@@ -1,0 +1,6 @@
+@UngDungQuanLiNhaHang_HostAddress = http://localhost:5030
+
+GET {{UngDungQuanLiNhaHang_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

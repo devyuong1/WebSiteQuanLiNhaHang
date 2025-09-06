@@ -1,0 +1,31 @@
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace UngDungQuanLiNhaHang.Models {
+    public class Invoices {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int InvoiceId { get; set; }
+        public int TotalQuantity { get; set; }
+        public double TotalAmount { get; set; }
+        public DateTime Create_At { get; set; }
+        public bool IsPayment { get; set; }
+        public bool InvoiceType {  get; set; }
+        public int? customerId { get; set; }
+        public Customers? customers { get; set; }
+        public int? tableId { get; set; }
+        public Tables? tables { get; set; }
+        public int paymentMethodId { get; set; }
+        public PaymentMethod? paymentMethod { get; set; }
+
+        public int invoiceStatusId { get; set; }
+        public InvoiceStatus? invoiceStatus { get; set; }
+      
+        public int? productReviewId { get; set; }
+        public ProductReviews? productReviews { get; set; }
+
+        public ICollection<InvoiceItems> invoiceItems { get; set; }  = new List<InvoiceItems>();
+
+
+    }
+}
