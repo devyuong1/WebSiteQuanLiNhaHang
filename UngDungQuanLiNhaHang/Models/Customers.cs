@@ -10,7 +10,7 @@ namespace UngDungQuanLiNhaHang.Models {
         public required string Email { get; set; }
         public required string Phone {  get; set; }
         public required string Password { get; set; }
-        public bool IsActive { get; set; }
+        public bool IsActive { get; set; } = true;
 
         public int roleId { get; set; }
         public Roles? role { get; set; }

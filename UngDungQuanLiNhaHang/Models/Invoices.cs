@@ -8,7 +8,7 @@ namespace UngDungQuanLiNhaHang.Models {
         public int InvoiceId { get; set; }
         public int TotalQuantity { get; set; }
         public double TotalAmount { get; set; }
-        public DateTime Create_At { get; set; }
+        public DateTime Create_At { get; set; } 
         public bool IsPayment { get; set; }
         public bool InvoiceType {  get; set; }
         public int? customerId { get; set; }
@@ -23,7 +23,8 @@ namespace UngDungQuanLiNhaHang.Models {
       
         public int? productReviewId { get; set; }
         public ProductReviews? productReviews { get; set; }
-
+        public int addressId { get; set; }
+        public Address? address { get; set; }
         public ICollection<InvoiceItems> invoiceItems { get; set; }  = new List<InvoiceItems>();
 
 

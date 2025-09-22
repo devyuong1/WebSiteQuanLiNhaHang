@@ -11,16 +11,16 @@ namespace UngDungQuanLiNhaHang.Models {
         public required string Hamlet { get; set; }
         public required string Street { get; set; }
         public required string HouseNumber { get; set; }
-        public bool IsDefault { get; set; }
-        public int restaurantId { get; set; }
+        public bool IsDefault { get; set; } = true;
+        public int? restaurantId { get; set; }
         public Restaurants? restaurants { get; set; }
-        public int employeeId { get; set; }
+        public int? employeeId { get; set; }
         public Employees? employees { get; set; }
-        public int customerId { get; set; }
+        public int? customerId { get; set; }
         public Customers? customers { get; set; }
-        public int supplierId { get; set; }
+        public int? supplierId { get; set; }
         public Suppliers? suppliers { get; set; }
 
-        
+        public ICollection<Invoices> invoices { get; set; } = new List<Invoices>();
     }
 }

@@ -7,6 +7,7 @@ namespace UngDungQuanLiNhaHang.Models {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int CategoryId { get; set; }
         public required string CategoryName { get; set; }  
+        public bool IsActive { get; set; } = true;
         public ICollection<Products> Products { get; set; } = new List<Products>();
     }
 }
