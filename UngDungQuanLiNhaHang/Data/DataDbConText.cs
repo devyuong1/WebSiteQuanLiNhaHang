@@ -44,7 +44,6 @@ namespace UngDungQuanLiNhaHang.Data {
                    new Roles { RoleId = 4, RoleName = "Customer", Description = "Khách Hàng" }
 
                );
-
             modelBuilder.Entity<Address>().HasData(
                 new Address {
                     AddressId = 1,
@@ -170,12 +169,12 @@ namespace UngDungQuanLiNhaHang.Data {
                 );
 
             modelBuilder.Entity<Categorys>().HasData(
-                new Categorys { CategoryId = 1, CategoryName = "Món Khai Vị" },
-                new Categorys { CategoryId = 2, CategoryName = "Món Chính" },
+                new Categorys { CategoryId = 1, CategoryName = "Món Xào" },
+                new Categorys { CategoryId = 2, CategoryName = "Món Hấp" },
                 new Categorys { CategoryId = 3, CategoryName = "Món Lẩu" },
                 new Categorys { CategoryId = 4, CategoryName = "Món Nướng" },
-                new Categorys { CategoryId = 5, CategoryName = "Món Tráng Miệng" },
-                new Categorys { CategoryId = 5, CategoryName = "Nước Uống" }
+                new Categorys { CategoryId = 5, CategoryName = "Món Bún/Phở" },
+                new Categorys { CategoryId = 6, CategoryName = "Nước Uống" }
                 );
             modelBuilder.Entity<PaymentMethod>().HasData(
                     new PaymentMethod { PaymentMethodId = 1, PaymentMethodName = "VNPay" },
@@ -349,11 +348,75 @@ namespace UngDungQuanLiNhaHang.Data {
                 },
                 new Ingredient {
                     IngredientId = 19,
-                    IngredientName = "Mang Chua",
+                    IngredientName = "Măng Chua",
                     Quantity = 3,
                     MinQuantity = 1.0,
                     Price = 100000,
+                },
+                new Ingredient {
+                    IngredientId = 20,
+                    IngredientName = "Hàu",
+                    Quantity = 20,
+                    MinQuantity = 5,
+                    Price = 100000,
+                },
+                new Ingredient {
+                    IngredientId = 21,
+                    IngredientName = "Óc móng tay",
+                    Quantity = 20,
+                    MinQuantity = 5,
+                    Price = 100000,
+                },
+                new Ingredient {
+                    IngredientId = 22,
+                    IngredientName = "Miến",
+                    Quantity = 20,
+                    MinQuantity = 5,
+                    Price = 50000,
+                },
+                new Ingredient {
+                    IngredientId = 23,
+                    IngredientName = "Trứng Muối",
+                    Quantity = 20,
+                    MinQuantity = 2,
+                    Price = 100000,
+                },
+                new Ingredient {
+                    IngredientId = 24,
+                    IngredientName = "Ốc Hương",
+                    Quantity = 20,
+                    MinQuantity = 2,
+                    Price = 200000,
+                },
+                new Ingredient {
+                    IngredientId = 25,
+                    IngredientName = "Gạo",
+                    Quantity = 20,
+                    MinQuantity = 2,
+                    Price = 20000,
+                },
+                new Ingredient {
+                    IngredientId = 26,
+                    IngredientName = "Mì",
+                    Quantity = 20,
+                    MinQuantity = 2,
+                    Price = 20000,
+                },
+                new Ingredient {
+                    IngredientId = 27,
+                    IngredientName = "Sò Huyết",
+                    Quantity = 20,
+                    MinQuantity = 2,
+                    Price = 200000,
+                },
+                new Ingredient {
+                    IngredientId = 28,
+                    IngredientName = "Cá Mú",
+                    Quantity = 20,
+                    MinQuantity = 2,
+                    Price = 250000,
                 }
+
             );
             modelBuilder.Entity<Products>().HasData(
                     new Products {
@@ -364,7 +427,7 @@ namespace UngDungQuanLiNhaHang.Data {
                         PriceSale = 45000.0,
                         Quantity = 40,
                         SoldCount = 2000,
-                        categoryId = 2
+                        categoryId = 5
                     },
                     new Products {
                         ProductId =2,
@@ -374,7 +437,7 @@ namespace UngDungQuanLiNhaHang.Data {
                         PriceSale = 50000.0,
                         Quantity = 40,
                         SoldCount = 100,
-                        categoryId = 2
+                        categoryId = 5
                     },
                     new Products {
                         ProductId = 3,
@@ -384,7 +447,7 @@ namespace UngDungQuanLiNhaHang.Data {
                         PriceSale = 50000.0,
                         Quantity = 30,
                         SoldCount = 100,
-                        categoryId = 2
+                        categoryId = 5
                     },
                     new Products {
                         ProductId = 4,
@@ -394,7 +457,7 @@ namespace UngDungQuanLiNhaHang.Data {
                         PriceSale = 75000.0,
                         Quantity = 30,
                         SoldCount = 100,
-                        categoryId = 2
+                        categoryId = 5
                     },
                     new Products {
                         ProductId = 5,
@@ -404,7 +467,7 @@ namespace UngDungQuanLiNhaHang.Data {
                         PriceSale = 250000.0,
                         Quantity = 30,
                         SoldCount = 100,
-                        categoryId = 2
+                        categoryId = 1
                     },
                     new Products {
                         ProductId = 6,
@@ -414,7 +477,7 @@ namespace UngDungQuanLiNhaHang.Data {
                         PriceSale = 250000.0,
                         Quantity = 30,
                         SoldCount = 100,
-                        categoryId = 2
+                        categoryId =1
                     },
                     new Products {
                         ProductId = 7,
@@ -424,7 +487,7 @@ namespace UngDungQuanLiNhaHang.Data {
                         PriceSale = 250000.0,
                         Quantity = 30,
                         SoldCount = 100,
-                        categoryId = 2
+                        categoryId = 1
                     },
                     new Products {
                         ProductId = 8,
@@ -434,7 +497,7 @@ namespace UngDungQuanLiNhaHang.Data {
                         PriceSale = 250000.0,
                         Quantity = 30,
                         SoldCount = 100,
-                        categoryId = 2
+                        categoryId = 1
                     },
                     new Products {
                         ProductId = 9,
@@ -444,7 +507,7 @@ namespace UngDungQuanLiNhaHang.Data {
                         PriceSale = 250000.0,
                         Quantity = 30,
                         SoldCount = 100,
-                        categoryId = 2
+                        categoryId = 3
                     },
                     new Products {
                         ProductId = 10,
@@ -454,7 +517,7 @@ namespace UngDungQuanLiNhaHang.Data {
                         PriceSale = 200000.0,
                         Quantity = 30,
                         SoldCount = 100,
-                        categoryId = 2
+                        categoryId = 3
                     },
                     new Products {
                         ProductId = 11,
@@ -474,8 +537,169 @@ namespace UngDungQuanLiNhaHang.Data {
                         PriceSale = 90000.0,
                         Quantity = 30,
                         SoldCount = 100,
+                        categoryId = 4
+                    },
+                    new Products {
+                        ProductId = 13,
+                        ProductName = "Hàu Nướng Mỡ Hành",
+                        Description = "",
+                        Price = 80000.0,
+                        PriceSale = 70000.0,
+                        Quantity = 30,
+                        SoldCount = 200,
+                        categoryId = 4
+                    },
+                    new Products {
+                        ProductId = 14,
+                        ProductName = "Hàu Nướng Phô Mai",
+                        Description = "",
+                        Price = 80000.0,
+                        PriceSale = 70000.0,
+                        Quantity = 30,
+                        SoldCount = 200,
+                        categoryId = 4
+                    },
+                    new Products {
+                        ProductId = 15,
+                        ProductName = "Ốc Móng Tay Cháy Tỏi",
+                        Description = "",
+                        Price = 80000.0,
+                        PriceSale = 70000.0,
+                        Quantity = 30,
+                        SoldCount = 200,
+                        categoryId = 1
+                    },
+                    new Products {
+                        ProductId = 16,
+                        ProductName = "Miến Xào Thịt Cua",
+                        Description = "",
+                        Price = 80000.0,
+                        PriceSale = 70000.0,
+                        Quantity = 30,
+                        SoldCount = 200,
+                        categoryId = 1
+                    },
+                    new Products {
+                        ProductId = 17,
+                        ProductName = "Ốc Hương Sốt Trứng Muối",
+                        Description = "",
+                        Price = 150000.0,
+                        PriceSale = 140000.0,
+                        Quantity = 50,
+                        SoldCount = 200,
+                        categoryId = 1
+                    },
+                    new Products {
+                        ProductId = 18,
+                        ProductName = "Cơm Chiên Hải Sản",
+                        Description = "",
+                        Price = 150000.0,
+                        PriceSale = 140000.0,
+                        Quantity = 50,
+                        SoldCount = 200,
+                        categoryId = 1
+                    },
+                    new Products {
+                        ProductId = 19,
+                        ProductName = "Mì Xào Bò",
+                        Description = "",
+                        Price = 150000.0,
+                        PriceSale = 140000.0,
+                        Quantity = 50,
+                        SoldCount = 200,
+                        categoryId = 1
+                    },
+                    new Products {
+                        ProductId = 20,
+                        ProductName = "Sò Huyết Cháy Tỏi",
+                        Description = "",
+                        Price = 120000.0,
+                        PriceSale = 100000.0,
+                        Quantity = 50,
+                        SoldCount = 200,
+                        categoryId = 1
+                    },
+                    new Products {
+                        ProductId = 21,
+                        ProductName = "Sò Huyết Sốt Thái",
+                        Description = "",
+                        Price = 120000.0,
+                        PriceSale = 100000.0,
+                        Quantity = 50,
+                        SoldCount = 200,
+                        categoryId = 1
+                    },
+                    new Products {
+                        ProductId = 22,
+                        ProductName = "Mực Hấp Hành",
+                        Description = "1 phần gồm 300g mực tươi hấp với hành và các gia vị.",
+                        Price = 120000.0,
+                        PriceSale = 100000.0,
+                        Quantity = 50,
+                        SoldCount = 200,
                         categoryId = 2
+                    },
+                    new Products {
+                        ProductId = 23,
+                        ProductName = "Cá Mú Hấp",
+                        Description = "1 phần gồm 1 con cá mú hấp vớ  các gia vị.",
+                        Price = 200000.0,
+                        PriceSale = 100000.0,
+                        Quantity = 50,
+                        SoldCount = 200,
+                        categoryId = 2
+                    },
+                    new Products {
+                        ProductId = 24,
+                        ProductName = "Nghêu Hấp",
+                        Description = "1 phần gồm 500g Nghêu",
+                        Price = 200000.0,
+                        PriceSale = 100000.0,
+                        Quantity = 50,
+                        SoldCount = 200,
+                        categoryId = 2
+                    },
+                    new Products {
+                        ProductId = 25,
+                        ProductName = "Coca Cola Lon",
+                        Description = "",
+                        Price = 20000.0,
+                        PriceSale = 18000.0,
+                        Quantity = 50,
+                        SoldCount = 200,
+                        categoryId = 5
+                    },
+                    new Products {
+                        ProductId = 26,
+                        ProductName = "Pepsi Lon",
+                        Description = "",
+                        Price = 20000.0,
+                        PriceSale = 18000.0,
+                        Quantity = 50,
+                        SoldCount = 200,
+                        categoryId = 5
+                    },
+                    new Products {
+                        ProductId = 27,
+                        ProductName = "Bia Tiger Lon",
+                        Description = "",
+                        Price = 25000.0,
+                        PriceSale = 22000.0,
+                        Quantity = 50,
+                        SoldCount = 200,
+                        categoryId = 5
+                    },
+                    new Products {
+                        ProductId = 28,
+                        ProductName = "Bia Heniken Lon",
+                        Description = "",
+                        Price = 30000.0,
+                        PriceSale = 25000.0,
+                        Quantity = 50,
+                        SoldCount = 200,
+                        categoryId = 5
                     }
+
                 );
 
             modelBuilder.Entity<Recipes>().HasData(
@@ -525,8 +749,74 @@ namespace UngDungQuanLiNhaHang.Data {
                     new Recipes { RecipeId = 31, Quantity = 300, Unit = "g", ingredientId = 11, productId = 11 },
                     // cong thuc mon bo nuong ngoi
                     new Recipes { RecipeId = 32, Quantity = 200, Unit = "g", ingredientId = 1, productId = 12 }
-
+                    // cong thuc mon hau nuong mo hanh  
+                    , new Recipes { RecipeId = 33, Quantity = 1, Unit = "kg", ingredientId = 20, productId = 13 }
+                    // cong thuc mon hau nuong pho mai
+                    , new Recipes { RecipeId = 34, Quantity = 1, Unit = "kg", ingredientId = 20, productId = 14 }
+                    // cong thuc mon oc mong tay chay toi
+                    , new Recipes { RecipeId = 35, Quantity = 300, Unit = "g", ingredientId = 21, productId = 15 }
+                    // cong thuc mon mien xao thit cua
+                    , new Recipes { RecipeId = 36, Quantity = 200, Unit = "g", ingredientId = 22, productId = 16 }
+                    , new Recipes { RecipeId = 37, Quantity = 200, Unit = "g", ingredientId = 14, productId = 16 }
+                    // cong thuc mon oc huong sot trung muoi
+                    , new Recipes { RecipeId = 38, Quantity = 300, Unit = "g", ingredientId = 24, productId = 17 }
+                    , new Recipes { RecipeId = 39, Quantity = 100, Unit = "g", ingredientId = 23, productId = 17 }
+                    // cong thuc mon com chien hai san
+                    , new Recipes { RecipeId = 40, Quantity = 200, Unit = "g", ingredientId = 12, productId = 18 }
+                    , new Recipes { RecipeId = 41, Quantity = 200, Unit = "g", ingredientId = 11, productId = 18 }
+                    , new Recipes { RecipeId = 42, Quantity = 200, Unit = "g", ingredientId = 25, productId = 18 }
+                    // cong thuc mon mi xao bo
+                    , new Recipes { RecipeId = 43, Quantity = 300, Unit = "g", ingredientId = 26, productId = 19 }
+                    , new Recipes { RecipeId = 44, Quantity = 200, Unit = "g", ingredientId = 1, productId = 19 }
+                    // cong thuc mon so huyet chay toi
+                    , new Recipes { RecipeId = 45, Quantity = 300, Unit = "g", ingredientId = 27, productId = 20 }
+                    // cong thuc mon so huyet sot thai
+                    , new Recipes { RecipeId = 46, Quantity = 300, Unit = "g", ingredientId = 27, productId = 21 }
+                    // cong thuc mon muc hap hanh
+                    , new Recipes { RecipeId = 47, Quantity = 300, Unit = "g", ingredientId = 11, productId = 22 }
+                    // cong thuc mon ca mu hap
+                    , new Recipes { RecipeId = 48, Quantity = 500, Unit = "g", ingredientId = 28, productId = 23 }
                 );
+            modelBuilder.Entity<InvoiceStatus>().HasData(
+                new InvoiceStatus { InvoiceStatusId = 1,InvoiceStatusName = "Pending", Description = "Chờ Xác Nhận" },
+                new InvoiceStatus { InvoiceStatusId = 2, InvoiceStatusName = "Confirmed", Description = "Đã Xác Nhận" },
+                new InvoiceStatus { InvoiceStatusId = 3, InvoiceStatusName = "Shipping", Description = "Đang Giao Hàng" },
+                new InvoiceStatus { InvoiceStatusId = 4, InvoiceStatusName = "Delivered", Description = "Đã Giao" },
+                new InvoiceStatus { InvoiceStatusId = 5, InvoiceStatusName = "Cancelled", Description = "Đã Hủy" },
+                new InvoiceStatus { InvoiceStatusId = 6, InvoiceStatusName = "Returned", Description = "Trả hàng" }
+            );
+            modelBuilder.Entity<Invoices>().HasData(
+                new Invoices {
+                    InvoiceId = 1,
+                    TotalQuantity = 3,
+                    TotalAmount = 400000.0,
+                    Create_At = DateTime.UtcNow,
+                    IsPayment = true,
+                    InvoiceType = false,
+                    customerId = 1,
+                    invoiceStatusId = 4,
+                    paymentMethodId = 1,
+                    addressId = 1
+                },
+                new Invoices {
+                    InvoiceId = 2,
+                    TotalQuantity = 2,
+                    TotalAmount = 270000.0,
+                    Create_At = DateTime.UtcNow,
+                    IsPayment = false,
+                    InvoiceType = false,
+                    customerId = 1,
+                    invoiceStatusId = 4,
+                    paymentMethodId = 3,
+                    addressId = 1
+                }
+            );
+            modelBuilder.Entity<InvoiceItems>().HasData(
+                new InvoiceItems { InvoiceItemId = 1, Quantity = 2, Price = 75000.0, productId = 4, invoiceId = 1 },
+                new InvoiceItems { InvoiceItemId = 2, Quantity = 1, Price = 250000.0, productId = 8, invoiceId = 1 },
+                new InvoiceItems { InvoiceItemId = 3, Quantity = 1, Price = 120000.0, productId = 22, invoiceId = 2 },
+                new InvoiceItems { InvoiceItemId = 4, Quantity = 1, Price = 150000.0, productId = 19, invoiceId = 2 }
+            );
         }
     }
 }

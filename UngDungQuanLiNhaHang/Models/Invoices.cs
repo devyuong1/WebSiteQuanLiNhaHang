@@ -9,8 +9,8 @@ namespace UngDungQuanLiNhaHang.Models {
         public int TotalQuantity { get; set; }
         public double TotalAmount { get; set; }
         public DateTime Create_At { get; set; } 
-        public bool IsPayment { get; set; }
-        public bool InvoiceType {  get; set; }
+        public bool IsPayment { get; set; } // true: da thanh toan, false: chua thanh toan
+        public bool InvoiceType {  get; set; } // true: tai cho, false: online
         public int? customerId { get; set; }
         public Customers? customers { get; set; }
         public int? tableId { get; set; }
