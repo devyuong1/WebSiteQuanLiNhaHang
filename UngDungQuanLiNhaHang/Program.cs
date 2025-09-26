@@ -1,4 +1,11 @@
+using Microsoft.EntityFrameworkCore;
+using UngDungQuanLiNhaHang.Data;
+
 var builder = WebApplication.CreateBuilder(args);
+
+
+builder.Services.AddDbContext<DataDbConText>(options => 
+options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Add services to the container.
 

@@ -7,7 +7,7 @@ namespace UngDungQuanLiNhaHang.Models {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int PurchaseInvoiceId { get; set; }
         public double Totalamount { get; set; }
-        public required string Unit {  get; set; }
+        
         public DateTime Create_At { get; set; }
         public bool IsPayment {  get; set; }
         public int supplierId { get; set; }

@@ -10,6 +10,7 @@ namespace UngDungQuanLiNhaHang.Models {
         public double Quantity { get; set; }
         public double MinQuantity { get; set; }
         public double Price { get; set; }
+        public required string Unit {  get; set; }
         public bool IsActive { get; set; } = true;
 
         public ICollection<Recipes> recipes { get; set; } = new List<Recipes>();

@@ -26,10 +26,6 @@
   <ItemGroup>
     <Folder Include="Helpers\" />
     <Folder Include="Repository\" />
-    <Folder Include="Services\" />
-    <Folder Include="ResponseDTO\" />
-    <Folder Include="RequestDTO\" />
-    <Folder Include="wwwroot\ImageProducts\" />
   </ItemGroup>
 
 </Project>

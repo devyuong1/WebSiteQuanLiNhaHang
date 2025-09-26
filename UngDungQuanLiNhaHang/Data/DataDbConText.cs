@@ -37,6 +37,10 @@ namespace UngDungQuanLiNhaHang.Data {
 
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
             base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<Invoices>()
+                .HasOne(i => i.productReviews)
+                .WithOne(pr => pr.invoices)
+                .HasForeignKey<ProductReviews>(pr => pr.invoiceId);
             modelBuilder.Entity<Roles>().HasData(
                    new Roles { RoleId = 1, RoleName = "Admin", Description = "Chủ nhà hàng" },
                    new Roles { RoleId = 2, RoleName = "Manager", Description = "Quản lí" },
@@ -193,7 +197,7 @@ namespace UngDungQuanLiNhaHang.Data {
                     
                 },
                 new Customers {
-                    CustomerId = 1,
+                    CustomerId = 2,
                     FullName = "Nguyễn Văn B",
                     Email = "b@gmail.com",
                     Phone = "0909092389",
@@ -226,6 +230,7 @@ namespace UngDungQuanLiNhaHang.Data {
                     Quantity = 10.0,
                     MinQuantity = 1.0,
                     Price = 200000.0,
+                    Unit = "kg"
                 },
                 new Ingredient {
                     IngredientId =2,
@@ -233,6 +238,7 @@ namespace UngDungQuanLiNhaHang.Data {
                     Quantity = 4,
                     MinQuantity = 1.0,
                     Price = 30000.0,
+                    Unit = "kg"
                 },
                 new Ingredient {
                     IngredientId = 3,
@@ -240,6 +246,7 @@ namespace UngDungQuanLiNhaHang.Data {
                     Quantity = 10,
                     MinQuantity = 1.0,
                     Price = 10000,
+                    Unit = "lít"
                 },
                 new Ingredient {
                     IngredientId = 4,
@@ -247,6 +254,7 @@ namespace UngDungQuanLiNhaHang.Data {
                     Quantity = 10,
                     MinQuantity = 1.0,
                     Price = 10000,
+                    Unit = "lít"
                 },
                 new Ingredient {
                     IngredientId = 5,
@@ -254,6 +262,7 @@ namespace UngDungQuanLiNhaHang.Data {
                     Quantity = 3,
                     MinQuantity = 1.0,
                     Price = 120000,
+                    Unit = "kg"
                 },
                 new Ingredient {
                     IngredientId =6,
@@ -261,6 +270,7 @@ namespace UngDungQuanLiNhaHang.Data {
                     Quantity = 2,
                     MinQuantity = 1.0,
                     Price = 100000,
+                    Unit = "kg"
                 },
                 new Ingredient {
                     IngredientId = 7,
@@ -268,6 +278,7 @@ namespace UngDungQuanLiNhaHang.Data {
                     Quantity = 2,
                     MinQuantity = 1.0,
                     Price = 15000,
+                    Unit = "kg"
                 },
                 new Ingredient {
                     IngredientId = 8,
@@ -275,6 +286,7 @@ namespace UngDungQuanLiNhaHang.Data {
                     Quantity = 2,
                     MinQuantity = 1.0,
                     Price = 100000,
+                    Unit = "kg"
                 },
                 new Ingredient {
                     IngredientId = 9,
@@ -282,6 +294,7 @@ namespace UngDungQuanLiNhaHang.Data {
                     Quantity = 5,
                     MinQuantity = 1.0,
                     Price = 200000,
+                    Unit = "kg"
                 },
                 new Ingredient {
                     IngredientId = 10,
@@ -289,6 +302,7 @@ namespace UngDungQuanLiNhaHang.Data {
                     Quantity = 2,
                     MinQuantity = 1.0,
                     Price = 150000,
+                    Unit = "kg"
                 },
                 new Ingredient {
                     IngredientId = 11,
@@ -296,6 +310,7 @@ namespace UngDungQuanLiNhaHang.Data {
                     Quantity = 2,
                     MinQuantity = 1.0,
                     Price = 250000,
+                    Unit = "kg"
                 },
                 new Ingredient {
                     IngredientId = 12,
@@ -303,6 +318,7 @@ namespace UngDungQuanLiNhaHang.Data {
                     Quantity = 4,
                     MinQuantity = 1.0,
                     Price = 250000,
+                    Unit = "kg"
                 },
                 new Ingredient {
                     IngredientId = 13,
@@ -310,6 +326,7 @@ namespace UngDungQuanLiNhaHang.Data {
                     Quantity = 3,
                     MinQuantity = 1.0,
                     Price = 450000,
+                    Unit = "kg"
                 },
                 new Ingredient {
                     IngredientId = 14,
@@ -317,6 +334,7 @@ namespace UngDungQuanLiNhaHang.Data {
                     Quantity = 3,
                     MinQuantity = 1.0,
                     Price = 350000,
+                    Unit = "kg"
                 },
                 new Ingredient {
                     IngredientId = 15,
@@ -324,6 +342,7 @@ namespace UngDungQuanLiNhaHang.Data {
                     Quantity = 3,
                     MinQuantity = 1.0,
                     Price = 300000,
+                    Unit = "kg"
                 },
                 new Ingredient {
                     IngredientId = 16,
@@ -331,6 +350,7 @@ namespace UngDungQuanLiNhaHang.Data {
                     Quantity = 3,
                     MinQuantity = 1.0,
                     Price = 100000,
+                    Unit = "kg"
                 },
                 new Ingredient {
                     IngredientId = 17,
@@ -338,13 +358,15 @@ namespace UngDungQuanLiNhaHang.Data {
                     Quantity = 3,
                     MinQuantity = 1.0,
                     Price = 100000,
+                    Unit = "kg"
                 },
                 new Ingredient {
                     IngredientId = 18,
-                    IngredientName = "Cá Đối",
+                    IngredientName = "Cá Đuối",
                     Quantity = 3,
                     MinQuantity = 1.0,
                     Price = 100000,
+                    Unit = "kg"
                 },
                 new Ingredient {
                     IngredientId = 19,
@@ -352,13 +374,15 @@ namespace UngDungQuanLiNhaHang.Data {
                     Quantity = 3,
                     MinQuantity = 1.0,
                     Price = 100000,
+                    Unit = "kg"
                 },
                 new Ingredient {
                     IngredientId = 20,
                     IngredientName = "Hàu",
                     Quantity = 20,
                     MinQuantity = 5,
-                    Price = 100000,
+                    Price = 800000,
+                    Unit = "kg"
                 },
                 new Ingredient {
                     IngredientId = 21,
@@ -366,6 +390,7 @@ namespace UngDungQuanLiNhaHang.Data {
                     Quantity = 20,
                     MinQuantity = 5,
                     Price = 100000,
+                    Unit = "kg"
                 },
                 new Ingredient {
                     IngredientId = 22,
@@ -373,6 +398,7 @@ namespace UngDungQuanLiNhaHang.Data {
                     Quantity = 20,
                     MinQuantity = 5,
                     Price = 50000,
+                    Unit = "kg"
                 },
                 new Ingredient {
                     IngredientId = 23,
@@ -380,6 +406,7 @@ namespace UngDungQuanLiNhaHang.Data {
                     Quantity = 20,
                     MinQuantity = 2,
                     Price = 100000,
+                    Unit = "trứng"
                 },
                 new Ingredient {
                     IngredientId = 24,
@@ -387,6 +414,7 @@ namespace UngDungQuanLiNhaHang.Data {
                     Quantity = 20,
                     MinQuantity = 2,
                     Price = 200000,
+                    Unit = "kg"
                 },
                 new Ingredient {
                     IngredientId = 25,
@@ -394,13 +422,15 @@ namespace UngDungQuanLiNhaHang.Data {
                     Quantity = 20,
                     MinQuantity = 2,
                     Price = 20000,
+                    Unit = "kg"
                 },
                 new Ingredient {
                     IngredientId = 26,
                     IngredientName = "Mì",
-                    Quantity = 20,
-                    MinQuantity = 2,
-                    Price = 20000,
+                    Quantity = 200,
+                    MinQuantity = 20,
+                    Price = 5000,
+                    Unit = "gói"
                 },
                 new Ingredient {
                     IngredientId = 27,
@@ -408,6 +438,7 @@ namespace UngDungQuanLiNhaHang.Data {
                     Quantity = 20,
                     MinQuantity = 2,
                     Price = 200000,
+                    Unit = "kg"
                 },
                 new Ingredient {
                     IngredientId = 28,
@@ -415,6 +446,7 @@ namespace UngDungQuanLiNhaHang.Data {
                     Quantity = 20,
                     MinQuantity = 2,
                     Price = 250000,
+                    Unit = "kg"
                 }
 
             );
@@ -511,7 +543,7 @@ namespace UngDungQuanLiNhaHang.Data {
                     },
                     new Products {
                         ProductId = 10,
-                        ProductName = "Lẩu Cá Đối",
+                        ProductName = "Lẩu Cá Đuối",
                         Description = "",
                         Price = 200000.0,
                         PriceSale = 200000.0,
@@ -521,7 +553,7 @@ namespace UngDungQuanLiNhaHang.Data {
                     },
                     new Products {
                         ProductId = 11,
-                        ProductName = "Mực Hấp",
+                        ProductName = "Mực Hấp ",
                         Description = "",
                         Price = 200000.0,
                         PriceSale = 200000.0,
@@ -701,7 +733,36 @@ namespace UngDungQuanLiNhaHang.Data {
                     }
 
                 );
-
+            modelBuilder.Entity<Images>().HasData(
+                    new Images { ImagesId = 1, ImagesUrl = "/ImageProducts/product1.png", productId = 1 },
+                    new Images { ImagesId = 2, ImagesUrl = "/ImageProducts/product2.png", productId = 2 },
+                    new Images { ImagesId = 3, ImagesUrl = "/ImageProducts/product3.png", productId = 3 },
+                    new Images { ImagesId = 4, ImagesUrl = "/ImageProducts/product4.png", productId = 4 },
+                    new Images { ImagesId = 5, ImagesUrl = "/ImageProducts/product5.png", productId = 5 },
+                    new Images { ImagesId = 6, ImagesUrl = "/ImageProducts/product6.png", productId = 6 },
+                    new Images { ImagesId = 7, ImagesUrl = "/ImageProducts/product7.png", productId = 7 },
+                    new Images { ImagesId = 8, ImagesUrl = "/ImageProducts/product8.png", productId = 8 },
+                    new Images { ImagesId = 9, ImagesUrl = "/ImageProducts/product9.png", productId = 9 },
+                    new Images { ImagesId = 10, ImagesUrl = "/ImageProducts/product10.png", productId = 10 },
+                    new Images { ImagesId = 11, ImagesUrl = "/ImageProducts/product11.png", productId = 11 },
+                    new Images { ImagesId = 12, ImagesUrl = "/ImageProducts/product12.png", productId = 12 },
+                    new Images { ImagesId = 13, ImagesUrl = "/ImageProducts/product13.png", productId = 13 },
+                    new Images { ImagesId = 14, ImagesUrl = "/ImageProducts/product14.png", productId = 14 },
+                    new Images { ImagesId = 15, ImagesUrl = "/ImageProducts/product15.png", productId = 15 },
+                    new Images { ImagesId = 16, ImagesUrl = "/ImageProducts/product16.png", productId = 16 },
+                    new Images { ImagesId = 17, ImagesUrl = "/ImageProducts/product17.png", productId = 17 },
+                    new Images { ImagesId = 18, ImagesUrl = "/ImageProducts/product18.png", productId = 18 },
+                    new Images { ImagesId = 19, ImagesUrl = "/ImageProducts/product19.png", productId = 19 },
+                    new Images { ImagesId = 20, ImagesUrl = "/ImageProducts/product20.png", productId = 20 },
+                    new Images { ImagesId = 21, ImagesUrl = "/ImageProducts/product21.png", productId = 21 },
+                    new Images { ImagesId = 22, ImagesUrl = "/ImageProducts/product22.png", productId = 22 },
+                    new Images { ImagesId = 23, ImagesUrl = "/ImageProducts/product23.png", productId = 23 },
+                    new Images { ImagesId = 24, ImagesUrl = "/ImageProducts/product24.png", productId = 24 },
+                    new Images { ImagesId = 25, ImagesUrl = "/ImageProducts/product25.png", productId = 25 },
+                    new Images { ImagesId = 26, ImagesUrl = "/ImageProducts/product26.png", productId = 26 },
+                    new Images { ImagesId = 27, ImagesUrl = "/ImageProducts/product27.png", productId = 27 },
+                    new Images { ImagesId = 28, ImagesUrl = "/ImageProducts/product28.png", productId = 28 }
+                );
             modelBuilder.Entity<Recipes>().HasData(
                 // cong thuc mon pho 
                     new Recipes { RecipeId = 1, Quantity = 100, Unit = "g", ingredientId = 1, productId = 1},
@@ -723,59 +784,59 @@ namespace UngDungQuanLiNhaHang.Data {
                     new Recipes { RecipeId = 14, Quantity = 50, Unit = "g", ingredientId = 12, productId = 4 },
                     new Recipes { RecipeId = 15, Quantity = 50, Unit = "g", ingredientId = 14, productId = 4 },
                     new Recipes { RecipeId = 16, Quantity = 50, Unit = "g", ingredientId = 15, productId = 4 },
-                    new Recipes { RecipeId = 16, Quantity = 150, Unit = "g", ingredientId = 7, productId = 4 },
+                    new Recipes { RecipeId = 17, Quantity = 150, Unit = "g", ingredientId = 7, productId = 4 },
                     // cong thuc mon cua sot bo toi
-                    new Recipes { RecipeId = 17, Quantity = 2, Unit = "con", ingredientId = 14, productId = 5 },
-                    new Recipes { RecipeId = 17, Quantity = 100, Unit = "g", ingredientId = 16, productId = 5 },
+                    new Recipes { RecipeId = 18, Quantity = 2, Unit = "con", ingredientId = 14, productId = 5 },
+                    new Recipes { RecipeId = 19, Quantity = 100, Unit = "g", ingredientId = 16, productId = 5 },
                     // cong thuc mon cua sot pho mai
-                    new Recipes { RecipeId = 18, Quantity = 2, Unit = "con", ingredientId = 14, productId = 6 },
-                    new Recipes { RecipeId = 19, Quantity = 100, Unit = "g", ingredientId = 17, productId = 6 },
+                    new Recipes { RecipeId = 20, Quantity = 2, Unit = "con", ingredientId = 14, productId = 6 },
+                    new Recipes { RecipeId = 21, Quantity = 100, Unit = "g", ingredientId = 17, productId = 6 },
                     // cong thuc mon tom hum sot bo toi
-                    new Recipes { RecipeId = 20, Quantity = 1, Unit = "con", ingredientId = 13, productId = 7 },
-                    new Recipes { RecipeId = 21, Quantity = 100, Unit = "g", ingredientId = 16, productId = 7 },
+                    new Recipes { RecipeId = 22, Quantity = 1, Unit = "con", ingredientId = 13, productId = 7 },
+                    new Recipes { RecipeId = 23, Quantity = 100, Unit = "g", ingredientId = 16, productId = 7 },
                     // cong thuc mon tom hum sot pho mai
-                    new Recipes { RecipeId = 22, Quantity = 1, Unit = "con", ingredientId = 13, productId = 8 },
-                    new Recipes { RecipeId = 23, Quantity = 100, Unit = "g", ingredientId = 17, productId = 8 },
+                    new Recipes { RecipeId = 24, Quantity = 1, Unit = "con", ingredientId = 13, productId = 8 },
+                    new Recipes { RecipeId = 25, Quantity = 100, Unit = "g", ingredientId = 17, productId = 8 },
                     // cong thuc mon lau hai san
-                    new Recipes { RecipeId = 24, Quantity = 200, Unit = "g", ingredientId = 11, productId = 9 },
-                    new Recipes { RecipeId = 25, Quantity = 200, Unit = "g", ingredientId = 12, productId = 9 },
-                    new Recipes { RecipeId = 26, Quantity = 200, Unit = "g", ingredientId = 14, productId = 9 },
-                    new Recipes { RecipeId = 27, Quantity = 200, Unit = "g", ingredientId = 1, productId = 9 },
-                    new Recipes { RecipeId = 28, Quantity = 200, Unit = "g", ingredientId = 7, productId = 9 },
+                    new Recipes { RecipeId = 26, Quantity = 200, Unit = "g", ingredientId = 11, productId = 9 },
+                    new Recipes { RecipeId = 27, Quantity = 200, Unit = "g", ingredientId = 12, productId = 9 },
+                    new Recipes { RecipeId = 28, Quantity = 200, Unit = "g", ingredientId = 14, productId = 9 },
+                    new Recipes { RecipeId = 29, Quantity = 200, Unit = "g", ingredientId = 1, productId = 9 },
+                    new Recipes { RecipeId = 30, Quantity = 200, Unit = "g", ingredientId = 7, productId = 9 },
                     // cong thuc mon lau ca doi
-                    new Recipes { RecipeId = 29, Quantity = 500, Unit = "g", ingredientId = 18, productId = 10 },
-                    new Recipes { RecipeId = 30, Quantity = 200, Unit = "g", ingredientId = 19, productId = 10 },
+                    new Recipes { RecipeId = 31, Quantity = 500, Unit = "g", ingredientId = 18, productId = 10 },
+                    new Recipes { RecipeId = 32, Quantity = 200, Unit = "g", ingredientId = 19, productId = 10 },
                     // cong thuc mon muc hap
-                    new Recipes { RecipeId = 31, Quantity = 300, Unit = "g", ingredientId = 11, productId = 11 },
+                    new Recipes { RecipeId = 33, Quantity = 300, Unit = "g", ingredientId = 11, productId = 11 },
                     // cong thuc mon bo nuong ngoi
-                    new Recipes { RecipeId = 32, Quantity = 200, Unit = "g", ingredientId = 1, productId = 12 }
+                    new Recipes { RecipeId = 34, Quantity = 200, Unit = "g", ingredientId = 1, productId = 12 }
                     // cong thuc mon hau nuong mo hanh  
-                    , new Recipes { RecipeId = 33, Quantity = 1, Unit = "kg", ingredientId = 20, productId = 13 }
+                    , new Recipes { RecipeId = 35, Quantity = 1, Unit = "kg", ingredientId = 20, productId = 13 }
                     // cong thuc mon hau nuong pho mai
-                    , new Recipes { RecipeId = 34, Quantity = 1, Unit = "kg", ingredientId = 20, productId = 14 }
+                    , new Recipes { RecipeId = 36, Quantity = 1, Unit = "kg", ingredientId = 20, productId = 14 }
                     // cong thuc mon oc mong tay chay toi
-                    , new Recipes { RecipeId = 35, Quantity = 300, Unit = "g", ingredientId = 21, productId = 15 }
+                    , new Recipes { RecipeId = 37, Quantity = 300, Unit = "g", ingredientId = 21, productId = 15 }
                     // cong thuc mon mien xao thit cua
-                    , new Recipes { RecipeId = 36, Quantity = 200, Unit = "g", ingredientId = 22, productId = 16 }
-                    , new Recipes { RecipeId = 37, Quantity = 200, Unit = "g", ingredientId = 14, productId = 16 }
+                    , new Recipes { RecipeId = 38, Quantity = 200, Unit = "g", ingredientId = 22, productId = 16 }
+                    , new Recipes { RecipeId = 39, Quantity = 200, Unit = "g", ingredientId = 14, productId = 16 }
                     // cong thuc mon oc huong sot trung muoi
-                    , new Recipes { RecipeId = 38, Quantity = 300, Unit = "g", ingredientId = 24, productId = 17 }
-                    , new Recipes { RecipeId = 39, Quantity = 100, Unit = "g", ingredientId = 23, productId = 17 }
+                    , new Recipes { RecipeId = 40, Quantity = 300, Unit = "g", ingredientId = 24, productId = 17 }
+                    , new Recipes { RecipeId = 41, Quantity = 100, Unit = "g", ingredientId = 23, productId = 17 }
                     // cong thuc mon com chien hai san
-                    , new Recipes { RecipeId = 40, Quantity = 200, Unit = "g", ingredientId = 12, productId = 18 }
-                    , new Recipes { RecipeId = 41, Quantity = 200, Unit = "g", ingredientId = 11, productId = 18 }
-                    , new Recipes { RecipeId = 42, Quantity = 200, Unit = "g", ingredientId = 25, productId = 18 }
+                    , new Recipes { RecipeId = 42, Quantity = 200, Unit = "g", ingredientId = 12, productId = 18 }
+                    , new Recipes { RecipeId = 43, Quantity = 200, Unit = "g", ingredientId = 11, productId = 18 }
+                    , new Recipes { RecipeId = 44, Quantity = 200, Unit = "g", ingredientId = 25, productId = 18 }
                     // cong thuc mon mi xao bo
-                    , new Recipes { RecipeId = 43, Quantity = 300, Unit = "g", ingredientId = 26, productId = 19 }
-                    , new Recipes { RecipeId = 44, Quantity = 200, Unit = "g", ingredientId = 1, productId = 19 }
+                    , new Recipes { RecipeId = 45, Quantity = 300, Unit = "g", ingredientId = 26, productId = 19 }
+                    , new Recipes { RecipeId = 46, Quantity = 200, Unit = "g", ingredientId = 1, productId = 19 }
                     // cong thuc mon so huyet chay toi
-                    , new Recipes { RecipeId = 45, Quantity = 300, Unit = "g", ingredientId = 27, productId = 20 }
+                    , new Recipes { RecipeId = 47, Quantity = 300, Unit = "g", ingredientId = 27, productId = 20 }
                     // cong thuc mon so huyet sot thai
-                    , new Recipes { RecipeId = 46, Quantity = 300, Unit = "g", ingredientId = 27, productId = 21 }
+                    , new Recipes { RecipeId = 48, Quantity = 300, Unit = "g", ingredientId = 27, productId = 21 }
                     // cong thuc mon muc hap hanh
-                    , new Recipes { RecipeId = 47, Quantity = 300, Unit = "g", ingredientId = 11, productId = 22 }
+                    , new Recipes { RecipeId = 49, Quantity = 300, Unit = "g", ingredientId = 11, productId = 22 }
                     // cong thuc mon ca mu hap
-                    , new Recipes { RecipeId = 48, Quantity = 500, Unit = "g", ingredientId = 28, productId = 23 }
+                    , new Recipes { RecipeId = 50, Quantity = 500, Unit = "g", ingredientId = 28, productId = 23 }
                 );
             modelBuilder.Entity<InvoiceStatus>().HasData(
                 new InvoiceStatus { InvoiceStatusId = 1,InvoiceStatusName = "Pending", Description = "Chờ Xác Nhận" },

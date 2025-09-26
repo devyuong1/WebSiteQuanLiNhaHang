@@ -21,7 +21,7 @@ namespace UngDungQuanLiNhaHang.Models {
         public int invoiceStatusId { get; set; }
         public InvoiceStatus? invoiceStatus { get; set; }
       
-        public int? productReviewId { get; set; }
+        
         public ProductReviews? productReviews { get; set; }
         public int addressId { get; set; }
         public Address? address { get; set; }
