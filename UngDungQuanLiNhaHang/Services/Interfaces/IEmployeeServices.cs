@@ -2,11 +2,11 @@
 using UngDungQuanLiNhaHang.ResponseDTO;
 
 namespace UngDungQuanLiNhaHang.Services.Interfaces {
-    public interface EmployeeServices {
+    public interface IEmployeeServices {
         public Task<ApiResponse<bool>> AddEmployee(EmployeeDTO employeeDTO);
         public Task<ApiResponse<bool>> UpdateEmployee(EmployeeDTO employeeDTO);
-        public Task<ApiResponse<bool>> DisableEmployee(int employeeId,int isActive);
-        public Task<ApiResponse<List<EmployeeDTO>>> GetAllEmployees();  
-        public Task<ApiResponse<EmployeeDTO>> GetEmployeeById(int employeeId);
+        public Task<ApiResponse<bool>> DisableEmployee(int employeeId);
+        public Task<ApiResponse<IEnumerable<EmployeeResponse>>> GetAllEmployees();  
+        public Task<ApiResponse<EmployeeResponse>> GetEmployeeById(int employeeId);
     }
 }

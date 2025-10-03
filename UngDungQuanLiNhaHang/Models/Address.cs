@@ -9,8 +9,8 @@ namespace UngDungQuanLiNhaHang.Models {
         public required string Province { get; set; }
         public required string District { get; set; }
         public required string Hamlet { get; set; }
-        public required string Street { get; set; }
-        public required string HouseNumber { get; set; }
+        public  string? Street { get; set; }
+        public  string? HouseNumber { get; set; }
         public bool IsDefault { get; set; } = true;
         public int? restaurantId { get; set; }
         public Restaurants? restaurants { get; set; }

@@ -8,9 +8,9 @@ namespace UngDungQuanLiNhaHang.ResponseDTO {
         
         public required string phone { get; set; }
         public required string email { get; set; }
-        public AddressDTO? address { get; set; }
+        public AddressResponse? address { get; set; }
         
         public int roleId { get; set; }
-        public string roleName { get; set; } = string.Empty;
+        public string? roleName { get; set; } 
     }
 }
