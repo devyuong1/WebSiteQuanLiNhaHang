@@ -1,9 +1,10 @@
 ﻿using UngDungQuanLiNhaHang.Models;
+using UngDungQuanLiNhaHang.RequestDTO;
 using UngDungQuanLiNhaHang.ResponseDTO;
 
 namespace UngDungQuanLiNhaHang.Services.Interfaces {
     public interface IAuthServices {
-        public Task<ApiResponse<CustomerResponse>> Login(string Email, string password);
-        public Task<ApiResponse<bool>> Register(Customers customer);
+        public Task<ApiResponse<CustomerResponse>> Login(LoginDTO customer);
+        public Task<ApiResponse<bool>> Register(CustomerDTO customer);
     }
 }
