@@ -8,7 +8,7 @@ namespace UngDungQuanLiNhaHang.Repository {
             return await _context.employees.Include(e => e.roles).Include(e => e.address).ToListAsync();
         }
         public async Task<Employees?> GetEmployeeById(int employeeId) {
-            return await _context.employees.FindAsync(employeeId);
+            return await _context.employees.Include(e => e.roles).Include(e => e.address).FirstOrDefaultAsync(e => e.EmployeeId == employeeId);
         }
         public async Task AddEmployee(Employees employee) {
             await _context.employees.AddAsync(employee);
@@ -16,6 +16,7 @@ namespace UngDungQuanLiNhaHang.Repository {
         public void UpdateEmployee(Employees employee) {
             _context.employees.Update(employee);
         }
+        
         public async Task<Employees?> GetEmployeeByEmail(string email) {
             return await _context.employees.FirstOrDefaultAsync(e => e.Email == email);
         }

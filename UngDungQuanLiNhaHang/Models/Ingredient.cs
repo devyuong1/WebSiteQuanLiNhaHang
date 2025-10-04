@@ -13,7 +13,7 @@ namespace UngDungQuanLiNhaHang.Models {
         public required string Unit {  get; set; }
         public bool IsActive { get; set; } = true;
 
-        public ICollection<Recipes> recipes { get; set; } = new List<Recipes>();
-        public ICollection<PurchaseInvoiceItem> purchaseInvoiceItems { get; set;} = new List<PurchaseInvoiceItem>();
+        public ICollection<Recipes> Recipes { get; set; } = [];
+        public ICollection<PurchaseInvoiceItem> PurchaseInvoiceItems { get; set;} = [];
     }
 }

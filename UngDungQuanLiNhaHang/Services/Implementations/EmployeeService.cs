@@ -25,7 +25,7 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
 
             try {
                 await transactionRepo.BeginTransactionAsync();
-                Address address = new Address() {
+                Address address = new() {
                     Province = employeeDTO.address!.province,
                     District = employeeDTO.address!.district,
                     Hamlet = employeeDTO.address!.hamlet,
@@ -33,7 +33,7 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
                     HouseNumber = employeeDTO.address.houseNumber,
                 };
                 await addressRepo.AddAddress(address);
-                Employees item = new Employees() {
+                Employees item = new() {
                     UserName = employeeDTO.username,
                     Fullname = employeeDTO.fullname,
                     Email = employeeDTO.email,
@@ -70,7 +70,7 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
 
                 await transactionRepo.CompleteAsync();
                 await transactionRepo.CommitAsync();
-                
+
                 return ApiResponse<bool>.SuccessResponse(true, "Cập nhật trạng thái nhân viên thành công.");
 
             }
@@ -83,7 +83,7 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
 
         public async Task<ApiResponse<IEnumerable<EmployeeResponse>>> GetAllEmployees() {
             var employees = await employeeRepo.GetAllEmployees();
-            if ( employees.Count() == 0 ) {
+            if ( !employees.Any() ) {
                 return ApiResponse<IEnumerable<EmployeeResponse>>.FailResponse("Không có nhân viên");
             }
             IEnumerable<EmployeeResponse> list = employees.Select(e => new EmployeeResponse() {
@@ -101,18 +101,81 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
                     hamlet = e.address.Hamlet,
                     street = e.address.Street,
                     houseNumber = e.address.HouseNumber
-                    
+
                 }
             });
             return ApiResponse<IEnumerable<EmployeeResponse>>.SuccessResponse(list, "Lấy danh sách nhân viên thành công.");
         }
 
-        public Task<ApiResponse<EmployeeResponse>> GetEmployeeById(int employeeId) {
-            throw new NotImplementedException();
+        public async Task<ApiResponse<EmployeeResponse>> GetEmployeeById(int employeeId) {
+            var result = await employeeRepo.GetEmployeeById(employeeId);
+            if ( result == null ) {
+                return ApiResponse<EmployeeResponse>.FailResponse("Nhân viên không tồn tại.");
+            }
+            EmployeeResponse employeeResponse = new() {
+                employeeId = result.EmployeeId,
+                username = result.UserName,
+                fullname = result.Fullname,
+                email = result.Email,
+                phone = result.Phone,
+                roleId = result.roleId,
+                roleName = result.roles!.RoleName,
+                address = new AddressResponse() {
+                    addressId = result.address!.AddressId,
+                    province = result.address.Province,
+                    district = result.address.District,
+                    hamlet = result.address.Hamlet,
+                    street = result.address.Street,
+                    houseNumber = result.address.HouseNumber
+                }
+            };
+            return ApiResponse<EmployeeResponse>.SuccessResponse(employeeResponse, "Lấy thông tin nhân viên thành công.");
         }
 
-        public Task<ApiResponse<bool>> UpdateEmployee(EmployeeDTO employeeDTO) {
-            throw new NotImplementedException();
+        public async Task<ApiResponse<bool>> UpdateEmployee(EmployeeDTO employeeDTO) {
+            var result = await employeeRepo.GetEmployeeById(employeeDTO.employeeId);
+            if ( result == null ) {
+                return ApiResponse<bool>.FailResponse("Nhân viên không tồn tại.");
+
+            }
+            var checkEmail = await employeeRepo.GetEmployeeByEmail(employeeDTO.email);
+            if ( checkEmail != null && checkEmail.EmployeeId != employeeDTO.employeeId ) {
+                return ApiResponse<bool>.FailResponse("Email đã tồn tại.");
+            }
+            var checkPhone = await employeeRepo.GetEmployeeByPhone(employeeDTO.phone);
+            if ( checkPhone != null && checkPhone.EmployeeId != employeeDTO.employeeId ) {
+                return ApiResponse<bool>.FailResponse("Số điện thoại đã tồn tại.");
+            }
+            if ( employeeDTO.address == null ) {
+                return ApiResponse<bool>.FailResponse("Địa chỉ không được để trống.");
+            }
+            try {
+                await transactionRepo.BeginTransactionAsync();
+                result.Email = employeeDTO.email;
+                result.Fullname = employeeDTO.fullname;
+                result.Phone = employeeDTO.phone;
+                result.UserName = employeeDTO.username;
+                if ( !string.IsNullOrEmpty(employeeDTO.password) ) {
+                    result.Password = BCrypt.Net.BCrypt.HashPassword(employeeDTO.password);
+                }
+                result.roleId = employeeDTO.roleId;
+                result.address!.Province = employeeDTO.address.province;
+                result.address.District = employeeDTO.address.district;
+                result.address.Hamlet = employeeDTO.address.hamlet;
+                result.address.Street = employeeDTO.address.street;
+                result.address.HouseNumber = employeeDTO.address.houseNumber;
+
+                employeeRepo.UpdateEmployee(result);
+
+                await transactionRepo.CompleteAsync();
+                await transactionRepo.CommitAsync();
+
+                return ApiResponse<bool>.SuccessResponse(true, "Cập nhật nhân viên thành công.");
+            }
+            catch ( Exception ex ) {
+                await transactionRepo.RollbackAsync();
+                return ApiResponse<bool>.FailResponse(ex.ToString());
+            }
         }
     }
 }

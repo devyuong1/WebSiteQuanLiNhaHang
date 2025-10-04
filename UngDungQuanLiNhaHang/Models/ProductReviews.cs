@@ -13,7 +13,7 @@ namespace UngDungQuanLiNhaHang.Models {
         public int customerId { get; set; }
         public Customers? customers { get; set; }
         public int invoiceId { get; set; }
-        public Invoices invoices { get; set; }
+        public Invoices? invoices { get; set; }
 
         public int productId { get; set; }
         public Products? products { get; set; }
