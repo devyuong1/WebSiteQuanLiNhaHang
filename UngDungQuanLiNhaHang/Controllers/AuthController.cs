@@ -30,5 +30,16 @@ namespace UngDungQuanLiNhaHang.Controllers {
             }
             return BadRequest(result);
         }
+        [HttpPost("refresh-token")]
+        public async Task<IActionResult> RefreshToken([FromBody] TokenRequestDTO tokenRequest) {
+            if (!ModelState.IsValid) {
+                return BadRequest("Dữ liệu không hợp lệ");
+            }
+            var result = await authServices.RefreshToken(tokenRequest);
+            if ( result.Success ) {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
     }
 }

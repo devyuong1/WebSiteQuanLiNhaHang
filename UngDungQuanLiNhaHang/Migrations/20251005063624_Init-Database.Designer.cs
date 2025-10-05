@@ -12,8 +12,8 @@ using UngDungQuanLiNhaHang.Data;
 namespace UngDungQuanLiNhaHang.Migrations
 {
     [DbContext(typeof(DataDbConText))]
-    [Migration("20250926155801_update-1")]
-    partial class update1
+    [Migration("20251005063624_Init-Database")]
+    partial class InitDatabase
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,21 @@ namespace UngDungQuanLiNhaHang.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("AddressCustomers", b =>
+                {
+                    b.Property<int>("addressesAddressId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("customersCustomerId")
+                        .HasColumnType("int");
+
+                    b.HasKey("addressesAddressId", "customersCustomerId");
+
+                    b.HasIndex("customersCustomerId");
+
+                    b.ToTable("AddressCustomers");
+                });
 
             modelBuilder.Entity("UngDungQuanLiNhaHang.Models.Address", b =>
                 {
@@ -42,7 +57,6 @@ namespace UngDungQuanLiNhaHang.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("HouseNumber")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDefault")
@@ -53,27 +67,9 @@ namespace UngDungQuanLiNhaHang.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Street")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("customerId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("customersCustomerId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("employeeId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("restaurantId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("supplierId")
-                        .HasColumnType("int");
-
                     b.HasKey("AddressId");
-
-                    b.HasIndex("customersCustomerId");
 
                     b.ToTable("addresses");
 
@@ -397,6 +393,9 @@ namespace UngDungQuanLiNhaHang.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("EmployeeId"));
 
+                    b.Property<int>("AddressId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -416,33 +415,23 @@ namespace UngDungQuanLiNhaHang.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("RestaurantId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RoleId")
+                        .HasColumnType("int");
+
                     b.Property<string>("UserName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("addressId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("restaurantId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("restaurantsRestaurantId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("roleId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("rolesRoleId")
-                        .HasColumnType("int");
-
                     b.HasKey("EmployeeId");
 
-                    b.HasIndex("addressId")
-                        .IsUnique();
+                    b.HasIndex("AddressId");
 
-                    b.HasIndex("restaurantsRestaurantId");
+                    b.HasIndex("RestaurantId");
 
-                    b.HasIndex("rolesRoleId");
+                    b.HasIndex("RoleId");
 
                     b.ToTable("employees");
 
@@ -450,54 +439,54 @@ namespace UngDungQuanLiNhaHang.Migrations
                         new
                         {
                             EmployeeId = 1,
+                            AddressId = 2,
                             Email = "tam@gmail.com",
                             Fullname = "Nguyễn Thanh Tâm",
                             IsActive = true,
                             Password = "thanhtam1",
                             Phone = "0909092324",
-                            UserName = "tam@gmail.com",
-                            addressId = 2,
-                            restaurantId = 1,
-                            roleId = 1
+                            RestaurantId = 1,
+                            RoleId = 1,
+                            UserName = "tam@gmail.com"
                         },
                         new
                         {
                             EmployeeId = 2,
+                            AddressId = 3,
                             Email = "thien@gmail.com",
                             Fullname = "Nguyễn Thanh Thiên",
                             IsActive = true,
                             Password = "thanhtam1",
                             Phone = "0909092325",
-                            UserName = "thien@gmail.com",
-                            addressId = 3,
-                            restaurantId = 1,
-                            roleId = 2
+                            RestaurantId = 1,
+                            RoleId = 2,
+                            UserName = "thien@gmail.com"
                         },
                         new
                         {
                             EmployeeId = 3,
+                            AddressId = 4,
                             Email = "qui@gmail.com",
                             Fullname = "Nguyễn Hoàng Quí",
                             IsActive = true,
                             Password = "thanhtam1",
                             Phone = "0909092326",
-                            UserName = "qui@gmail.com",
-                            addressId = 4,
-                            restaurantId = 1,
-                            roleId = 3
+                            RestaurantId = 1,
+                            RoleId = 3,
+                            UserName = "qui@gmail.com"
                         },
                         new
                         {
                             EmployeeId = 4,
+                            AddressId = 5,
                             Email = "phuc@gmail.com",
                             Fullname = "Nguyễn Hoàng Phúc",
                             IsActive = true,
                             Password = "thanhtam1",
                             Phone = "0909092327",
-                            UserName = "phuc@gmail.com",
-                            addressId = 5,
-                            restaurantId = 1,
-                            roleId = 3
+                            RestaurantId = 1,
+                            RoleId = 3,
+                            UserName = "phuc@gmail.com"
                         });
                 });
 
@@ -1201,7 +1190,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                         new
                         {
                             InvoiceId = 1,
-                            Create_At = new DateTime(2025, 9, 26, 15, 58, 1, 443, DateTimeKind.Utc).AddTicks(6719),
+                            Create_At = new DateTime(2025, 10, 5, 6, 36, 23, 545, DateTimeKind.Utc).AddTicks(1151),
                             InvoiceType = false,
                             IsPayment = true,
                             TotalAmount = 400000.0,
@@ -1214,7 +1203,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                         new
                         {
                             InvoiceId = 2,
-                            Create_At = new DateTime(2025, 9, 26, 15, 58, 1, 443, DateTimeKind.Utc).AddTicks(6722),
+                            Create_At = new DateTime(2025, 10, 5, 6, 36, 23, 545, DateTimeKind.Utc).AddTicks(1156),
                             InvoiceType = false,
                             IsPayment = false,
                             TotalAmount = 270000.0,
@@ -1362,7 +1351,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                         {
                             ProductId = 1,
                             AverageRating = 5.0,
-                            Create_At = new DateTime(2025, 9, 26, 15, 58, 1, 443, DateTimeKind.Utc).AddTicks(6468),
+                            Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "",
                             IsActive = true,
                             Price = 50000.0,
@@ -1371,14 +1360,14 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Quantity = 40,
                             SoldCount = 2000,
                             TotalReviews = 1,
-                            Update_At = new DateTime(2025, 9, 26, 15, 58, 1, 443, DateTimeKind.Utc).AddTicks(6470),
+                            Update_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             categoryId = 5
                         },
                         new
                         {
                             ProductId = 2,
                             AverageRating = 5.0,
-                            Create_At = new DateTime(2025, 9, 26, 15, 58, 1, 443, DateTimeKind.Utc).AddTicks(6477),
+                            Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "",
                             IsActive = true,
                             Price = 55000.0,
@@ -1387,14 +1376,14 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Quantity = 40,
                             SoldCount = 100,
                             TotalReviews = 1,
-                            Update_At = new DateTime(2025, 9, 26, 15, 58, 1, 443, DateTimeKind.Utc).AddTicks(6477),
+                            Update_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             categoryId = 5
                         },
                         new
                         {
                             ProductId = 3,
                             AverageRating = 5.0,
-                            Create_At = new DateTime(2025, 9, 26, 15, 58, 1, 443, DateTimeKind.Utc).AddTicks(6479),
+                            Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "",
                             IsActive = true,
                             Price = 55000.0,
@@ -1403,14 +1392,14 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Quantity = 30,
                             SoldCount = 100,
                             TotalReviews = 1,
-                            Update_At = new DateTime(2025, 9, 26, 15, 58, 1, 443, DateTimeKind.Utc).AddTicks(6480),
+                            Update_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             categoryId = 5
                         },
                         new
                         {
                             ProductId = 4,
                             AverageRating = 5.0,
-                            Create_At = new DateTime(2025, 9, 26, 15, 58, 1, 443, DateTimeKind.Utc).AddTicks(6481),
+                            Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "",
                             IsActive = true,
                             Price = 80000.0,
@@ -1419,14 +1408,14 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Quantity = 30,
                             SoldCount = 100,
                             TotalReviews = 1,
-                            Update_At = new DateTime(2025, 9, 26, 15, 58, 1, 443, DateTimeKind.Utc).AddTicks(6482),
+                            Update_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             categoryId = 5
                         },
                         new
                         {
                             ProductId = 5,
                             AverageRating = 5.0,
-                            Create_At = new DateTime(2025, 9, 26, 15, 58, 1, 443, DateTimeKind.Utc).AddTicks(6483),
+                            Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "",
                             IsActive = true,
                             Price = 250000.0,
@@ -1435,14 +1424,14 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Quantity = 30,
                             SoldCount = 100,
                             TotalReviews = 1,
-                            Update_At = new DateTime(2025, 9, 26, 15, 58, 1, 443, DateTimeKind.Utc).AddTicks(6483),
+                            Update_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             categoryId = 1
                         },
                         new
                         {
                             ProductId = 6,
                             AverageRating = 5.0,
-                            Create_At = new DateTime(2025, 9, 26, 15, 58, 1, 443, DateTimeKind.Utc).AddTicks(6486),
+                            Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "",
                             IsActive = true,
                             Price = 250000.0,
@@ -1451,14 +1440,14 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Quantity = 30,
                             SoldCount = 100,
                             TotalReviews = 1,
-                            Update_At = new DateTime(2025, 9, 26, 15, 58, 1, 443, DateTimeKind.Utc).AddTicks(6486),
+                            Update_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             categoryId = 1
                         },
                         new
                         {
                             ProductId = 7,
                             AverageRating = 5.0,
-                            Create_At = new DateTime(2025, 9, 26, 15, 58, 1, 443, DateTimeKind.Utc).AddTicks(6488),
+                            Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "",
                             IsActive = true,
                             Price = 250000.0,
@@ -1467,14 +1456,14 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Quantity = 30,
                             SoldCount = 100,
                             TotalReviews = 1,
-                            Update_At = new DateTime(2025, 9, 26, 15, 58, 1, 443, DateTimeKind.Utc).AddTicks(6488),
+                            Update_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             categoryId = 1
                         },
                         new
                         {
                             ProductId = 8,
                             AverageRating = 5.0,
-                            Create_At = new DateTime(2025, 9, 26, 15, 58, 1, 443, DateTimeKind.Utc).AddTicks(6489),
+                            Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "",
                             IsActive = true,
                             Price = 250000.0,
@@ -1483,14 +1472,14 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Quantity = 30,
                             SoldCount = 100,
                             TotalReviews = 1,
-                            Update_At = new DateTime(2025, 9, 26, 15, 58, 1, 443, DateTimeKind.Utc).AddTicks(6490),
+                            Update_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             categoryId = 1
                         },
                         new
                         {
                             ProductId = 9,
                             AverageRating = 5.0,
-                            Create_At = new DateTime(2025, 9, 26, 15, 58, 1, 443, DateTimeKind.Utc).AddTicks(6491),
+                            Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "",
                             IsActive = true,
                             Price = 300000.0,
@@ -1499,14 +1488,14 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Quantity = 30,
                             SoldCount = 100,
                             TotalReviews = 1,
-                            Update_At = new DateTime(2025, 9, 26, 15, 58, 1, 443, DateTimeKind.Utc).AddTicks(6491),
+                            Update_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             categoryId = 3
                         },
                         new
                         {
                             ProductId = 10,
                             AverageRating = 5.0,
-                            Create_At = new DateTime(2025, 9, 26, 15, 58, 1, 443, DateTimeKind.Utc).AddTicks(6493),
+                            Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "",
                             IsActive = true,
                             Price = 200000.0,
@@ -1515,14 +1504,14 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Quantity = 30,
                             SoldCount = 100,
                             TotalReviews = 1,
-                            Update_At = new DateTime(2025, 9, 26, 15, 58, 1, 443, DateTimeKind.Utc).AddTicks(6493),
+                            Update_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             categoryId = 3
                         },
                         new
                         {
                             ProductId = 11,
                             AverageRating = 5.0,
-                            Create_At = new DateTime(2025, 9, 26, 15, 58, 1, 443, DateTimeKind.Utc).AddTicks(6494),
+                            Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "",
                             IsActive = true,
                             Price = 200000.0,
@@ -1531,14 +1520,14 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Quantity = 30,
                             SoldCount = 100,
                             TotalReviews = 1,
-                            Update_At = new DateTime(2025, 9, 26, 15, 58, 1, 443, DateTimeKind.Utc).AddTicks(6495),
+                            Update_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             categoryId = 2
                         },
                         new
                         {
                             ProductId = 12,
                             AverageRating = 5.0,
-                            Create_At = new DateTime(2025, 9, 26, 15, 58, 1, 443, DateTimeKind.Utc).AddTicks(6496),
+                            Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "",
                             IsActive = true,
                             Price = 100000.0,
@@ -1547,14 +1536,14 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Quantity = 30,
                             SoldCount = 100,
                             TotalReviews = 1,
-                            Update_At = new DateTime(2025, 9, 26, 15, 58, 1, 443, DateTimeKind.Utc).AddTicks(6496),
+                            Update_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             categoryId = 4
                         },
                         new
                         {
                             ProductId = 13,
                             AverageRating = 5.0,
-                            Create_At = new DateTime(2025, 9, 26, 15, 58, 1, 443, DateTimeKind.Utc).AddTicks(6498),
+                            Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "",
                             IsActive = true,
                             Price = 80000.0,
@@ -1563,14 +1552,14 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Quantity = 30,
                             SoldCount = 200,
                             TotalReviews = 1,
-                            Update_At = new DateTime(2025, 9, 26, 15, 58, 1, 443, DateTimeKind.Utc).AddTicks(6498),
+                            Update_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             categoryId = 4
                         },
                         new
                         {
                             ProductId = 14,
                             AverageRating = 5.0,
-                            Create_At = new DateTime(2025, 9, 26, 15, 58, 1, 443, DateTimeKind.Utc).AddTicks(6499),
+                            Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "",
                             IsActive = true,
                             Price = 80000.0,
@@ -1579,14 +1568,14 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Quantity = 30,
                             SoldCount = 200,
                             TotalReviews = 1,
-                            Update_At = new DateTime(2025, 9, 26, 15, 58, 1, 443, DateTimeKind.Utc).AddTicks(6499),
+                            Update_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             categoryId = 4
                         },
                         new
                         {
                             ProductId = 15,
                             AverageRating = 5.0,
-                            Create_At = new DateTime(2025, 9, 26, 15, 58, 1, 443, DateTimeKind.Utc).AddTicks(6501),
+                            Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "",
                             IsActive = true,
                             Price = 80000.0,
@@ -1595,14 +1584,14 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Quantity = 30,
                             SoldCount = 200,
                             TotalReviews = 1,
-                            Update_At = new DateTime(2025, 9, 26, 15, 58, 1, 443, DateTimeKind.Utc).AddTicks(6501),
+                            Update_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             categoryId = 1
                         },
                         new
                         {
                             ProductId = 16,
                             AverageRating = 5.0,
-                            Create_At = new DateTime(2025, 9, 26, 15, 58, 1, 443, DateTimeKind.Utc).AddTicks(6502),
+                            Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "",
                             IsActive = true,
                             Price = 80000.0,
@@ -1611,14 +1600,14 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Quantity = 30,
                             SoldCount = 200,
                             TotalReviews = 1,
-                            Update_At = new DateTime(2025, 9, 26, 15, 58, 1, 443, DateTimeKind.Utc).AddTicks(6503),
+                            Update_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             categoryId = 1
                         },
                         new
                         {
                             ProductId = 17,
                             AverageRating = 5.0,
-                            Create_At = new DateTime(2025, 9, 26, 15, 58, 1, 443, DateTimeKind.Utc).AddTicks(6504),
+                            Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "",
                             IsActive = true,
                             Price = 150000.0,
@@ -1627,14 +1616,14 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Quantity = 50,
                             SoldCount = 200,
                             TotalReviews = 1,
-                            Update_At = new DateTime(2025, 9, 26, 15, 58, 1, 443, DateTimeKind.Utc).AddTicks(6504),
+                            Update_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             categoryId = 1
                         },
                         new
                         {
                             ProductId = 18,
                             AverageRating = 5.0,
-                            Create_At = new DateTime(2025, 9, 26, 15, 58, 1, 443, DateTimeKind.Utc).AddTicks(6505),
+                            Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "",
                             IsActive = true,
                             Price = 150000.0,
@@ -1643,14 +1632,14 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Quantity = 50,
                             SoldCount = 200,
                             TotalReviews = 1,
-                            Update_At = new DateTime(2025, 9, 26, 15, 58, 1, 443, DateTimeKind.Utc).AddTicks(6506),
+                            Update_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             categoryId = 1
                         },
                         new
                         {
                             ProductId = 19,
                             AverageRating = 5.0,
-                            Create_At = new DateTime(2025, 9, 26, 15, 58, 1, 443, DateTimeKind.Utc).AddTicks(6507),
+                            Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "",
                             IsActive = true,
                             Price = 150000.0,
@@ -1659,14 +1648,14 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Quantity = 50,
                             SoldCount = 200,
                             TotalReviews = 1,
-                            Update_At = new DateTime(2025, 9, 26, 15, 58, 1, 443, DateTimeKind.Utc).AddTicks(6507),
+                            Update_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             categoryId = 1
                         },
                         new
                         {
                             ProductId = 20,
                             AverageRating = 5.0,
-                            Create_At = new DateTime(2025, 9, 26, 15, 58, 1, 443, DateTimeKind.Utc).AddTicks(6509),
+                            Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "",
                             IsActive = true,
                             Price = 120000.0,
@@ -1675,14 +1664,14 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Quantity = 50,
                             SoldCount = 200,
                             TotalReviews = 1,
-                            Update_At = new DateTime(2025, 9, 26, 15, 58, 1, 443, DateTimeKind.Utc).AddTicks(6509),
+                            Update_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             categoryId = 1
                         },
                         new
                         {
                             ProductId = 21,
                             AverageRating = 5.0,
-                            Create_At = new DateTime(2025, 9, 26, 15, 58, 1, 443, DateTimeKind.Utc).AddTicks(6510),
+                            Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "",
                             IsActive = true,
                             Price = 120000.0,
@@ -1691,14 +1680,14 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Quantity = 50,
                             SoldCount = 200,
                             TotalReviews = 1,
-                            Update_At = new DateTime(2025, 9, 26, 15, 58, 1, 443, DateTimeKind.Utc).AddTicks(6511),
+                            Update_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             categoryId = 1
                         },
                         new
                         {
                             ProductId = 22,
                             AverageRating = 5.0,
-                            Create_At = new DateTime(2025, 9, 26, 15, 58, 1, 443, DateTimeKind.Utc).AddTicks(6513),
+                            Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "1 phần gồm 300g mực tươi hấp với hành và các gia vị.",
                             IsActive = true,
                             Price = 120000.0,
@@ -1707,14 +1696,14 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Quantity = 50,
                             SoldCount = 200,
                             TotalReviews = 1,
-                            Update_At = new DateTime(2025, 9, 26, 15, 58, 1, 443, DateTimeKind.Utc).AddTicks(6513),
+                            Update_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             categoryId = 2
                         },
                         new
                         {
                             ProductId = 23,
                             AverageRating = 5.0,
-                            Create_At = new DateTime(2025, 9, 26, 15, 58, 1, 443, DateTimeKind.Utc).AddTicks(6514),
+                            Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "1 phần gồm 1 con cá mú hấp vớ  các gia vị.",
                             IsActive = true,
                             Price = 200000.0,
@@ -1723,14 +1712,14 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Quantity = 50,
                             SoldCount = 200,
                             TotalReviews = 1,
-                            Update_At = new DateTime(2025, 9, 26, 15, 58, 1, 443, DateTimeKind.Utc).AddTicks(6515),
+                            Update_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             categoryId = 2
                         },
                         new
                         {
                             ProductId = 24,
                             AverageRating = 5.0,
-                            Create_At = new DateTime(2025, 9, 26, 15, 58, 1, 443, DateTimeKind.Utc).AddTicks(6544),
+                            Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "1 phần gồm 500g Nghêu",
                             IsActive = true,
                             Price = 200000.0,
@@ -1739,14 +1728,14 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Quantity = 50,
                             SoldCount = 200,
                             TotalReviews = 1,
-                            Update_At = new DateTime(2025, 9, 26, 15, 58, 1, 443, DateTimeKind.Utc).AddTicks(6544),
+                            Update_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             categoryId = 2
                         },
                         new
                         {
                             ProductId = 25,
                             AverageRating = 5.0,
-                            Create_At = new DateTime(2025, 9, 26, 15, 58, 1, 443, DateTimeKind.Utc).AddTicks(6545),
+                            Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "",
                             IsActive = true,
                             Price = 20000.0,
@@ -1755,14 +1744,14 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Quantity = 50,
                             SoldCount = 200,
                             TotalReviews = 1,
-                            Update_At = new DateTime(2025, 9, 26, 15, 58, 1, 443, DateTimeKind.Utc).AddTicks(6546),
+                            Update_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             categoryId = 5
                         },
                         new
                         {
                             ProductId = 26,
                             AverageRating = 5.0,
-                            Create_At = new DateTime(2025, 9, 26, 15, 58, 1, 443, DateTimeKind.Utc).AddTicks(6547),
+                            Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "",
                             IsActive = true,
                             Price = 20000.0,
@@ -1771,14 +1760,14 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Quantity = 50,
                             SoldCount = 200,
                             TotalReviews = 1,
-                            Update_At = new DateTime(2025, 9, 26, 15, 58, 1, 443, DateTimeKind.Utc).AddTicks(6547),
+                            Update_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             categoryId = 5
                         },
                         new
                         {
                             ProductId = 27,
                             AverageRating = 5.0,
-                            Create_At = new DateTime(2025, 9, 26, 15, 58, 1, 443, DateTimeKind.Utc).AddTicks(6549),
+                            Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "",
                             IsActive = true,
                             Price = 25000.0,
@@ -1787,14 +1776,14 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Quantity = 50,
                             SoldCount = 200,
                             TotalReviews = 1,
-                            Update_At = new DateTime(2025, 9, 26, 15, 58, 1, 443, DateTimeKind.Utc).AddTicks(6549),
+                            Update_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             categoryId = 5
                         },
                         new
                         {
                             ProductId = 28,
                             AverageRating = 5.0,
-                            Create_At = new DateTime(2025, 9, 26, 15, 58, 1, 443, DateTimeKind.Utc).AddTicks(6550),
+                            Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "",
                             IsActive = true,
                             Price = 30000.0,
@@ -1803,7 +1792,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Quantity = 50,
                             SoldCount = 200,
                             TotalReviews = 1,
-                            Update_At = new DateTime(2025, 9, 26, 15, 58, 1, 443, DateTimeKind.Utc).AddTicks(6551),
+                            Update_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             categoryId = 5
                         });
                 });
@@ -2374,6 +2363,9 @@ namespace UngDungQuanLiNhaHang.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RestaurantId"));
 
+                    b.Property<int>("AddressId")
+                        .HasColumnType("int");
+
                     b.Property<TimeSpan>("CloseTime")
                         .HasColumnType("time");
 
@@ -2392,12 +2384,9 @@ namespace UngDungQuanLiNhaHang.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("addressId")
-                        .HasColumnType("int");
-
                     b.HasKey("RestaurantId");
 
-                    b.HasIndex("addressId")
+                    b.HasIndex("AddressId")
                         .IsUnique();
 
                     b.ToTable("restaurants");
@@ -2406,12 +2395,12 @@ namespace UngDungQuanLiNhaHang.Migrations
                         new
                         {
                             RestaurantId = 1,
+                            AddressId = 1,
                             CloseTime = new TimeSpan(0, 23, 30, 0, 0),
                             Email = "ThanhThien@gmail.com",
                             OpenTime = new TimeSpan(0, 10, 0, 0, 0),
                             Phone = "0989000030",
-                            RestaurantName = "Nhà Hàng Thanh Thiên",
-                            addressId = 1
+                            RestaurantName = "Nhà Hàng Thanh Thiên"
                         });
                 });
 
@@ -2494,8 +2483,7 @@ namespace UngDungQuanLiNhaHang.Migrations
 
                     b.HasKey("SupplierID");
 
-                    b.HasIndex("addressID")
-                        .IsUnique();
+                    b.HasIndex("addressID");
 
                     b.ToTable("suppliers");
 
@@ -2537,13 +2525,19 @@ namespace UngDungQuanLiNhaHang.Migrations
                     b.ToTable("tables");
                 });
 
-            modelBuilder.Entity("UngDungQuanLiNhaHang.Models.Address", b =>
+            modelBuilder.Entity("AddressCustomers", b =>
                 {
-                    b.HasOne("UngDungQuanLiNhaHang.Models.Customers", "customers")
-                        .WithMany("addresses")
-                        .HasForeignKey("customersCustomerId");
+                    b.HasOne("UngDungQuanLiNhaHang.Models.Address", null)
+                        .WithMany()
+                        .HasForeignKey("addressesAddressId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Navigation("customers");
+                    b.HasOne("UngDungQuanLiNhaHang.Models.Customers", null)
+                        .WithMany()
+                        .HasForeignKey("customersCustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("UngDungQuanLiNhaHang.Models.BookTable", b =>
@@ -2595,25 +2589,28 @@ namespace UngDungQuanLiNhaHang.Migrations
 
             modelBuilder.Entity("UngDungQuanLiNhaHang.Models.Employees", b =>
                 {
-                    b.HasOne("UngDungQuanLiNhaHang.Models.Address", "address")
-                        .WithOne("employees")
-                        .HasForeignKey("UngDungQuanLiNhaHang.Models.Employees", "addressId")
+                    b.HasOne("UngDungQuanLiNhaHang.Models.Address", "Address")
+                        .WithMany("employees")
+                        .HasForeignKey("AddressId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("UngDungQuanLiNhaHang.Models.Restaurants", "restaurants")
+                    b.HasOne("UngDungQuanLiNhaHang.Models.Restaurants", "Restaurant")
                         .WithMany("Employees")
-                        .HasForeignKey("restaurantsRestaurantId");
+                        .HasForeignKey("RestaurantId")
+                        .OnDelete(DeleteBehavior.NoAction);
 
-                    b.HasOne("UngDungQuanLiNhaHang.Models.Roles", "roles")
+                    b.HasOne("UngDungQuanLiNhaHang.Models.Roles", "Role")
                         .WithMany("Employees")
-                        .HasForeignKey("rolesRoleId");
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
-                    b.Navigation("address");
+                    b.Navigation("Address");
 
-                    b.Navigation("restaurants");
+                    b.Navigation("Restaurant");
 
-                    b.Navigation("roles");
+                    b.Navigation("Role");
                 });
 
             modelBuilder.Entity("UngDungQuanLiNhaHang.Models.Images", b =>
@@ -2731,7 +2728,7 @@ namespace UngDungQuanLiNhaHang.Migrations
             modelBuilder.Entity("UngDungQuanLiNhaHang.Models.PurchaseInvoiceItem", b =>
                 {
                     b.HasOne("UngDungQuanLiNhaHang.Models.Ingredient", "ingredient")
-                        .WithMany("purchaseInvoiceItems")
+                        .WithMany("PurchaseInvoiceItems")
                         .HasForeignKey("ingredientId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -2750,7 +2747,7 @@ namespace UngDungQuanLiNhaHang.Migrations
             modelBuilder.Entity("UngDungQuanLiNhaHang.Models.Recipes", b =>
                 {
                     b.HasOne("UngDungQuanLiNhaHang.Models.Ingredient", "ingredient")
-                        .WithMany("recipes")
+                        .WithMany("Recipes")
                         .HasForeignKey("ingredientId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -2781,20 +2778,20 @@ namespace UngDungQuanLiNhaHang.Migrations
 
             modelBuilder.Entity("UngDungQuanLiNhaHang.Models.Restaurants", b =>
                 {
-                    b.HasOne("UngDungQuanLiNhaHang.Models.Address", "address")
-                        .WithOne("restaurants")
-                        .HasForeignKey("UngDungQuanLiNhaHang.Models.Restaurants", "addressId")
+                    b.HasOne("UngDungQuanLiNhaHang.Models.Address", "Address")
+                        .WithOne("Restaurant")
+                        .HasForeignKey("UngDungQuanLiNhaHang.Models.Restaurants", "AddressId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("address");
+                    b.Navigation("Address");
                 });
 
             modelBuilder.Entity("UngDungQuanLiNhaHang.Models.Suppliers", b =>
                 {
                     b.HasOne("UngDungQuanLiNhaHang.Models.Address", "address")
-                        .WithOne("suppliers")
-                        .HasForeignKey("UngDungQuanLiNhaHang.Models.Suppliers", "addressID")
+                        .WithMany("suppliers")
+                        .HasForeignKey("addressID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -2803,11 +2800,11 @@ namespace UngDungQuanLiNhaHang.Migrations
 
             modelBuilder.Entity("UngDungQuanLiNhaHang.Models.Address", b =>
                 {
+                    b.Navigation("Restaurant");
+
                     b.Navigation("employees");
 
                     b.Navigation("invoices");
-
-                    b.Navigation("restaurants");
 
                     b.Navigation("suppliers");
                 });
@@ -2826,8 +2823,6 @@ namespace UngDungQuanLiNhaHang.Migrations
 
             modelBuilder.Entity("UngDungQuanLiNhaHang.Models.Customers", b =>
                 {
-                    b.Navigation("addresses");
-
                     b.Navigation("invoices");
 
                     b.Navigation("productReviews");
@@ -2844,9 +2839,9 @@ namespace UngDungQuanLiNhaHang.Migrations
 
             modelBuilder.Entity("UngDungQuanLiNhaHang.Models.Ingredient", b =>
                 {
-                    b.Navigation("purchaseInvoiceItems");
+                    b.Navigation("PurchaseInvoiceItems");
 
-                    b.Navigation("recipes");
+                    b.Navigation("Recipes");
                 });
 
             modelBuilder.Entity("UngDungQuanLiNhaHang.Models.InvoiceStatus", b =>

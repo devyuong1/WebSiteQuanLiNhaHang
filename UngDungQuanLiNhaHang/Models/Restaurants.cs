@@ -11,9 +11,9 @@ namespace UngDungQuanLiNhaHang.Models {
         public required string Email { get; set; }
         public TimeSpan OpenTime { get; set; }
         public TimeSpan CloseTime { get; set; }
-
-        public int addressId { get; set; }
-        public Address? address { get; set; }
+        [ForeignKey("AddressId")]
+        public int AddressId { get; set; }
+        public Address? Address { get; set; }
         public ICollection<Employees> Employees { get; set; } = new List<Employees>();
 
     }

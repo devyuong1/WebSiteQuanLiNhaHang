@@ -41,6 +41,21 @@ namespace UngDungQuanLiNhaHang.Data {
                 .HasOne(i => i.productReviews)
                 .WithOne(pr => pr.invoices)
                 .HasForeignKey<ProductReviews>(pr => pr.invoiceId);
+
+
+
+            
+            modelBuilder.Entity<Employees>()
+                .HasOne(e => e.Restaurant)
+                .WithMany(r => r.Employees)
+                .HasForeignKey(e => e.RestaurantId)
+                .OnDelete(DeleteBehavior.NoAction);
+            // hoặc DeleteBehavior.NoAction
+            modelBuilder.Entity<Employees>()
+                .HasOne(e => e.Role)
+                .WithMany(r => r.Employees)
+                .HasForeignKey(e => e.RoleId)
+                .OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<Roles>().HasData(
                    new Roles { RoleId = 1, RoleName = "Admin", Description = "Chủ nhà hàng" },
                    new Roles { RoleId = 2, RoleName = "Manager", Description = "Quản lí" },
@@ -120,7 +135,7 @@ namespace UngDungQuanLiNhaHang.Data {
                     RestaurantName = "Nhà Hàng Thanh Thiên",
                     Email = "ThanhThien@gmail.com",
                     Phone = "0989000030",
-                    addressId = 1,
+                    AddressId = 1,
                     CloseTime = new TimeSpan(23, 30, 0),
                     OpenTime = new TimeSpan(10, 0, 0)
                 }
@@ -133,9 +148,9 @@ namespace UngDungQuanLiNhaHang.Data {
                     UserName = "tam@gmail.com",
                     Password = "thanhtam1",
                     Phone = "0909092324",
-                    restaurantId = 1,
-                    roleId = 1,
-                    addressId = 2
+                    RestaurantId = 1,
+                    RoleId = 1,
+                    AddressId = 2
                 },
                 new Employees {
                     EmployeeId = 2,
@@ -144,9 +159,9 @@ namespace UngDungQuanLiNhaHang.Data {
                     UserName = "thien@gmail.com",
                     Password = "thanhtam1",
                     Phone = "0909092325",
-                    restaurantId = 1,
-                    roleId = 2,
-                    addressId = 3
+                    RestaurantId = 1,
+                    RoleId = 2,
+                    AddressId = 3
                 },
                 new Employees {
                     EmployeeId = 3,
@@ -155,9 +170,9 @@ namespace UngDungQuanLiNhaHang.Data {
                     UserName = "qui@gmail.com",
                     Password = "thanhtam1",
                     Phone = "0909092326",
-                    restaurantId = 1,
-                    roleId = 3,
-                    addressId = 4
+                    RestaurantId = 1,
+                    RoleId = 3,
+                    AddressId = 4
                 },
                 new Employees {
                     EmployeeId = 4,
@@ -166,9 +181,9 @@ namespace UngDungQuanLiNhaHang.Data {
                     UserName = "phuc@gmail.com",
                     Password = "thanhtam1",
                     Phone = "0909092327",
-                    restaurantId = 1,
-                    roleId = 3,
-                    addressId = 5
+                    RestaurantId = 1,
+                    RoleId = 3,
+                    AddressId = 5
                 }
                 );
 
@@ -459,17 +474,21 @@ namespace UngDungQuanLiNhaHang.Data {
                         PriceSale = 45000.0,
                         Quantity = 40,
                         SoldCount = 2000,
-                        categoryId = 5
+                        categoryId = 5,
+                        Create_At = new DateTime(2025, 7, 12),
+                        Update_At = new DateTime(2025, 7, 12)
                     },
                     new Products {
-                        ProductId =2,
+                        ProductId = 2,
                         ProductName = "Bún Bò",
                         Description = "",
                         Price = 55000.0,
                         PriceSale = 50000.0,
                         Quantity = 40,
                         SoldCount = 100,
-                        categoryId = 5
+                        categoryId = 5,
+                        Create_At = new DateTime(2025, 7, 12),
+                        Update_At = new DateTime(2025, 7, 12)
                     },
                     new Products {
                         ProductId = 3,
@@ -479,7 +498,9 @@ namespace UngDungQuanLiNhaHang.Data {
                         PriceSale = 50000.0,
                         Quantity = 30,
                         SoldCount = 100,
-                        categoryId = 5
+                        categoryId = 5,
+                        Create_At = new DateTime(2025, 7, 12),
+                        Update_At = new DateTime(2025, 7, 12)
                     },
                     new Products {
                         ProductId = 4,
@@ -489,7 +510,9 @@ namespace UngDungQuanLiNhaHang.Data {
                         PriceSale = 75000.0,
                         Quantity = 30,
                         SoldCount = 100,
-                        categoryId = 5
+                        categoryId = 5,
+                        Create_At = new DateTime(2025, 7, 12),
+                        Update_At = new DateTime(2025, 7, 12)
                     },
                     new Products {
                         ProductId = 5,
@@ -499,7 +522,9 @@ namespace UngDungQuanLiNhaHang.Data {
                         PriceSale = 250000.0,
                         Quantity = 30,
                         SoldCount = 100,
-                        categoryId = 1
+                        categoryId = 1,
+                        Create_At = new DateTime(2025, 7, 12),
+                        Update_At = new DateTime(2025, 7, 12)
                     },
                     new Products {
                         ProductId = 6,
@@ -509,7 +534,9 @@ namespace UngDungQuanLiNhaHang.Data {
                         PriceSale = 250000.0,
                         Quantity = 30,
                         SoldCount = 100,
-                        categoryId =1
+                        categoryId = 1,
+                        Create_At = new DateTime(2025, 7, 12),
+                        Update_At = new DateTime(2025, 7, 12)
                     },
                     new Products {
                         ProductId = 7,
@@ -519,7 +546,9 @@ namespace UngDungQuanLiNhaHang.Data {
                         PriceSale = 250000.0,
                         Quantity = 30,
                         SoldCount = 100,
-                        categoryId = 1
+                        categoryId = 1,
+                        Create_At = new DateTime(2025, 7, 12),
+                        Update_At = new DateTime(2025, 7, 12)
                     },
                     new Products {
                         ProductId = 8,
@@ -529,7 +558,9 @@ namespace UngDungQuanLiNhaHang.Data {
                         PriceSale = 250000.0,
                         Quantity = 30,
                         SoldCount = 100,
-                        categoryId = 1
+                        categoryId = 1,
+                        Create_At = new DateTime(2025, 7, 12),
+                        Update_At = new DateTime(2025, 7, 12)
                     },
                     new Products {
                         ProductId = 9,
@@ -539,7 +570,9 @@ namespace UngDungQuanLiNhaHang.Data {
                         PriceSale = 250000.0,
                         Quantity = 30,
                         SoldCount = 100,
-                        categoryId = 3
+                        categoryId = 3,
+                        Create_At = new DateTime(2025, 7, 12),
+                        Update_At = new DateTime(2025, 7, 12)
                     },
                     new Products {
                         ProductId = 10,
@@ -549,7 +582,9 @@ namespace UngDungQuanLiNhaHang.Data {
                         PriceSale = 200000.0,
                         Quantity = 30,
                         SoldCount = 100,
-                        categoryId = 3
+                        categoryId = 3,
+                        Create_At = new DateTime(2025, 7, 12),
+                        Update_At = new DateTime(2025, 7, 12)
                     },
                     new Products {
                         ProductId = 11,
@@ -559,7 +594,9 @@ namespace UngDungQuanLiNhaHang.Data {
                         PriceSale = 200000.0,
                         Quantity = 30,
                         SoldCount = 100,
-                        categoryId = 2
+                        categoryId = 2,
+                        Create_At = new DateTime(2025, 7, 12),
+                        Update_At = new DateTime(2025, 7, 12)
                     },
                     new Products {
                         ProductId = 12,
@@ -569,7 +606,9 @@ namespace UngDungQuanLiNhaHang.Data {
                         PriceSale = 90000.0,
                         Quantity = 30,
                         SoldCount = 100,
-                        categoryId = 4
+                        categoryId = 4,
+                        Create_At = new DateTime(2025, 7, 12),
+                        Update_At = new DateTime(2025, 7, 12)
                     },
                     new Products {
                         ProductId = 13,
@@ -579,7 +618,9 @@ namespace UngDungQuanLiNhaHang.Data {
                         PriceSale = 70000.0,
                         Quantity = 30,
                         SoldCount = 200,
-                        categoryId = 4
+                        categoryId = 4,
+                        Create_At = new DateTime(2025, 7, 12),
+                        Update_At = new DateTime(2025, 7, 12)
                     },
                     new Products {
                         ProductId = 14,
@@ -589,7 +630,9 @@ namespace UngDungQuanLiNhaHang.Data {
                         PriceSale = 70000.0,
                         Quantity = 30,
                         SoldCount = 200,
-                        categoryId = 4
+                        categoryId = 4,
+                        Create_At = new DateTime(2025, 7, 12),
+                        Update_At = new DateTime(2025, 7, 12)
                     },
                     new Products {
                         ProductId = 15,
@@ -599,7 +642,9 @@ namespace UngDungQuanLiNhaHang.Data {
                         PriceSale = 70000.0,
                         Quantity = 30,
                         SoldCount = 200,
-                        categoryId = 1
+                        categoryId = 1,
+                        Create_At = new DateTime(2025, 7, 12),
+                        Update_At = new DateTime(2025, 7, 12)
                     },
                     new Products {
                         ProductId = 16,
@@ -609,7 +654,9 @@ namespace UngDungQuanLiNhaHang.Data {
                         PriceSale = 70000.0,
                         Quantity = 30,
                         SoldCount = 200,
-                        categoryId = 1
+                        categoryId = 1,
+                        Create_At = new DateTime(2025, 7, 12),
+                        Update_At = new DateTime(2025, 7, 12)
                     },
                     new Products {
                         ProductId = 17,
@@ -619,7 +666,9 @@ namespace UngDungQuanLiNhaHang.Data {
                         PriceSale = 140000.0,
                         Quantity = 50,
                         SoldCount = 200,
-                        categoryId = 1
+                        categoryId = 1,
+                        Create_At = new DateTime(2025, 7, 12),
+                        Update_At = new DateTime(2025, 7, 12)
                     },
                     new Products {
                         ProductId = 18,
@@ -629,7 +678,9 @@ namespace UngDungQuanLiNhaHang.Data {
                         PriceSale = 140000.0,
                         Quantity = 50,
                         SoldCount = 200,
-                        categoryId = 1
+                        categoryId = 1,
+                        Create_At = new DateTime(2025, 7, 12),
+                        Update_At = new DateTime(2025, 7, 12)
                     },
                     new Products {
                         ProductId = 19,
@@ -639,7 +690,9 @@ namespace UngDungQuanLiNhaHang.Data {
                         PriceSale = 140000.0,
                         Quantity = 50,
                         SoldCount = 200,
-                        categoryId = 1
+                        categoryId = 1,
+                        Create_At = new DateTime(2025, 7, 12),
+                        Update_At = new DateTime(2025, 7, 12)
                     },
                     new Products {
                         ProductId = 20,
@@ -649,7 +702,9 @@ namespace UngDungQuanLiNhaHang.Data {
                         PriceSale = 100000.0,
                         Quantity = 50,
                         SoldCount = 200,
-                        categoryId = 1
+                        categoryId = 1,
+                        Create_At = new DateTime(2025, 7, 12),
+                        Update_At = new DateTime(2025, 7, 12)
                     },
                     new Products {
                         ProductId = 21,
@@ -659,7 +714,9 @@ namespace UngDungQuanLiNhaHang.Data {
                         PriceSale = 100000.0,
                         Quantity = 50,
                         SoldCount = 200,
-                        categoryId = 1
+                        categoryId = 1,
+                        Create_At = new DateTime(2025, 7, 12),
+                        Update_At = new DateTime(2025, 7, 12)
                     },
                     new Products {
                         ProductId = 22,
@@ -669,7 +726,9 @@ namespace UngDungQuanLiNhaHang.Data {
                         PriceSale = 100000.0,
                         Quantity = 50,
                         SoldCount = 200,
-                        categoryId = 2
+                        categoryId = 2,
+                        Create_At = new DateTime(2025, 7, 12),
+                        Update_At = new DateTime(2025, 7, 12)
                     },
                     new Products {
                         ProductId = 23,
@@ -679,7 +738,9 @@ namespace UngDungQuanLiNhaHang.Data {
                         PriceSale = 100000.0,
                         Quantity = 50,
                         SoldCount = 200,
-                        categoryId = 2
+                        categoryId = 2,
+                        Create_At = new DateTime(2025, 7, 12),
+                        Update_At = new DateTime(2025, 7, 12)
                     },
                     new Products {
                         ProductId = 24,
@@ -689,7 +750,9 @@ namespace UngDungQuanLiNhaHang.Data {
                         PriceSale = 100000.0,
                         Quantity = 50,
                         SoldCount = 200,
-                        categoryId = 2
+                        categoryId = 2,
+                        Create_At = new DateTime(2025, 7, 12),
+                        Update_At = new DateTime(2025, 7, 12)
                     },
                     new Products {
                         ProductId = 25,
@@ -699,7 +762,9 @@ namespace UngDungQuanLiNhaHang.Data {
                         PriceSale = 18000.0,
                         Quantity = 50,
                         SoldCount = 200,
-                        categoryId = 5
+                        categoryId = 5,
+                        Create_At = new DateTime(2025, 7, 12),
+                        Update_At = new DateTime(2025, 7, 12)
                     },
                     new Products {
                         ProductId = 26,
@@ -709,7 +774,9 @@ namespace UngDungQuanLiNhaHang.Data {
                         PriceSale = 18000.0,
                         Quantity = 50,
                         SoldCount = 200,
-                        categoryId = 5
+                        categoryId = 5,
+                        Create_At = new DateTime(2025, 7, 12),
+                        Update_At = new DateTime(2025, 7, 12)
                     },
                     new Products {
                         ProductId = 27,
@@ -719,7 +786,9 @@ namespace UngDungQuanLiNhaHang.Data {
                         PriceSale = 22000.0,
                         Quantity = 50,
                         SoldCount = 200,
-                        categoryId = 5
+                        categoryId = 5,
+                        Create_At = new DateTime(2025, 7, 12),
+                        Update_At = new DateTime(2025, 7, 12)
                     },
                     new Products {
                         ProductId = 28,
@@ -729,7 +798,9 @@ namespace UngDungQuanLiNhaHang.Data {
                         PriceSale = 25000.0,
                         Quantity = 50,
                         SoldCount = 200,
-                        categoryId = 5
+                        categoryId = 5,
+                        Create_At = new DateTime(2025, 7, 12),
+                        Update_At = new DateTime(2025, 7, 12)
                     }
 
                 );

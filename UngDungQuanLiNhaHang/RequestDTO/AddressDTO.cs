@@ -1,5 +1,7 @@
 ﻿namespace UngDungQuanLiNhaHang.RequestDTO {
     public class AddressDTO {
+        public int customerId { get; set; }
+        public int? addressId { get; set; }
         public required string province { get; set; }
         public required string district { get; set; }
         public required string hamlet { get; set; }

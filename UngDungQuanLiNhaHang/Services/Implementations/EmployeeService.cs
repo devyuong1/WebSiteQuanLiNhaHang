@@ -39,9 +39,9 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
                     Email = employeeDTO.email,
                     Phone = employeeDTO.phone,
                     Password = BCrypt.Net.BCrypt.HashPassword(employeeDTO.password),
-                    addressId = address.AddressId,
-                    restaurantId = 1,
-                    roleId = employeeDTO.roleId,
+                    Address = address,
+                    RestaurantId = 1,
+                    RoleId = employeeDTO.roleId,
                 };
                 await employeeRepo.AddEmployee(item);
 
@@ -92,15 +92,15 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
                 fullname = e.Fullname,
                 email = e.Email,
                 phone = e.Phone,
-                roleId = e.roleId,
-                roleName = e.roles!.RoleName,
+                roleId = e.RoleId,
+                roleName = e.Role!.RoleName,
                 address = new AddressResponse() {
-                    addressId = e.address!.AddressId,
-                    province = e.address.Province,
-                    district = e.address.District,
-                    hamlet = e.address.Hamlet,
-                    street = e.address.Street,
-                    houseNumber = e.address.HouseNumber
+                    addressId = e.AddressId,
+                    province = e.Address!.Province,
+                    district = e.Address.District,
+                    hamlet = e.Address.Hamlet,
+                    street = e.Address.Street,
+                    houseNumber = e.Address.HouseNumber
 
                 }
             });
@@ -118,15 +118,16 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
                 fullname = result.Fullname,
                 email = result.Email,
                 phone = result.Phone,
-                roleId = result.roleId,
-                roleName = result.roles!.RoleName,
+                roleId = result.RoleId,
+                roleName = result.Role!.RoleName,
                 address = new AddressResponse() {
-                    addressId = result.address!.AddressId,
-                    province = result.address.Province,
-                    district = result.address.District,
-                    hamlet = result.address.Hamlet,
-                    street = result.address.Street,
-                    houseNumber = result.address.HouseNumber
+                    addressId = result.AddressId,
+                    province = result.Address!.Province,
+                    district = result.Address.District,
+                    hamlet = result.Address.Hamlet,
+                    street = result.Address.Street,
+                    houseNumber = result.Address.HouseNumber
+
                 }
             };
             return ApiResponse<EmployeeResponse>.SuccessResponse(employeeResponse, "Lấy thông tin nhân viên thành công.");
@@ -158,12 +159,12 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
                 if ( !string.IsNullOrEmpty(employeeDTO.password) ) {
                     result.Password = BCrypt.Net.BCrypt.HashPassword(employeeDTO.password);
                 }
-                result.roleId = employeeDTO.roleId;
-                result.address!.Province = employeeDTO.address.province;
-                result.address.District = employeeDTO.address.district;
-                result.address.Hamlet = employeeDTO.address.hamlet;
-                result.address.Street = employeeDTO.address.street;
-                result.address.HouseNumber = employeeDTO.address.houseNumber;
+                result.RoleId = employeeDTO.roleId;
+                result.Address!.Province = employeeDTO.address.province;
+                result.Address.District = employeeDTO.address.district;
+                result.Address.Hamlet = employeeDTO.address.hamlet;
+                result.Address.Street = employeeDTO.address.street;
+                result.Address.HouseNumber = employeeDTO.address.houseNumber;
 
                 employeeRepo.UpdateEmployee(result);
 

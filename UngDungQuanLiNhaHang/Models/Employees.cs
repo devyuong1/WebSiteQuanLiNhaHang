@@ -13,14 +13,15 @@ namespace UngDungQuanLiNhaHang.Models {
         public required string Email { get; set; }
 
         public bool IsActive { get; set; } = true;
-        public int addressId { get; set; }
-        public Address? address { get; set; }
-
-        public int restaurantId { get; set; }
-        public Restaurants? restaurants { get; set; }
-
-        public int roleId { get; set; }
-        public Roles? roles { get; set; }
+        [ForeignKey("AddressId")]
+        public int AddressId { get; set; }
+        public Address? Address { get; set; }
+        [ForeignKey("RestaurantId")]
+        public int? RestaurantId { get; set; }
+        public Restaurants? Restaurant { get; set; }
+        [ForeignKey("RoleId")]
+        public int RoleId { get; set; }
+        public Roles? Role { get; set; }
         public ICollection<PurchaseInvoice> PurchaseInvoices { get; set; } = new List<PurchaseInvoice>();
         public ICollection<RefreshTokens> RefreshTokens { get; set; } = new List<RefreshTokens>();
     }

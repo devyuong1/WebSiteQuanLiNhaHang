@@ -18,6 +18,7 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
                 IngredientName = item.ingredientName,
                 Unit = item.unit,
                 Quantity = item.quantity,
+                Price = item.price,
                 MinQuantity = item.minQuantity,
                 IsActive = true
             };
@@ -64,6 +65,7 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
             var response = ingredients.Select(i => new IngredientResponse {
                 ingredientId = i.IngredientId,
                 ingredientName = i.IngredientName,
+                price = i.Price,
                 unit = i.Unit,
                 quantity = i.Quantity,
                 minQuantity = i.MinQuantity,
@@ -81,6 +83,7 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
                 ingredientName = ingredients.IngredientName,
                 ingredientId = ingredients.IngredientId,
                 unit = ingredients.Unit,
+                price = ingredients.Price,
                 quantity = ingredients.Quantity,
                 minQuantity = ingredients.MinQuantity,
                 isActive = ingredients.IsActive
@@ -104,6 +107,7 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
             ingredient.IngredientName = ingredientDTO.ingredientName;
             ingredient.Unit = ingredientDTO.unit;
             ingredient.Quantity = ingredientDTO.quantity;
+            ingredient.Price = ingredientDTO.price;
             ingredient.MinQuantity = ingredientDTO.minQuantity;
             ingredient.IsActive = ingredientDTO.isActive;
             try {

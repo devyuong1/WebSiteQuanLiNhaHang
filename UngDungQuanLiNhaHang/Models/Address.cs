@@ -12,14 +12,13 @@ namespace UngDungQuanLiNhaHang.Models {
         public  string? Street { get; set; }
         public  string? HouseNumber { get; set; }
         public bool IsDefault { get; set; } = true;
-        public int? restaurantId { get; set; }
-        public Restaurants? restaurants { get; set; }
-        public int? employeeId { get; set; }
-        public Employees? employees { get; set; }
-        public int? customerId { get; set; }
-        public Customers? customers { get; set; }
-        public int? supplierId { get; set; }
-        public Suppliers? suppliers { get; set; }
+        
+        public Restaurants? Restaurant { get; set; }
+        public ICollection<Customers> customers { get; set; } = new List<Customers>();
+        public ICollection<Employees> employees { get; set; } = new List<Employees>();
+
+        
+        public ICollection<Suppliers> suppliers { get; set; } = new List<Suppliers>();
 
         public ICollection<Invoices> invoices { get; set; } = new List<Invoices>();
     }

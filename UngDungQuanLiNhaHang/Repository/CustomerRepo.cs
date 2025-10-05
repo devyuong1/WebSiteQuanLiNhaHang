@@ -10,15 +10,32 @@ namespace UngDungQuanLiNhaHang.Repository {
         public async Task<bool> IsPhoneExist(string phone) {
             return await _context.customers.AnyAsync(c => c.Phone == phone);
         }
-        public async Task AddCustomer(Models.Customers customer) {
+        public async Task AddCustomer(Customers customer) {
             await _context.customers.AddAsync(customer);
 
         }
         public async Task<Customers?> GetCustomerByEmail(string email) {
-            return await _context.customers.FirstOrDefaultAsync(c => c.Email == email);
+            return await _context.customers
+                .Include(c => c.role)
+                .Include(c => c.refreshTokens)
+                .FirstOrDefaultAsync(c => c.Email == email);
         }
         public async Task<Customers?> GetCustomerById(int customerId) {
-            return await _context.customers.FirstOrDefaultAsync(c => c.CustomerId == customerId);
+            return await _context.customers
+                .Include(c => c.refreshTokens)
+                .Include(c => c.role)
+                .Include(c => c.addresses)
+                .FirstOrDefaultAsync(c => c.CustomerId == customerId);
+        }
+        public async Task<Customers?> GetCustomerForAddress(int customerId) {
+            return await _context.customers
+                .Include(c => c.addresses)
+                .FirstOrDefaultAsync(c => c.CustomerId == customerId);
+        }
+        public async Task<Customers?> GetCustomerByPhonel(string phone) {
+            return await _context.customers
+               
+                .FirstOrDefaultAsync(c => c.Phone == phone);
         }
         public void  UpdateCustomer(Customers customer) {
               _context.customers.Update(customer);
