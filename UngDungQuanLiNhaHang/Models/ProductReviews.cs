@@ -9,13 +9,18 @@ namespace UngDungQuanLiNhaHang.Models {
         public int Rating { get; set; }
         public required string Comment { get; set; }
         public DateTime Create_At { get; set; }
+        
+        public int CustomerId { get; set; }
+        [ForeignKey("CustomerId")]
+        public Customers? Customers { get; set; }
 
-        public int customerId { get; set; }
-        public Customers? customers { get; set; }
-        public int invoiceId { get; set; }
-        public Invoices? invoices { get; set; }
+        public int InvoiceId { get; set; }
+        [ForeignKey("InvoiceId")]
 
-        public int productId { get; set; }
-        public Products? products { get; set; }
+        public Invoices? Invoices { get; set; }
+        public int ProductId { get; set; }
+        [ForeignKey("ProductId")]
+
+        public Products? Products { get; set; }
     }
 }

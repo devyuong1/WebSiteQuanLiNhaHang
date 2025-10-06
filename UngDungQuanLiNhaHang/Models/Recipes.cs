@@ -8,11 +8,13 @@ namespace UngDungQuanLiNhaHang.Models {
         public int RecipeId { get; set; }
         public double Quantity { get; set; }
         public required string Unit {  get; set; }
+        public int IngredientId { get; set; }
+        [ForeignKey("IngredientId")]
 
-        public int ingredientId { get; set; }
-        public Ingredient? ingredient { get; set; }
+        public Ingredient? Ingredient { get; set; }
+        public int ProductId { get; set; }
+        [ForeignKey("ProductId")]
 
-        public int productId { get; set; }
-        public Products? products { get; set; }
+        public Products? Products { get; set; }
     }
 }

@@ -209,29 +209,23 @@ namespace UngDungQuanLiNhaHang.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CartItemId"));
 
-                    b.Property<int?>("CartsCartId")
+                    b.Property<int>("CartId")
                         .HasColumnType("int");
 
                     b.Property<double>("Price")
                         .HasColumnType("float");
 
-                    b.Property<int?>("ProductsProductId")
+                    b.Property<int>("ProductId")
                         .HasColumnType("int");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
-                    b.Property<int>("cartId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("productId")
-                        .HasColumnType("int");
-
                     b.HasKey("CartItemId");
 
-                    b.HasIndex("CartsCartId");
+                    b.HasIndex("CartId");
 
-                    b.HasIndex("ProductsProductId");
+                    b.HasIndex("ProductId");
 
                     b.ToTable("cartItems");
                 });
@@ -244,18 +238,37 @@ namespace UngDungQuanLiNhaHang.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CartId"));
 
+                    b.Property<int>("CustomerId")
+                        .HasColumnType("int");
+
                     b.Property<double>("TotalAmount")
                         .HasColumnType("float");
 
                     b.Property<int>("TotalQuantity")
                         .HasColumnType("int");
 
-                    b.Property<int>("customerId")
-                        .HasColumnType("int");
-
                     b.HasKey("CartId");
 
+                    b.HasIndex("CustomerId")
+                        .IsUnique();
+
                     b.ToTable("carts");
+
+                    b.HasData(
+                        new
+                        {
+                            CartId = 1,
+                            CustomerId = 1,
+                            TotalAmount = 0.0,
+                            TotalQuantity = 0
+                        },
+                        new
+                        {
+                            CartId = 2,
+                            CustomerId = 2,
+                            TotalAmount = 0.0,
+                            TotalQuantity = 0
+                        });
                 });
 
             modelBuilder.Entity("UngDungQuanLiNhaHang.Models.Categorys", b =>
@@ -343,19 +356,12 @@ namespace UngDungQuanLiNhaHang.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("cartId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("roleId")
+                    b.Property<int>("RoleId")
                         .HasColumnType("int");
 
                     b.HasKey("CustomerId");
 
-                    b.HasIndex("cartId")
-                        .IsUnique()
-                        .HasFilter("[cartId] IS NOT NULL");
-
-                    b.HasIndex("roleId");
+                    b.HasIndex("RoleId");
 
                     b.ToTable("customers");
 
@@ -366,9 +372,9 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Email = "a@gmail.com",
                             FullName = "Nguyễn Văn A",
                             IsActive = true,
-                            Password = "thanhtam1",
+                            Password = "$2a$11$VNeE3dx3kAH4jlMywC81duZnXD.jDTIHPmNkxIeYSHJovscjL7FJa",
                             Phone = "0909092321",
-                            roleId = 4
+                            RoleId = 4
                         },
                         new
                         {
@@ -376,9 +382,9 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Email = "b@gmail.com",
                             FullName = "Nguyễn Văn B",
                             IsActive = true,
-                            Password = "thanhtam1",
+                            Password = "$2a$11$VNeE3dx3kAH4jlMywC81duZnXD.jDTIHPmNkxIeYSHJovscjL7FJa",
                             Phone = "0909092389",
-                            roleId = 4
+                            RoleId = 4
                         });
                 });
 
@@ -499,15 +505,12 @@ namespace UngDungQuanLiNhaHang.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("productId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("productsProductId")
+                    b.Property<int>("ProductId")
                         .HasColumnType("int");
 
                     b.HasKey("ImagesId");
 
-                    b.HasIndex("productsProductId");
+                    b.HasIndex("ProductId");
 
                     b.ToTable("images");
 
@@ -516,169 +519,169 @@ namespace UngDungQuanLiNhaHang.Migrations
                         {
                             ImagesId = 1,
                             ImagesUrl = "/ImageProducts/product1.png",
-                            productId = 1
+                            ProductId = 1
                         },
                         new
                         {
                             ImagesId = 2,
                             ImagesUrl = "/ImageProducts/product2.png",
-                            productId = 2
+                            ProductId = 2
                         },
                         new
                         {
                             ImagesId = 3,
                             ImagesUrl = "/ImageProducts/product3.png",
-                            productId = 3
+                            ProductId = 3
                         },
                         new
                         {
                             ImagesId = 4,
                             ImagesUrl = "/ImageProducts/product4.png",
-                            productId = 4
+                            ProductId = 4
                         },
                         new
                         {
                             ImagesId = 5,
                             ImagesUrl = "/ImageProducts/product5.png",
-                            productId = 5
+                            ProductId = 5
                         },
                         new
                         {
                             ImagesId = 6,
                             ImagesUrl = "/ImageProducts/product6.png",
-                            productId = 6
+                            ProductId = 6
                         },
                         new
                         {
                             ImagesId = 7,
                             ImagesUrl = "/ImageProducts/product7.png",
-                            productId = 7
+                            ProductId = 7
                         },
                         new
                         {
                             ImagesId = 8,
                             ImagesUrl = "/ImageProducts/product8.png",
-                            productId = 8
+                            ProductId = 8
                         },
                         new
                         {
                             ImagesId = 9,
                             ImagesUrl = "/ImageProducts/product9.png",
-                            productId = 9
+                            ProductId = 9
                         },
                         new
                         {
                             ImagesId = 10,
                             ImagesUrl = "/ImageProducts/product10.png",
-                            productId = 10
+                            ProductId = 10
                         },
                         new
                         {
                             ImagesId = 11,
                             ImagesUrl = "/ImageProducts/product11.png",
-                            productId = 11
+                            ProductId = 11
                         },
                         new
                         {
                             ImagesId = 12,
                             ImagesUrl = "/ImageProducts/product12.png",
-                            productId = 12
+                            ProductId = 12
                         },
                         new
                         {
                             ImagesId = 13,
                             ImagesUrl = "/ImageProducts/product13.png",
-                            productId = 13
+                            ProductId = 13
                         },
                         new
                         {
                             ImagesId = 14,
                             ImagesUrl = "/ImageProducts/product14.png",
-                            productId = 14
+                            ProductId = 14
                         },
                         new
                         {
                             ImagesId = 15,
                             ImagesUrl = "/ImageProducts/product15.png",
-                            productId = 15
+                            ProductId = 15
                         },
                         new
                         {
                             ImagesId = 16,
                             ImagesUrl = "/ImageProducts/product16.png",
-                            productId = 16
+                            ProductId = 16
                         },
                         new
                         {
                             ImagesId = 17,
                             ImagesUrl = "/ImageProducts/product17.png",
-                            productId = 17
+                            ProductId = 17
                         },
                         new
                         {
                             ImagesId = 18,
                             ImagesUrl = "/ImageProducts/product18.png",
-                            productId = 18
+                            ProductId = 18
                         },
                         new
                         {
                             ImagesId = 19,
                             ImagesUrl = "/ImageProducts/product19.png",
-                            productId = 19
+                            ProductId = 19
                         },
                         new
                         {
                             ImagesId = 20,
                             ImagesUrl = "/ImageProducts/product20.png",
-                            productId = 20
+                            ProductId = 20
                         },
                         new
                         {
                             ImagesId = 21,
                             ImagesUrl = "/ImageProducts/product21.png",
-                            productId = 21
+                            ProductId = 21
                         },
                         new
                         {
                             ImagesId = 22,
                             ImagesUrl = "/ImageProducts/product22.png",
-                            productId = 22
+                            ProductId = 22
                         },
                         new
                         {
                             ImagesId = 23,
                             ImagesUrl = "/ImageProducts/product23.png",
-                            productId = 23
+                            ProductId = 23
                         },
                         new
                         {
                             ImagesId = 24,
                             ImagesUrl = "/ImageProducts/product24.png",
-                            productId = 24
+                            ProductId = 24
                         },
                         new
                         {
                             ImagesId = 25,
                             ImagesUrl = "/ImageProducts/product25.png",
-                            productId = 25
+                            ProductId = 25
                         },
                         new
                         {
                             ImagesId = 26,
                             ImagesUrl = "/ImageProducts/product26.png",
-                            productId = 26
+                            ProductId = 26
                         },
                         new
                         {
                             ImagesId = 27,
                             ImagesUrl = "/ImageProducts/product27.png",
-                            productId = 27
+                            ProductId = 27
                         },
                         new
                         {
                             ImagesId = 28,
                             ImagesUrl = "/ImageProducts/product28.png",
-                            productId = 28
+                            ProductId = 28
                         });
                 });
 
@@ -1005,29 +1008,23 @@ namespace UngDungQuanLiNhaHang.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("InvoiceItemId"));
 
+                    b.Property<int>("InvoiceId")
+                        .HasColumnType("int");
+
                     b.Property<double>("Price")
                         .HasColumnType("float");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
-                    b.Property<int>("invoiceId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("invoicesInvoiceId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("productId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("productsProductId")
-                        .HasColumnType("int");
-
                     b.HasKey("InvoiceItemId");
 
-                    b.HasIndex("invoicesInvoiceId");
+                    b.HasIndex("InvoiceId");
 
-                    b.HasIndex("productsProductId");
+                    b.HasIndex("ProductId");
 
                     b.ToTable("invoicesItems");
 
@@ -1035,34 +1032,34 @@ namespace UngDungQuanLiNhaHang.Migrations
                         new
                         {
                             InvoiceItemId = 1,
+                            InvoiceId = 1,
                             Price = 75000.0,
-                            Quantity = 2,
-                            invoiceId = 1,
-                            productId = 4
+                            ProductId = 4,
+                            Quantity = 2
                         },
                         new
                         {
                             InvoiceItemId = 2,
+                            InvoiceId = 1,
                             Price = 250000.0,
-                            Quantity = 1,
-                            invoiceId = 1,
-                            productId = 8
+                            ProductId = 8,
+                            Quantity = 1
                         },
                         new
                         {
                             InvoiceItemId = 3,
+                            InvoiceId = 2,
                             Price = 120000.0,
-                            Quantity = 1,
-                            invoiceId = 2,
-                            productId = 22
+                            ProductId = 22,
+                            Quantity = 1
                         },
                         new
                         {
                             InvoiceItemId = 4,
+                            InvoiceId = 2,
                             Price = 150000.0,
-                            Quantity = 1,
-                            invoiceId = 2,
-                            productId = 19
+                            ProductId = 19,
+                            Quantity = 1
                         });
                 });
 
@@ -1133,8 +1130,14 @@ namespace UngDungQuanLiNhaHang.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("InvoiceId"));
 
+                    b.Property<int>("AddressId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("Create_At")
                         .HasColumnType("datetime2");
+
+                    b.Property<int>("InvoiceStatusId")
+                        .HasColumnType("int");
 
                     b.Property<bool>("InvoiceType")
                         .HasColumnType("bit");
@@ -1142,25 +1145,19 @@ namespace UngDungQuanLiNhaHang.Migrations
                     b.Property<bool>("IsPayment")
                         .HasColumnType("bit");
 
+                    b.Property<int>("PaymentMethodId")
+                        .HasColumnType("int");
+
                     b.Property<double>("TotalAmount")
                         .HasColumnType("float");
 
                     b.Property<int>("TotalQuantity")
                         .HasColumnType("int");
 
-                    b.Property<int>("addressId")
-                        .HasColumnType("int");
-
                     b.Property<int?>("customerId")
                         .HasColumnType("int");
 
                     b.Property<int?>("customersCustomerId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("invoiceStatusId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("paymentMethodId")
                         .HasColumnType("int");
 
                     b.Property<int?>("tableId")
@@ -1171,13 +1168,13 @@ namespace UngDungQuanLiNhaHang.Migrations
 
                     b.HasKey("InvoiceId");
 
-                    b.HasIndex("addressId");
+                    b.HasIndex("AddressId");
+
+                    b.HasIndex("InvoiceStatusId");
+
+                    b.HasIndex("PaymentMethodId");
 
                     b.HasIndex("customersCustomerId");
-
-                    b.HasIndex("invoiceStatusId");
-
-                    b.HasIndex("paymentMethodId");
 
                     b.HasIndex("tablesTableId");
 
@@ -1187,28 +1184,28 @@ namespace UngDungQuanLiNhaHang.Migrations
                         new
                         {
                             InvoiceId = 1,
-                            Create_At = new DateTime(2025, 10, 5, 6, 36, 23, 545, DateTimeKind.Utc).AddTicks(1151),
+                            AddressId = 1,
+                            Create_At = new DateTime(2025, 10, 6, 14, 20, 16, 969, DateTimeKind.Utc).AddTicks(8945),
+                            InvoiceStatusId = 4,
                             InvoiceType = false,
                             IsPayment = true,
+                            PaymentMethodId = 1,
                             TotalAmount = 400000.0,
                             TotalQuantity = 3,
-                            addressId = 1,
-                            customerId = 1,
-                            invoiceStatusId = 4,
-                            paymentMethodId = 1
+                            customerId = 1
                         },
                         new
                         {
                             InvoiceId = 2,
-                            Create_At = new DateTime(2025, 10, 5, 6, 36, 23, 545, DateTimeKind.Utc).AddTicks(1156),
+                            AddressId = 1,
+                            Create_At = new DateTime(2025, 10, 6, 14, 20, 16, 969, DateTimeKind.Utc).AddTicks(8948),
+                            InvoiceStatusId = 4,
                             InvoiceType = false,
                             IsPayment = false,
+                            PaymentMethodId = 3,
                             TotalAmount = 270000.0,
                             TotalQuantity = 2,
-                            addressId = 1,
-                            customerId = 1,
-                            invoiceStatusId = 4,
-                            paymentMethodId = 3
+                            customerId = 1
                         });
                 });
 
@@ -1261,32 +1258,26 @@ namespace UngDungQuanLiNhaHang.Migrations
                     b.Property<DateTime>("Create_At")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("CustomerId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("InvoiceId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
                     b.Property<int>("Rating")
-                        .HasColumnType("int");
-
-                    b.Property<int>("customerId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("customersCustomerId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("invoiceId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("productId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("productsProductId")
                         .HasColumnType("int");
 
                     b.HasKey("ProductReviewId");
 
-                    b.HasIndex("customersCustomerId");
+                    b.HasIndex("CustomerId");
 
-                    b.HasIndex("invoiceId")
+                    b.HasIndex("InvoiceId")
                         .IsUnique();
 
-                    b.HasIndex("productsProductId");
+                    b.HasIndex("ProductId");
 
                     b.ToTable("productReviews");
                 });
@@ -1301,6 +1292,9 @@ namespace UngDungQuanLiNhaHang.Migrations
 
                     b.Property<double>("AverageRating")
                         .HasColumnType("float");
+
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("Create_At")
                         .HasColumnType("datetime2");
@@ -1334,12 +1328,9 @@ namespace UngDungQuanLiNhaHang.Migrations
                     b.Property<DateTime>("Update_At")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("categoryId")
-                        .HasColumnType("int");
-
                     b.HasKey("ProductId");
 
-                    b.HasIndex("categoryId");
+                    b.HasIndex("CategoryId");
 
                     b.ToTable("products");
 
@@ -1348,6 +1339,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                         {
                             ProductId = 1,
                             AverageRating = 5.0,
+                            CategoryId = 5,
                             Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "",
                             IsActive = true,
@@ -1357,13 +1349,13 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Quantity = 40,
                             SoldCount = 2000,
                             TotalReviews = 1,
-                            Update_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            categoryId = 5
+                            Update_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             ProductId = 2,
                             AverageRating = 5.0,
+                            CategoryId = 5,
                             Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "",
                             IsActive = true,
@@ -1373,13 +1365,13 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Quantity = 40,
                             SoldCount = 100,
                             TotalReviews = 1,
-                            Update_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            categoryId = 5
+                            Update_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             ProductId = 3,
                             AverageRating = 5.0,
+                            CategoryId = 5,
                             Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "",
                             IsActive = true,
@@ -1389,13 +1381,13 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Quantity = 30,
                             SoldCount = 100,
                             TotalReviews = 1,
-                            Update_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            categoryId = 5
+                            Update_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             ProductId = 4,
                             AverageRating = 5.0,
+                            CategoryId = 5,
                             Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "",
                             IsActive = true,
@@ -1405,13 +1397,13 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Quantity = 30,
                             SoldCount = 100,
                             TotalReviews = 1,
-                            Update_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            categoryId = 5
+                            Update_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             ProductId = 5,
                             AverageRating = 5.0,
+                            CategoryId = 1,
                             Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "",
                             IsActive = true,
@@ -1421,13 +1413,13 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Quantity = 30,
                             SoldCount = 100,
                             TotalReviews = 1,
-                            Update_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            categoryId = 1
+                            Update_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             ProductId = 6,
                             AverageRating = 5.0,
+                            CategoryId = 1,
                             Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "",
                             IsActive = true,
@@ -1437,13 +1429,13 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Quantity = 30,
                             SoldCount = 100,
                             TotalReviews = 1,
-                            Update_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            categoryId = 1
+                            Update_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             ProductId = 7,
                             AverageRating = 5.0,
+                            CategoryId = 1,
                             Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "",
                             IsActive = true,
@@ -1453,13 +1445,13 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Quantity = 30,
                             SoldCount = 100,
                             TotalReviews = 1,
-                            Update_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            categoryId = 1
+                            Update_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             ProductId = 8,
                             AverageRating = 5.0,
+                            CategoryId = 1,
                             Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "",
                             IsActive = true,
@@ -1469,13 +1461,13 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Quantity = 30,
                             SoldCount = 100,
                             TotalReviews = 1,
-                            Update_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            categoryId = 1
+                            Update_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             ProductId = 9,
                             AverageRating = 5.0,
+                            CategoryId = 3,
                             Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "",
                             IsActive = true,
@@ -1485,13 +1477,13 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Quantity = 30,
                             SoldCount = 100,
                             TotalReviews = 1,
-                            Update_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            categoryId = 3
+                            Update_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             ProductId = 10,
                             AverageRating = 5.0,
+                            CategoryId = 3,
                             Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "",
                             IsActive = true,
@@ -1501,13 +1493,13 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Quantity = 30,
                             SoldCount = 100,
                             TotalReviews = 1,
-                            Update_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            categoryId = 3
+                            Update_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             ProductId = 11,
                             AverageRating = 5.0,
+                            CategoryId = 2,
                             Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "",
                             IsActive = true,
@@ -1517,13 +1509,13 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Quantity = 30,
                             SoldCount = 100,
                             TotalReviews = 1,
-                            Update_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            categoryId = 2
+                            Update_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             ProductId = 12,
                             AverageRating = 5.0,
+                            CategoryId = 4,
                             Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "",
                             IsActive = true,
@@ -1533,13 +1525,13 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Quantity = 30,
                             SoldCount = 100,
                             TotalReviews = 1,
-                            Update_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            categoryId = 4
+                            Update_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             ProductId = 13,
                             AverageRating = 5.0,
+                            CategoryId = 4,
                             Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "",
                             IsActive = true,
@@ -1549,13 +1541,13 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Quantity = 30,
                             SoldCount = 200,
                             TotalReviews = 1,
-                            Update_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            categoryId = 4
+                            Update_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             ProductId = 14,
                             AverageRating = 5.0,
+                            CategoryId = 4,
                             Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "",
                             IsActive = true,
@@ -1565,13 +1557,13 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Quantity = 30,
                             SoldCount = 200,
                             TotalReviews = 1,
-                            Update_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            categoryId = 4
+                            Update_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             ProductId = 15,
                             AverageRating = 5.0,
+                            CategoryId = 1,
                             Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "",
                             IsActive = true,
@@ -1581,13 +1573,13 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Quantity = 30,
                             SoldCount = 200,
                             TotalReviews = 1,
-                            Update_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            categoryId = 1
+                            Update_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             ProductId = 16,
                             AverageRating = 5.0,
+                            CategoryId = 1,
                             Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "",
                             IsActive = true,
@@ -1597,13 +1589,13 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Quantity = 30,
                             SoldCount = 200,
                             TotalReviews = 1,
-                            Update_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            categoryId = 1
+                            Update_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             ProductId = 17,
                             AverageRating = 5.0,
+                            CategoryId = 1,
                             Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "",
                             IsActive = true,
@@ -1613,13 +1605,13 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Quantity = 50,
                             SoldCount = 200,
                             TotalReviews = 1,
-                            Update_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            categoryId = 1
+                            Update_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             ProductId = 18,
                             AverageRating = 5.0,
+                            CategoryId = 1,
                             Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "",
                             IsActive = true,
@@ -1629,13 +1621,13 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Quantity = 50,
                             SoldCount = 200,
                             TotalReviews = 1,
-                            Update_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            categoryId = 1
+                            Update_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             ProductId = 19,
                             AverageRating = 5.0,
+                            CategoryId = 1,
                             Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "",
                             IsActive = true,
@@ -1645,13 +1637,13 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Quantity = 50,
                             SoldCount = 200,
                             TotalReviews = 1,
-                            Update_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            categoryId = 1
+                            Update_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             ProductId = 20,
                             AverageRating = 5.0,
+                            CategoryId = 1,
                             Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "",
                             IsActive = true,
@@ -1661,13 +1653,13 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Quantity = 50,
                             SoldCount = 200,
                             TotalReviews = 1,
-                            Update_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            categoryId = 1
+                            Update_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             ProductId = 21,
                             AverageRating = 5.0,
+                            CategoryId = 1,
                             Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "",
                             IsActive = true,
@@ -1677,13 +1669,13 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Quantity = 50,
                             SoldCount = 200,
                             TotalReviews = 1,
-                            Update_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            categoryId = 1
+                            Update_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             ProductId = 22,
                             AverageRating = 5.0,
+                            CategoryId = 2,
                             Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "1 phần gồm 300g mực tươi hấp với hành và các gia vị.",
                             IsActive = true,
@@ -1693,13 +1685,13 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Quantity = 50,
                             SoldCount = 200,
                             TotalReviews = 1,
-                            Update_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            categoryId = 2
+                            Update_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             ProductId = 23,
                             AverageRating = 5.0,
+                            CategoryId = 2,
                             Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "1 phần gồm 1 con cá mú hấp vớ  các gia vị.",
                             IsActive = true,
@@ -1709,13 +1701,13 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Quantity = 50,
                             SoldCount = 200,
                             TotalReviews = 1,
-                            Update_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            categoryId = 2
+                            Update_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             ProductId = 24,
                             AverageRating = 5.0,
+                            CategoryId = 2,
                             Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "1 phần gồm 500g Nghêu",
                             IsActive = true,
@@ -1725,13 +1717,13 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Quantity = 50,
                             SoldCount = 200,
                             TotalReviews = 1,
-                            Update_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            categoryId = 2
+                            Update_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             ProductId = 25,
                             AverageRating = 5.0,
+                            CategoryId = 5,
                             Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "",
                             IsActive = true,
@@ -1741,13 +1733,13 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Quantity = 50,
                             SoldCount = 200,
                             TotalReviews = 1,
-                            Update_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            categoryId = 5
+                            Update_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             ProductId = 26,
                             AverageRating = 5.0,
+                            CategoryId = 5,
                             Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "",
                             IsActive = true,
@@ -1757,13 +1749,13 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Quantity = 50,
                             SoldCount = 200,
                             TotalReviews = 1,
-                            Update_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            categoryId = 5
+                            Update_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             ProductId = 27,
                             AverageRating = 5.0,
+                            CategoryId = 5,
                             Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "",
                             IsActive = true,
@@ -1773,13 +1765,13 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Quantity = 50,
                             SoldCount = 200,
                             TotalReviews = 1,
-                            Update_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            categoryId = 5
+                            Update_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             ProductId = 28,
                             AverageRating = 5.0,
+                            CategoryId = 5,
                             Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "",
                             IsActive = true,
@@ -1789,8 +1781,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Quantity = 50,
                             SoldCount = 200,
                             TotalReviews = 1,
-                            Update_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            categoryId = 5
+                            Update_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         });
                 });
 
@@ -1805,29 +1796,23 @@ namespace UngDungQuanLiNhaHang.Migrations
                     b.Property<DateTime>("Create_At")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("EmployeeId")
+                        .HasColumnType("int");
+
                     b.Property<bool>("IsPayment")
                         .HasColumnType("bit");
+
+                    b.Property<int>("SupplierId")
+                        .HasColumnType("int");
 
                     b.Property<double>("Totalamount")
                         .HasColumnType("float");
 
-                    b.Property<int>("employeeId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("employeesEmployeeId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("supplierId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("suppliersSupplierID")
-                        .HasColumnType("int");
-
                     b.HasKey("PurchaseInvoiceId");
 
-                    b.HasIndex("employeesEmployeeId");
+                    b.HasIndex("EmployeeId");
 
-                    b.HasIndex("suppliersSupplierID");
+                    b.HasIndex("SupplierId");
 
                     b.ToTable("purchaseInvoice");
                 });
@@ -1840,8 +1825,14 @@ namespace UngDungQuanLiNhaHang.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PurchaseInvoiceItemID"));
 
+                    b.Property<int>("IngredientId")
+                        .HasColumnType("int");
+
                     b.Property<double>("Price")
                         .HasColumnType("float");
+
+                    b.Property<int>("PurchaseInvoiceId")
+                        .HasColumnType("int");
 
                     b.Property<double>("Quantity")
                         .HasColumnType("float");
@@ -1850,17 +1841,11 @@ namespace UngDungQuanLiNhaHang.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ingredientId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("purchaseInvoiceId")
-                        .HasColumnType("int");
-
                     b.HasKey("PurchaseInvoiceItemID");
 
-                    b.HasIndex("ingredientId");
+                    b.HasIndex("IngredientId");
 
-                    b.HasIndex("purchaseInvoiceId");
+                    b.HasIndex("PurchaseInvoiceId");
 
                     b.ToTable("purchaseInvoiceItem");
                 });
@@ -1873,6 +1858,12 @@ namespace UngDungQuanLiNhaHang.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RecipeId"));
 
+                    b.Property<int>("IngredientId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
                     b.Property<double>("Quantity")
                         .HasColumnType("float");
 
@@ -1880,20 +1871,11 @@ namespace UngDungQuanLiNhaHang.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ingredientId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("productId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("productsProductId")
-                        .HasColumnType("int");
-
                     b.HasKey("RecipeId");
 
-                    b.HasIndex("ingredientId");
+                    b.HasIndex("IngredientId");
 
-                    b.HasIndex("productsProductId");
+                    b.HasIndex("ProductId");
 
                     b.ToTable("recipes");
 
@@ -1901,402 +1883,402 @@ namespace UngDungQuanLiNhaHang.Migrations
                         new
                         {
                             RecipeId = 1,
+                            IngredientId = 1,
+                            ProductId = 1,
                             Quantity = 100.0,
-                            Unit = "g",
-                            ingredientId = 1,
-                            productId = 1
+                            Unit = "g"
                         },
                         new
                         {
                             RecipeId = 2,
+                            IngredientId = 2,
+                            ProductId = 1,
                             Quantity = 200.0,
-                            Unit = "g",
-                            ingredientId = 2,
-                            productId = 1
+                            Unit = "g"
                         },
                         new
                         {
                             RecipeId = 3,
+                            IngredientId = 3,
+                            ProductId = 1,
                             Quantity = 300.0,
-                            Unit = "ml",
-                            ingredientId = 3,
-                            productId = 1
+                            Unit = "ml"
                         },
                         new
                         {
                             RecipeId = 4,
+                            IngredientId = 1,
+                            ProductId = 2,
                             Quantity = 100.0,
-                            Unit = "g",
-                            ingredientId = 1,
-                            productId = 2
+                            Unit = "g"
                         },
                         new
                         {
                             RecipeId = 5,
+                            IngredientId = 4,
+                            ProductId = 2,
                             Quantity = 300.0,
-                            Unit = "ml",
-                            ingredientId = 4,
-                            productId = 2
+                            Unit = "ml"
                         },
                         new
                         {
                             RecipeId = 6,
+                            IngredientId = 5,
+                            ProductId = 2,
                             Quantity = 50.0,
-                            Unit = "g",
-                            ingredientId = 5,
-                            productId = 2
+                            Unit = "g"
                         },
                         new
                         {
                             RecipeId = 7,
+                            IngredientId = 6,
+                            ProductId = 2,
                             Quantity = 50.0,
-                            Unit = "g",
-                            ingredientId = 6,
-                            productId = 2
+                            Unit = "g"
                         },
                         new
                         {
                             RecipeId = 8,
+                            IngredientId = 7,
+                            ProductId = 2,
                             Quantity = 200.0,
-                            Unit = "g",
-                            ingredientId = 7,
-                            productId = 2
+                            Unit = "g"
                         },
                         new
                         {
                             RecipeId = 9,
+                            IngredientId = 9,
+                            ProductId = 3,
                             Quantity = 100.0,
-                            Unit = "g",
-                            ingredientId = 9,
-                            productId = 3
+                            Unit = "g"
                         },
                         new
                         {
                             RecipeId = 10,
+                            IngredientId = 8,
+                            ProductId = 3,
                             Quantity = 50.0,
-                            Unit = "g",
-                            ingredientId = 8,
-                            productId = 3
+                            Unit = "g"
                         },
                         new
                         {
                             RecipeId = 11,
+                            IngredientId = 7,
+                            ProductId = 3,
                             Quantity = 100.0,
-                            Unit = "g",
-                            ingredientId = 7,
-                            productId = 3
+                            Unit = "g"
                         },
                         new
                         {
                             RecipeId = 12,
+                            IngredientId = 10,
+                            ProductId = 3,
                             Quantity = 50.0,
-                            Unit = "g",
-                            ingredientId = 10,
-                            productId = 3
+                            Unit = "g"
                         },
                         new
                         {
                             RecipeId = 13,
+                            IngredientId = 11,
+                            ProductId = 4,
                             Quantity = 50.0,
-                            Unit = "g",
-                            ingredientId = 11,
-                            productId = 4
+                            Unit = "g"
                         },
                         new
                         {
                             RecipeId = 14,
+                            IngredientId = 12,
+                            ProductId = 4,
                             Quantity = 50.0,
-                            Unit = "g",
-                            ingredientId = 12,
-                            productId = 4
+                            Unit = "g"
                         },
                         new
                         {
                             RecipeId = 15,
+                            IngredientId = 14,
+                            ProductId = 4,
                             Quantity = 50.0,
-                            Unit = "g",
-                            ingredientId = 14,
-                            productId = 4
+                            Unit = "g"
                         },
                         new
                         {
                             RecipeId = 16,
+                            IngredientId = 15,
+                            ProductId = 4,
                             Quantity = 50.0,
-                            Unit = "g",
-                            ingredientId = 15,
-                            productId = 4
+                            Unit = "g"
                         },
                         new
                         {
                             RecipeId = 17,
+                            IngredientId = 7,
+                            ProductId = 4,
                             Quantity = 150.0,
-                            Unit = "g",
-                            ingredientId = 7,
-                            productId = 4
+                            Unit = "g"
                         },
                         new
                         {
                             RecipeId = 18,
+                            IngredientId = 14,
+                            ProductId = 5,
                             Quantity = 2.0,
-                            Unit = "con",
-                            ingredientId = 14,
-                            productId = 5
+                            Unit = "con"
                         },
                         new
                         {
                             RecipeId = 19,
+                            IngredientId = 16,
+                            ProductId = 5,
                             Quantity = 100.0,
-                            Unit = "g",
-                            ingredientId = 16,
-                            productId = 5
+                            Unit = "g"
                         },
                         new
                         {
                             RecipeId = 20,
+                            IngredientId = 14,
+                            ProductId = 6,
                             Quantity = 2.0,
-                            Unit = "con",
-                            ingredientId = 14,
-                            productId = 6
+                            Unit = "con"
                         },
                         new
                         {
                             RecipeId = 21,
+                            IngredientId = 17,
+                            ProductId = 6,
                             Quantity = 100.0,
-                            Unit = "g",
-                            ingredientId = 17,
-                            productId = 6
+                            Unit = "g"
                         },
                         new
                         {
                             RecipeId = 22,
+                            IngredientId = 13,
+                            ProductId = 7,
                             Quantity = 1.0,
-                            Unit = "con",
-                            ingredientId = 13,
-                            productId = 7
+                            Unit = "con"
                         },
                         new
                         {
                             RecipeId = 23,
+                            IngredientId = 16,
+                            ProductId = 7,
                             Quantity = 100.0,
-                            Unit = "g",
-                            ingredientId = 16,
-                            productId = 7
+                            Unit = "g"
                         },
                         new
                         {
                             RecipeId = 24,
+                            IngredientId = 13,
+                            ProductId = 8,
                             Quantity = 1.0,
-                            Unit = "con",
-                            ingredientId = 13,
-                            productId = 8
+                            Unit = "con"
                         },
                         new
                         {
                             RecipeId = 25,
+                            IngredientId = 17,
+                            ProductId = 8,
                             Quantity = 100.0,
-                            Unit = "g",
-                            ingredientId = 17,
-                            productId = 8
+                            Unit = "g"
                         },
                         new
                         {
                             RecipeId = 26,
+                            IngredientId = 11,
+                            ProductId = 9,
                             Quantity = 200.0,
-                            Unit = "g",
-                            ingredientId = 11,
-                            productId = 9
+                            Unit = "g"
                         },
                         new
                         {
                             RecipeId = 27,
+                            IngredientId = 12,
+                            ProductId = 9,
                             Quantity = 200.0,
-                            Unit = "g",
-                            ingredientId = 12,
-                            productId = 9
+                            Unit = "g"
                         },
                         new
                         {
                             RecipeId = 28,
+                            IngredientId = 14,
+                            ProductId = 9,
                             Quantity = 200.0,
-                            Unit = "g",
-                            ingredientId = 14,
-                            productId = 9
+                            Unit = "g"
                         },
                         new
                         {
                             RecipeId = 29,
+                            IngredientId = 1,
+                            ProductId = 9,
                             Quantity = 200.0,
-                            Unit = "g",
-                            ingredientId = 1,
-                            productId = 9
+                            Unit = "g"
                         },
                         new
                         {
                             RecipeId = 30,
+                            IngredientId = 7,
+                            ProductId = 9,
                             Quantity = 200.0,
-                            Unit = "g",
-                            ingredientId = 7,
-                            productId = 9
+                            Unit = "g"
                         },
                         new
                         {
                             RecipeId = 31,
+                            IngredientId = 18,
+                            ProductId = 10,
                             Quantity = 500.0,
-                            Unit = "g",
-                            ingredientId = 18,
-                            productId = 10
+                            Unit = "g"
                         },
                         new
                         {
                             RecipeId = 32,
+                            IngredientId = 19,
+                            ProductId = 10,
                             Quantity = 200.0,
-                            Unit = "g",
-                            ingredientId = 19,
-                            productId = 10
+                            Unit = "g"
                         },
                         new
                         {
                             RecipeId = 33,
+                            IngredientId = 11,
+                            ProductId = 11,
                             Quantity = 300.0,
-                            Unit = "g",
-                            ingredientId = 11,
-                            productId = 11
+                            Unit = "g"
                         },
                         new
                         {
                             RecipeId = 34,
+                            IngredientId = 1,
+                            ProductId = 12,
                             Quantity = 200.0,
-                            Unit = "g",
-                            ingredientId = 1,
-                            productId = 12
+                            Unit = "g"
                         },
                         new
                         {
                             RecipeId = 35,
+                            IngredientId = 20,
+                            ProductId = 13,
                             Quantity = 1.0,
-                            Unit = "kg",
-                            ingredientId = 20,
-                            productId = 13
+                            Unit = "kg"
                         },
                         new
                         {
                             RecipeId = 36,
+                            IngredientId = 20,
+                            ProductId = 14,
                             Quantity = 1.0,
-                            Unit = "kg",
-                            ingredientId = 20,
-                            productId = 14
+                            Unit = "kg"
                         },
                         new
                         {
                             RecipeId = 37,
+                            IngredientId = 21,
+                            ProductId = 15,
                             Quantity = 300.0,
-                            Unit = "g",
-                            ingredientId = 21,
-                            productId = 15
+                            Unit = "g"
                         },
                         new
                         {
                             RecipeId = 38,
+                            IngredientId = 22,
+                            ProductId = 16,
                             Quantity = 200.0,
-                            Unit = "g",
-                            ingredientId = 22,
-                            productId = 16
+                            Unit = "g"
                         },
                         new
                         {
                             RecipeId = 39,
+                            IngredientId = 14,
+                            ProductId = 16,
                             Quantity = 200.0,
-                            Unit = "g",
-                            ingredientId = 14,
-                            productId = 16
+                            Unit = "g"
                         },
                         new
                         {
                             RecipeId = 40,
+                            IngredientId = 24,
+                            ProductId = 17,
                             Quantity = 300.0,
-                            Unit = "g",
-                            ingredientId = 24,
-                            productId = 17
+                            Unit = "g"
                         },
                         new
                         {
                             RecipeId = 41,
+                            IngredientId = 23,
+                            ProductId = 17,
                             Quantity = 100.0,
-                            Unit = "g",
-                            ingredientId = 23,
-                            productId = 17
+                            Unit = "g"
                         },
                         new
                         {
                             RecipeId = 42,
+                            IngredientId = 12,
+                            ProductId = 18,
                             Quantity = 200.0,
-                            Unit = "g",
-                            ingredientId = 12,
-                            productId = 18
+                            Unit = "g"
                         },
                         new
                         {
                             RecipeId = 43,
+                            IngredientId = 11,
+                            ProductId = 18,
                             Quantity = 200.0,
-                            Unit = "g",
-                            ingredientId = 11,
-                            productId = 18
+                            Unit = "g"
                         },
                         new
                         {
                             RecipeId = 44,
+                            IngredientId = 25,
+                            ProductId = 18,
                             Quantity = 200.0,
-                            Unit = "g",
-                            ingredientId = 25,
-                            productId = 18
+                            Unit = "g"
                         },
                         new
                         {
                             RecipeId = 45,
+                            IngredientId = 26,
+                            ProductId = 19,
                             Quantity = 300.0,
-                            Unit = "g",
-                            ingredientId = 26,
-                            productId = 19
+                            Unit = "g"
                         },
                         new
                         {
                             RecipeId = 46,
+                            IngredientId = 1,
+                            ProductId = 19,
                             Quantity = 200.0,
-                            Unit = "g",
-                            ingredientId = 1,
-                            productId = 19
+                            Unit = "g"
                         },
                         new
                         {
                             RecipeId = 47,
+                            IngredientId = 27,
+                            ProductId = 20,
                             Quantity = 300.0,
-                            Unit = "g",
-                            ingredientId = 27,
-                            productId = 20
+                            Unit = "g"
                         },
                         new
                         {
                             RecipeId = 48,
+                            IngredientId = 27,
+                            ProductId = 21,
                             Quantity = 300.0,
-                            Unit = "g",
-                            ingredientId = 27,
-                            productId = 21
+                            Unit = "g"
                         },
                         new
                         {
                             RecipeId = 49,
+                            IngredientId = 11,
+                            ProductId = 22,
                             Quantity = 300.0,
-                            Unit = "g",
-                            ingredientId = 11,
-                            productId = 22
+                            Unit = "g"
                         },
                         new
                         {
                             RecipeId = 50,
+                            IngredientId = 28,
+                            ProductId = 23,
                             Quantity = 500.0,
-                            Unit = "g",
-                            ingredientId = 28,
-                            productId = 23
+                            Unit = "g"
                         });
                 });
 
@@ -2463,6 +2445,9 @@ namespace UngDungQuanLiNhaHang.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SupplierID"));
 
+                    b.Property<int>("AddressId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -2475,12 +2460,9 @@ namespace UngDungQuanLiNhaHang.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("addressID")
-                        .HasColumnType("int");
-
                     b.HasKey("SupplierID");
 
-                    b.HasIndex("addressID");
+                    b.HasIndex("AddressId");
 
                     b.ToTable("suppliers");
 
@@ -2488,18 +2470,18 @@ namespace UngDungQuanLiNhaHang.Migrations
                         new
                         {
                             SupplierID = 1,
+                            AddressId = 7,
                             Email = "ctyabc@gmail.com",
                             Phone = "0239092399",
-                            SupplierName = "Công Ty Thực Phẩm Sạch ABC",
-                            addressID = 7
+                            SupplierName = "Công Ty Thực Phẩm Sạch ABC"
                         },
                         new
                         {
                             SupplierID = 2,
+                            AddressId = 8,
                             Email = "haisan23@gmail.com",
                             Phone = "0239092459",
-                            SupplierName = "Công Ty Hải Sản Cà Mau",
-                            addressID = 8
+                            SupplierName = "Công Ty Hải Sản Cà Mau"
                         });
                 });
 
@@ -2556,32 +2538,41 @@ namespace UngDungQuanLiNhaHang.Migrations
                 {
                     b.HasOne("UngDungQuanLiNhaHang.Models.Carts", "Carts")
                         .WithMany("CartItems")
-                        .HasForeignKey("CartsCartId");
+                        .HasForeignKey("CartId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("UngDungQuanLiNhaHang.Models.Products", "Products")
                         .WithMany("cartItems")
-                        .HasForeignKey("ProductsProductId");
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Carts");
 
                     b.Navigation("Products");
                 });
 
-            modelBuilder.Entity("UngDungQuanLiNhaHang.Models.Customers", b =>
+            modelBuilder.Entity("UngDungQuanLiNhaHang.Models.Carts", b =>
                 {
-                    b.HasOne("UngDungQuanLiNhaHang.Models.Carts", "cart")
-                        .WithOne("Customers")
-                        .HasForeignKey("UngDungQuanLiNhaHang.Models.Customers", "cartId");
-
-                    b.HasOne("UngDungQuanLiNhaHang.Models.Roles", "role")
-                        .WithMany("Customers")
-                        .HasForeignKey("roleId")
+                    b.HasOne("UngDungQuanLiNhaHang.Models.Customers", "Customers")
+                        .WithOne("Cart")
+                        .HasForeignKey("UngDungQuanLiNhaHang.Models.Carts", "CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("cart");
+                    b.Navigation("Customers");
+                });
 
-                    b.Navigation("role");
+            modelBuilder.Entity("UngDungQuanLiNhaHang.Models.Customers", b =>
+                {
+                    b.HasOne("UngDungQuanLiNhaHang.Models.Roles", "Role")
+                        .WithMany("Customers")
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Role");
                 });
 
             modelBuilder.Entity("UngDungQuanLiNhaHang.Models.Employees", b =>
@@ -2612,33 +2603,51 @@ namespace UngDungQuanLiNhaHang.Migrations
 
             modelBuilder.Entity("UngDungQuanLiNhaHang.Models.Images", b =>
                 {
-                    b.HasOne("UngDungQuanLiNhaHang.Models.Products", "products")
+                    b.HasOne("UngDungQuanLiNhaHang.Models.Products", "Products")
                         .WithMany("images")
-                        .HasForeignKey("productsProductId");
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Navigation("products");
+                    b.Navigation("Products");
                 });
 
             modelBuilder.Entity("UngDungQuanLiNhaHang.Models.InvoiceItems", b =>
                 {
-                    b.HasOne("UngDungQuanLiNhaHang.Models.Invoices", "invoices")
+                    b.HasOne("UngDungQuanLiNhaHang.Models.Invoices", "Invoices")
                         .WithMany("invoiceItems")
-                        .HasForeignKey("invoicesInvoiceId");
+                        .HasForeignKey("InvoiceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasOne("UngDungQuanLiNhaHang.Models.Products", "products")
+                    b.HasOne("UngDungQuanLiNhaHang.Models.Products", "Products")
                         .WithMany("invoiceItems")
-                        .HasForeignKey("productsProductId");
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Navigation("invoices");
+                    b.Navigation("Invoices");
 
-                    b.Navigation("products");
+                    b.Navigation("Products");
                 });
 
             modelBuilder.Entity("UngDungQuanLiNhaHang.Models.Invoices", b =>
                 {
                     b.HasOne("UngDungQuanLiNhaHang.Models.Address", "address")
                         .WithMany("invoices")
-                        .HasForeignKey("addressId")
+                        .HasForeignKey("AddressId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("UngDungQuanLiNhaHang.Models.InvoiceStatus", "InvoiceStatus")
+                        .WithMany("Invoices")
+                        .HasForeignKey("InvoiceStatusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("UngDungQuanLiNhaHang.Models.PaymentMethod", "PaymentMethod")
+                        .WithMany("Invoices")
+                        .HasForeignKey("PaymentMethodId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -2646,116 +2655,114 @@ namespace UngDungQuanLiNhaHang.Migrations
                         .WithMany("invoices")
                         .HasForeignKey("customersCustomerId");
 
-                    b.HasOne("UngDungQuanLiNhaHang.Models.InvoiceStatus", "invoiceStatus")
-                        .WithMany("Invoices")
-                        .HasForeignKey("invoiceStatusId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("UngDungQuanLiNhaHang.Models.PaymentMethod", "paymentMethod")
-                        .WithMany("Invoices")
-                        .HasForeignKey("paymentMethodId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("UngDungQuanLiNhaHang.Models.Tables", "tables")
                         .WithMany("Invoices")
                         .HasForeignKey("tablesTableId");
 
+                    b.Navigation("InvoiceStatus");
+
+                    b.Navigation("PaymentMethod");
+
                     b.Navigation("address");
 
                     b.Navigation("customers");
-
-                    b.Navigation("invoiceStatus");
-
-                    b.Navigation("paymentMethod");
 
                     b.Navigation("tables");
                 });
 
             modelBuilder.Entity("UngDungQuanLiNhaHang.Models.ProductReviews", b =>
                 {
-                    b.HasOne("UngDungQuanLiNhaHang.Models.Customers", "customers")
+                    b.HasOne("UngDungQuanLiNhaHang.Models.Customers", "Customers")
                         .WithMany("productReviews")
-                        .HasForeignKey("customersCustomerId");
-
-                    b.HasOne("UngDungQuanLiNhaHang.Models.Invoices", "invoices")
-                        .WithOne("productReviews")
-                        .HasForeignKey("UngDungQuanLiNhaHang.Models.ProductReviews", "invoiceId")
+                        .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("UngDungQuanLiNhaHang.Models.Products", "products")
+                    b.HasOne("UngDungQuanLiNhaHang.Models.Invoices", "Invoices")
+                        .WithOne("productReviews")
+                        .HasForeignKey("UngDungQuanLiNhaHang.Models.ProductReviews", "InvoiceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("UngDungQuanLiNhaHang.Models.Products", "Products")
                         .WithMany("productReviews")
-                        .HasForeignKey("productsProductId");
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Navigation("customers");
+                    b.Navigation("Customers");
 
-                    b.Navigation("invoices");
+                    b.Navigation("Invoices");
 
-                    b.Navigation("products");
+                    b.Navigation("Products");
                 });
 
             modelBuilder.Entity("UngDungQuanLiNhaHang.Models.Products", b =>
                 {
-                    b.HasOne("UngDungQuanLiNhaHang.Models.Categorys", "category")
+                    b.HasOne("UngDungQuanLiNhaHang.Models.Categorys", "Category")
                         .WithMany("Products")
-                        .HasForeignKey("categoryId")
+                        .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("category");
+                    b.Navigation("Category");
                 });
 
             modelBuilder.Entity("UngDungQuanLiNhaHang.Models.PurchaseInvoice", b =>
                 {
-                    b.HasOne("UngDungQuanLiNhaHang.Models.Employees", "employees")
+                    b.HasOne("UngDungQuanLiNhaHang.Models.Employees", "Employees")
                         .WithMany("PurchaseInvoices")
-                        .HasForeignKey("employeesEmployeeId");
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasOne("UngDungQuanLiNhaHang.Models.Suppliers", "suppliers")
+                    b.HasOne("UngDungQuanLiNhaHang.Models.Suppliers", "Suppliers")
                         .WithMany("purchaseInvoices")
-                        .HasForeignKey("suppliersSupplierID");
+                        .HasForeignKey("SupplierId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
-                    b.Navigation("employees");
+                    b.Navigation("Employees");
 
-                    b.Navigation("suppliers");
+                    b.Navigation("Suppliers");
                 });
 
             modelBuilder.Entity("UngDungQuanLiNhaHang.Models.PurchaseInvoiceItem", b =>
                 {
-                    b.HasOne("UngDungQuanLiNhaHang.Models.Ingredient", "ingredient")
+                    b.HasOne("UngDungQuanLiNhaHang.Models.Ingredient", "Ingredient")
                         .WithMany("PurchaseInvoiceItems")
-                        .HasForeignKey("ingredientId")
+                        .HasForeignKey("IngredientId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("UngDungQuanLiNhaHang.Models.PurchaseInvoice", "purchaseInvoice")
+                    b.HasOne("UngDungQuanLiNhaHang.Models.PurchaseInvoice", "PurchaseInvoice")
                         .WithMany("purchaseInvoiceItems")
-                        .HasForeignKey("purchaseInvoiceId")
+                        .HasForeignKey("PurchaseInvoiceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("ingredient");
+                    b.Navigation("Ingredient");
 
-                    b.Navigation("purchaseInvoice");
+                    b.Navigation("PurchaseInvoice");
                 });
 
             modelBuilder.Entity("UngDungQuanLiNhaHang.Models.Recipes", b =>
                 {
-                    b.HasOne("UngDungQuanLiNhaHang.Models.Ingredient", "ingredient")
+                    b.HasOne("UngDungQuanLiNhaHang.Models.Ingredient", "Ingredient")
                         .WithMany("Recipes")
-                        .HasForeignKey("ingredientId")
+                        .HasForeignKey("IngredientId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("UngDungQuanLiNhaHang.Models.Products", "products")
+                    b.HasOne("UngDungQuanLiNhaHang.Models.Products", "Products")
                         .WithMany("recipes")
-                        .HasForeignKey("productsProductId");
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Navigation("ingredient");
+                    b.Navigation("Ingredient");
 
-                    b.Navigation("products");
+                    b.Navigation("Products");
                 });
 
             modelBuilder.Entity("UngDungQuanLiNhaHang.Models.RefreshTokens", b =>
@@ -2786,13 +2793,13 @@ namespace UngDungQuanLiNhaHang.Migrations
 
             modelBuilder.Entity("UngDungQuanLiNhaHang.Models.Suppliers", b =>
                 {
-                    b.HasOne("UngDungQuanLiNhaHang.Models.Address", "address")
+                    b.HasOne("UngDungQuanLiNhaHang.Models.Address", "Address")
                         .WithMany("suppliers")
-                        .HasForeignKey("addressID")
+                        .HasForeignKey("AddressId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("address");
+                    b.Navigation("Address");
                 });
 
             modelBuilder.Entity("UngDungQuanLiNhaHang.Models.Address", b =>
@@ -2809,8 +2816,6 @@ namespace UngDungQuanLiNhaHang.Migrations
             modelBuilder.Entity("UngDungQuanLiNhaHang.Models.Carts", b =>
                 {
                     b.Navigation("CartItems");
-
-                    b.Navigation("Customers");
                 });
 
             modelBuilder.Entity("UngDungQuanLiNhaHang.Models.Categorys", b =>
@@ -2820,6 +2825,9 @@ namespace UngDungQuanLiNhaHang.Migrations
 
             modelBuilder.Entity("UngDungQuanLiNhaHang.Models.Customers", b =>
                 {
+                    b.Navigation("Cart")
+                        .IsRequired();
+
                     b.Navigation("invoices");
 
                     b.Navigation("productReviews");

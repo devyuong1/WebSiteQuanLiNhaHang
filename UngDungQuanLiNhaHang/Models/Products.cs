@@ -17,8 +17,11 @@ namespace UngDungQuanLiNhaHang.Models {
         public DateTime Update_At { get; set; } = DateTime.UtcNow;
         public double AverageRating { get; set; } = 5;
         public int TotalReviews { get; set; } = 1;
-        public int categoryId { get; set; }
-        public Categorys? category { get; set; }
+        public int CategoryId { get; set; }
+        [ForeignKey("CategoryId")]
+
+        public Categorys? Category { get; set; }
+
         public ICollection<Images> images { get; set; } = new List<Images>();
         public ICollection<Recipes> recipes { get; set; } = new List<Recipes>();
 

@@ -15,15 +15,20 @@ namespace UngDungQuanLiNhaHang.Models {
         public Customers? customers { get; set; }
         public int? tableId { get; set; }
         public Tables? tables { get; set; }
-        public int paymentMethodId { get; set; }
-        public PaymentMethod? paymentMethod { get; set; }
+        
+        public int PaymentMethodId { get; set; }
+        [ForeignKey("PaymentMethodId")]
+        public PaymentMethod? PaymentMethod { get; set; }
+        public int InvoiceStatusId { get; set; }
+        [ForeignKey("InvoiceStatusId")]
 
-        public int invoiceStatusId { get; set; }
-        public InvoiceStatus? invoiceStatus { get; set; }
+        public InvoiceStatus? InvoiceStatus { get; set; }
       
         
         public ProductReviews? productReviews { get; set; }
-        public int addressId { get; set; }
+        public int AddressId { get; set; }
+        [ForeignKey("AddressId")]
+
         public Address? address { get; set; }
         public ICollection<InvoiceItems> invoiceItems { get; set; }  = new List<InvoiceItems>();
 

@@ -5,7 +5,7 @@ using UngDungQuanLiNhaHang.Services.Interfaces;
 using UngDungQuanLiNhaHang.Security;
 using UngDungQuanLiNhaHang.Models;
 namespace UngDungQuanLiNhaHang.Services.Implementations {
-    public class AuthServices(CustomerRepo customerRepo,JWT jwt,TransactionRepo transactionRepo) : IAuthServices {
+    public class AuthServices(CustomerRepo customerRepo,JWT jwt,TransactionRepo transactionRepo,CartRepo cartRepo) : IAuthServices {
         public async Task<ApiResponse<CustomerResponse>> Login(LoginDTO customer) {
             var user = await customerRepo.GetCustomerByEmail(customer.Email);
             if (user == null ) {
@@ -15,7 +15,7 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
                 return ApiResponse<CustomerResponse>.FailResponse("Sai tài khoản hoặc mật khẩu!!!");
             }
 
-            var token = jwt.GenerateJWT(user.FullName, user.CustomerId, user.role!.RoleName);
+            var token = jwt.GenerateJWT(user.FullName, user.CustomerId, user.Role!.RoleName);
             
             var response = new CustomerResponse {
                 customerId = user.CustomerId,
@@ -37,6 +37,7 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
                     customerId = user.CustomerId
                 };
                 user.refreshTokens!.Add(rfToken);
+                
                 customerRepo.UpdateCustomer(user);
                 await transactionRepo.CompleteAsync();
                 await transactionRepo.CommitAsync();
@@ -59,6 +60,8 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
                 return ApiResponse<bool>.FailResponse("Mật khẩu không khớp.");
             }
             var refreshToken = jwt.GenerateRefreshToken(customer.FullName);
+            
+
             try {
                 RefreshTokens rfToken = new RefreshTokens {
                     Token = refreshToken,
@@ -68,20 +71,31 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
                     IsUsed = false,
                     IsRevoked = false,
                 };
-
+                
                 Customers newCustomer = new Customers {
                     FullName = customer.FullName,
                     Email = customer.Email,
                     Phone = customer.Phone,
                     Password = BCrypt.Net.BCrypt.HashPassword(customer.Password),
-                    roleId = 4,
-                    cart = new Carts()
+                    RoleId = 4,
+                   
 
                 };
                 newCustomer.refreshTokens.Add(rfToken);
                 await customerRepo.AddCustomer(newCustomer);
 
                 await transactionRepo.CompleteAsync();
+
+
+                Carts carts = new() {
+                    TotalAmount = 0,
+                    TotalQuantity = 0,
+                    CustomerId = newCustomer.CustomerId
+                };
+                await cartRepo.AddCart(carts);
+                await transactionRepo.CompleteAsync();
+               
+                
                 await transactionRepo.CommitAsync();
                 return ApiResponse<bool>.SuccessResponse(true,"Đăng ký tài khoản thành công.");
             }
@@ -120,7 +134,7 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
                 
 
                 
-                var newJwtToken = jwt.GenerateJWT(user.FullName, user.CustomerId, user.role!.RoleName);
+                var newJwtToken = jwt.GenerateJWT(user.FullName, user.CustomerId, user.Role!.RoleName);
                 var newRefreshToken = jwt.GenerateRefreshToken(user.FullName);
                 RefreshTokens rfToken = new RefreshTokens {
                     customerId = user.CustomerId,

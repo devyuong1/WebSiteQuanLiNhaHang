@@ -9,9 +9,10 @@ namespace UngDungQuanLiNhaHang.Models {
         public required string SupplierName {get; set;}
         public required string Phone {  get; set;}
         public required string Email { get; set;}
+        public int AddressId { get; set;}
+        [ForeignKey("AddressId")]
 
-        public int addressID { get; set;}
-        public Address? address { get; set;}
+        public Address? Address { get; set;}
 
         public ICollection<PurchaseInvoice> purchaseInvoices { get; set;} = new List<PurchaseInvoice>();
     }

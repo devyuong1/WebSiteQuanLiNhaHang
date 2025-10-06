@@ -9,6 +9,7 @@ using UngDungQuanLiNhaHang.Security;
 using UngDungQuanLiNhaHang.Services.Implementations;
 using UngDungQuanLiNhaHang.Services.Interfaces;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 
@@ -52,12 +53,17 @@ builder.Services.AddAuthentication(
 builder.Services.AddScoped<IAuthServices, AuthServices>();
 builder.Services.AddScoped<IEmployeeServices, EmployeeService>();
 builder.Services.AddScoped<IIngredientServices, IngredientService>();
-builder.Services.AddScoped<CustomerRepo>();
+
 builder.Services.AddScoped<TransactionRepo>();
 builder.Services.AddScoped<EmployeeRepo>();
 builder.Services.AddScoped<IngredientRepo>();
 builder.Services.AddScoped<JWT>();
 builder.Services.AddScoped<AddressRepo>();
+builder.Services.AddScoped<CustomerRepo>();
+builder.Services.AddScoped<ICustomerServices, CustomerService>();
+builder.Services.AddScoped<CartRepo>();
+builder.Services.AddScoped<ICartServices, CartServices>();
+builder.Services.AddScoped<ProductRepo>();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAllOrigins",

@@ -2,14 +2,33 @@
 using UngDungQuanLiNhaHang.Repository;
 using UngDungQuanLiNhaHang.RequestDTO;
 using UngDungQuanLiNhaHang.ResponseDTO;
-using UngDungQuanLiNhaHang.Services.IServices;
+using UngDungQuanLiNhaHang.Services.Interfaces;
 
 namespace UngDungQuanLiNhaHang.Services.Implementations {
-    public class CustomerService(CustomerRepo customerRepo,TransactionRepo transactionRepo) : ICustomerServices {
-        
+    public class CustomerService(CustomerRepo customerRepo, TransactionRepo transactionRepo) : ICustomerServices {
 
-        public Task<bool> DeleteAddress(int addressId) {
-            throw new NotImplementedException();
+
+        public async Task<ApiResponse<bool>> DeleteAddress(int customerId, int addressId) {
+            var customer = await customerRepo.GetCustomerById(customerId);
+            if ( customer == null ) {
+                return ApiResponse<bool>.FailResponse("Customer not found");
+            }
+            var address = customer.addresses.FirstOrDefault(a => a.AddressId == addressId);
+            if ( address == null ) {
+                return ApiResponse<bool>.FailResponse("Address not found");
+            }
+            try {
+                await transactionRepo.BeginTransactionAsync();
+                customer.addresses.Remove(address);
+                customerRepo.UpdateCustomer(customer);
+                await transactionRepo.CompleteAsync();
+                await transactionRepo.CommitAsync();
+                return ApiResponse<bool>.SuccessResponse(true, "Delete address successfully");
+            }
+            catch ( Exception ex ) {
+                await transactionRepo.RollbackAsync();
+                return ApiResponse<bool>.FailResponse("Delete address failed. Erorr : " + ex.ToString());
+            }
         }
 
         public async Task<ApiResponse<CustomerResponse>> GetCustomersById(int id) {
@@ -35,16 +54,22 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
             return ApiResponse<CustomerResponse>.SuccessResponse(response, "Get customer successfully");
 
         }
-        public async Task<ApiResponse<bool>> AddAddress(AddressDTO address) {
-            var customer = await customerRepo.GetCustomerForAddress(address.customerId);
+        public async Task<ApiResponse<bool>> AddAddress(int customerID, AddressDTO address) {
+            var customer = await customerRepo.GetCustomerForAddress(customerID);
             if ( customer == null )
                 return ApiResponse<bool>.FailResponse("Customer not found");
+            if (address.isDefault) {
+                foreach ( var item in customer.addresses ) {
+                    item.IsDefault = false;
+                }
+            }
             Address address1 = new() {
                 Province = address.province,
                 District = address.district,
                 Hamlet = address.hamlet,
                 Street = address.street,
                 HouseNumber = address.houseNumber,
+                IsDefault = address.isDefault,
             };
             var addr = customer.addresses.Contains(address1);
             if ( !addr ) {
@@ -65,18 +90,37 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
 
             return ApiResponse<bool>.FailResponse("Address is exist");
         }
-            
-        public async Task<bool> UpdateCustomer(CustomerDTO customer) {
-            throw new NotImplementedException();
+
+        public async Task<ApiResponse<bool>> UpdateCustomer(int customerID, CustomerDTO customer) {
+            var existingCustomer = await customerRepo.GetCustomerById(customerID);
+            if ( existingCustomer == null )
+                return ApiResponse<bool>.FailResponse("Customer not found");
+            existingCustomer.FullName = customer.FullName;
+            existingCustomer.Phone = customer.Phone;
+
+            try {
+                await transactionRepo.BeginTransactionAsync();
+                customerRepo.UpdateCustomer(existingCustomer);
+                await transactionRepo.CompleteAsync();
+                await transactionRepo.CommitAsync();
+                return ApiResponse<bool>.SuccessResponse(true, "Update Success");
+
+            }
+            catch ( Exception ex ) {
+                await transactionRepo.RollbackAsync();
+                return ApiResponse<bool>.FailResponse(ex.Message);
+            }
+
+
         }
 
-        public async Task<ApiResponse<bool>> UpdateAddress(AddressDTO address) {
-            var customer = await customerRepo.GetCustomerForAddress(address.customerId);
+        public async Task<ApiResponse<bool>> UpdateAddress(int customerID, AddressDTO address) {
+            var customer = await customerRepo.GetCustomerForAddress(customerID);
             if ( customer == null )
                 return ApiResponse<bool>.FailResponse("Customer not found");
-            
-            var addr = customer.addresses.FirstOrDefault( s=> s.AddressId == address.addressId);
-            if ( addr == null) {
+
+            var addr = customer.addresses.FirstOrDefault(s => s.AddressId == address.addressId);
+            if ( addr == null ) {
                 return ApiResponse<bool>.FailResponse("Address not found");
             }
             addr.Province = address.province;
@@ -98,7 +142,57 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
                 return ApiResponse<bool>.FailResponse("Update address failed");
 
             }
-            
+
+        }
+
+        public async Task<ApiResponse<bool>> SetDefaultAddress(int customerId, int addressId) {
+            var customer = await customerRepo.GetCustomerById(customerId);
+            if ( customer == null ) {
+                return ApiResponse<bool>.FailResponse("Customer not found");
+            }
+            var addressOld = customer.addresses.FirstOrDefault(a => a.IsDefault == true);
+            var addressNew = customer.addresses.FirstOrDefault(a => a.AddressId == addressId);
+
+            if ( addressNew == null ) {
+                return ApiResponse<bool>.FailResponse("Address not found");
+            }
+            if ( addressOld != null ) {
+                addressOld.IsDefault = false;
+            }
+            addressNew.IsDefault = true;
+            try {
+                await transactionRepo.BeginTransactionAsync();
+                customerRepo.UpdateCustomer(customer);
+                await transactionRepo.CompleteAsync();
+                await transactionRepo.CommitAsync();
+                return ApiResponse<bool>.SuccessResponse(true, "Set default address successfully");
+            }
+            catch ( Exception ex ) {
+                await transactionRepo.RollbackAsync();
+                return ApiResponse<bool>.FailResponse("Set default address failed. Error: " + ex.ToString());
+            }
+        }
+
+        public async Task<ApiResponse<bool>> ChangePassword(int customerId, string oldPassword, string newPassword) {
+            var customer = await customerRepo.GetCustomerById(customerId);
+            if ( customer == null ) {
+                return ApiResponse<bool>.FailResponse("Customer not found");
+            }
+            if ( !BCrypt.Net.BCrypt.Verify(oldPassword, customer.Password) ) {
+                return ApiResponse<bool>.FailResponse("Old password is incorrect");
+            }
+            customer.Password = BCrypt.Net.BCrypt.HashPassword(newPassword);
+            try {
+                await transactionRepo.BeginTransactionAsync();
+                customerRepo.UpdateCustomer(customer);
+                await transactionRepo.CompleteAsync();
+                await transactionRepo.CommitAsync();
+                return ApiResponse<bool>.SuccessResponse(true, "Change password successfully");
+            }
+            catch ( Exception ex ) {
+                await transactionRepo.RollbackAsync();
+                return ApiResponse<bool>.FailResponse("Change password failed. Error: " + ex.ToString());
+            }
         }
     }
 }

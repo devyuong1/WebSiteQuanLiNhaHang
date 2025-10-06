@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace UngDungQuanLiNhaHang.Migrations
 {
     /// <inheritdoc />
-    public partial class InitDatabase : Migration
+    public partial class Init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -29,21 +29,6 @@ namespace UngDungQuanLiNhaHang.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_addresses", x => x.AddressId);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "carts",
-                columns: table => new
-                {
-                    CartId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    TotalQuantity = table.Column<int>(type: "int", nullable: false),
-                    TotalAmount = table.Column<double>(type: "float", nullable: false),
-                    customerId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_carts", x => x.CartId);
                 });
 
             migrationBuilder.CreateTable(
@@ -167,14 +152,14 @@ namespace UngDungQuanLiNhaHang.Migrations
                     SupplierName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Phone = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    addressID = table.Column<int>(type: "int", nullable: false)
+                    AddressId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_suppliers", x => x.SupplierID);
                     table.ForeignKey(
-                        name: "FK_suppliers_addresses_addressID",
-                        column: x => x.addressID,
+                        name: "FK_suppliers_addresses_AddressId",
+                        column: x => x.AddressId,
                         principalTable: "addresses",
                         principalColumn: "AddressId",
                         onDelete: ReferentialAction.Cascade);
@@ -197,14 +182,14 @@ namespace UngDungQuanLiNhaHang.Migrations
                     Update_At = table.Column<DateTime>(type: "datetime2", nullable: false),
                     AverageRating = table.Column<double>(type: "float", nullable: false),
                     TotalReviews = table.Column<int>(type: "int", nullable: false),
-                    categoryId = table.Column<int>(type: "int", nullable: false)
+                    CategoryId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_products", x => x.ProductId);
                     table.ForeignKey(
-                        name: "FK_products_categories_categoryId",
-                        column: x => x.categoryId,
+                        name: "FK_products_categories_CategoryId",
+                        column: x => x.CategoryId,
                         principalTable: "categories",
                         principalColumn: "CategoryId",
                         onDelete: ReferentialAction.Cascade);
@@ -221,20 +206,14 @@ namespace UngDungQuanLiNhaHang.Migrations
                     Phone = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     IsActive = table.Column<bool>(type: "bit", nullable: false),
-                    roleId = table.Column<int>(type: "int", nullable: false),
-                    cartId = table.Column<int>(type: "int", nullable: true)
+                    RoleId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_customers", x => x.CustomerId);
                     table.ForeignKey(
-                        name: "FK_customers_carts_cartId",
-                        column: x => x.cartId,
-                        principalTable: "carts",
-                        principalColumn: "CartId");
-                    table.ForeignKey(
-                        name: "FK_customers_roles_roleId",
-                        column: x => x.roleId,
+                        name: "FK_customers_roles_RoleId",
+                        column: x => x.RoleId,
                         principalTable: "roles",
                         principalColumn: "RoleId",
                         onDelete: ReferentialAction.Cascade);
@@ -279,51 +258,23 @@ namespace UngDungQuanLiNhaHang.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "cartItems",
-                columns: table => new
-                {
-                    CartItemId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Quantity = table.Column<int>(type: "int", nullable: false),
-                    Price = table.Column<double>(type: "float", nullable: false),
-                    cartId = table.Column<int>(type: "int", nullable: false),
-                    CartsCartId = table.Column<int>(type: "int", nullable: true),
-                    productId = table.Column<int>(type: "int", nullable: false),
-                    ProductsProductId = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_cartItems", x => x.CartItemId);
-                    table.ForeignKey(
-                        name: "FK_cartItems_carts_CartsCartId",
-                        column: x => x.CartsCartId,
-                        principalTable: "carts",
-                        principalColumn: "CartId");
-                    table.ForeignKey(
-                        name: "FK_cartItems_products_ProductsProductId",
-                        column: x => x.ProductsProductId,
-                        principalTable: "products",
-                        principalColumn: "ProductId");
-                });
-
-            migrationBuilder.CreateTable(
                 name: "images",
                 columns: table => new
                 {
                     ImagesId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ImagesUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    productId = table.Column<int>(type: "int", nullable: false),
-                    productsProductId = table.Column<int>(type: "int", nullable: true)
+                    ProductId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_images", x => x.ImagesId);
                     table.ForeignKey(
-                        name: "FK_images_products_productsProductId",
-                        column: x => x.productsProductId,
+                        name: "FK_images_products_ProductId",
+                        column: x => x.ProductId,
                         principalTable: "products",
-                        principalColumn: "ProductId");
+                        principalColumn: "ProductId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -334,24 +285,24 @@ namespace UngDungQuanLiNhaHang.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Quantity = table.Column<double>(type: "float", nullable: false),
                     Unit = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ingredientId = table.Column<int>(type: "int", nullable: false),
-                    productId = table.Column<int>(type: "int", nullable: false),
-                    productsProductId = table.Column<int>(type: "int", nullable: true)
+                    IngredientId = table.Column<int>(type: "int", nullable: false),
+                    ProductId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_recipes", x => x.RecipeId);
                     table.ForeignKey(
-                        name: "FK_recipes_ingredients_ingredientId",
-                        column: x => x.ingredientId,
+                        name: "FK_recipes_ingredients_IngredientId",
+                        column: x => x.IngredientId,
                         principalTable: "ingredients",
                         principalColumn: "IngredientId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_recipes_products_productsProductId",
-                        column: x => x.productsProductId,
+                        name: "FK_recipes_products_ProductId",
+                        column: x => x.ProductId,
                         principalTable: "products",
-                        principalColumn: "ProductId");
+                        principalColumn: "ProductId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -411,6 +362,27 @@ namespace UngDungQuanLiNhaHang.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "carts",
+                columns: table => new
+                {
+                    CartId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    TotalQuantity = table.Column<int>(type: "int", nullable: false),
+                    TotalAmount = table.Column<double>(type: "float", nullable: false),
+                    CustomerId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_carts", x => x.CartId);
+                    table.ForeignKey(
+                        name: "FK_carts_customers_CustomerId",
+                        column: x => x.CustomerId,
+                        principalTable: "customers",
+                        principalColumn: "CustomerId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "invoices",
                 columns: table => new
                 {
@@ -425,16 +397,16 @@ namespace UngDungQuanLiNhaHang.Migrations
                     customersCustomerId = table.Column<int>(type: "int", nullable: true),
                     tableId = table.Column<int>(type: "int", nullable: true),
                     tablesTableId = table.Column<int>(type: "int", nullable: true),
-                    paymentMethodId = table.Column<int>(type: "int", nullable: false),
-                    invoiceStatusId = table.Column<int>(type: "int", nullable: false),
-                    addressId = table.Column<int>(type: "int", nullable: false)
+                    PaymentMethodId = table.Column<int>(type: "int", nullable: false),
+                    InvoiceStatusId = table.Column<int>(type: "int", nullable: false),
+                    AddressId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_invoices", x => x.InvoiceId);
                     table.ForeignKey(
-                        name: "FK_invoices_addresses_addressId",
-                        column: x => x.addressId,
+                        name: "FK_invoices_addresses_AddressId",
+                        column: x => x.AddressId,
                         principalTable: "addresses",
                         principalColumn: "AddressId",
                         onDelete: ReferentialAction.Cascade);
@@ -444,14 +416,14 @@ namespace UngDungQuanLiNhaHang.Migrations
                         principalTable: "customers",
                         principalColumn: "CustomerId");
                     table.ForeignKey(
-                        name: "FK_invoices_invoicesStatus_invoiceStatusId",
-                        column: x => x.invoiceStatusId,
+                        name: "FK_invoices_invoicesStatus_InvoiceStatusId",
+                        column: x => x.InvoiceStatusId,
                         principalTable: "invoicesStatus",
                         principalColumn: "InvoiceStatusId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_invoices_paymentMethods_paymentMethodId",
-                        column: x => x.paymentMethodId,
+                        name: "FK_invoices_paymentMethods_PaymentMethodId",
+                        column: x => x.PaymentMethodId,
                         principalTable: "paymentMethods",
                         principalColumn: "PaymentMethodId",
                         onDelete: ReferentialAction.Cascade);
@@ -471,22 +443,21 @@ namespace UngDungQuanLiNhaHang.Migrations
                     Totalamount = table.Column<double>(type: "float", nullable: false),
                     Create_At = table.Column<DateTime>(type: "datetime2", nullable: false),
                     IsPayment = table.Column<bool>(type: "bit", nullable: false),
-                    supplierId = table.Column<int>(type: "int", nullable: false),
-                    suppliersSupplierID = table.Column<int>(type: "int", nullable: true),
-                    employeeId = table.Column<int>(type: "int", nullable: false),
-                    employeesEmployeeId = table.Column<int>(type: "int", nullable: true)
+                    SupplierId = table.Column<int>(type: "int", nullable: false),
+                    EmployeeId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_purchaseInvoice", x => x.PurchaseInvoiceId);
                     table.ForeignKey(
-                        name: "FK_purchaseInvoice_employees_employeesEmployeeId",
-                        column: x => x.employeesEmployeeId,
+                        name: "FK_purchaseInvoice_employees_EmployeeId",
+                        column: x => x.EmployeeId,
                         principalTable: "employees",
-                        principalColumn: "EmployeeId");
+                        principalColumn: "EmployeeId",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_purchaseInvoice_suppliers_suppliersSupplierID",
-                        column: x => x.suppliersSupplierID,
+                        name: "FK_purchaseInvoice_suppliers_SupplierId",
+                        column: x => x.SupplierId,
                         principalTable: "suppliers",
                         principalColumn: "SupplierID");
                 });
@@ -525,6 +496,34 @@ namespace UngDungQuanLiNhaHang.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "cartItems",
+                columns: table => new
+                {
+                    CartItemId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Quantity = table.Column<int>(type: "int", nullable: false),
+                    Price = table.Column<double>(type: "float", nullable: false),
+                    CartId = table.Column<int>(type: "int", nullable: false),
+                    ProductId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_cartItems", x => x.CartItemId);
+                    table.ForeignKey(
+                        name: "FK_cartItems_carts_CartId",
+                        column: x => x.CartId,
+                        principalTable: "carts",
+                        principalColumn: "CartId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_cartItems_products_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "products",
+                        principalColumn: "ProductId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "invoicesItems",
                 columns: table => new
                 {
@@ -532,24 +531,24 @@ namespace UngDungQuanLiNhaHang.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Quantity = table.Column<int>(type: "int", nullable: false),
                     Price = table.Column<double>(type: "float", nullable: false),
-                    productId = table.Column<int>(type: "int", nullable: false),
-                    productsProductId = table.Column<int>(type: "int", nullable: true),
-                    invoiceId = table.Column<int>(type: "int", nullable: false),
-                    invoicesInvoiceId = table.Column<int>(type: "int", nullable: true)
+                    ProductId = table.Column<int>(type: "int", nullable: false),
+                    InvoiceId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_invoicesItems", x => x.InvoiceItemId);
                     table.ForeignKey(
-                        name: "FK_invoicesItems_invoices_invoicesInvoiceId",
-                        column: x => x.invoicesInvoiceId,
+                        name: "FK_invoicesItems_invoices_InvoiceId",
+                        column: x => x.InvoiceId,
                         principalTable: "invoices",
-                        principalColumn: "InvoiceId");
+                        principalColumn: "InvoiceId",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_invoicesItems_products_productsProductId",
-                        column: x => x.productsProductId,
+                        name: "FK_invoicesItems_products_ProductId",
+                        column: x => x.ProductId,
                         principalTable: "products",
-                        principalColumn: "ProductId");
+                        principalColumn: "ProductId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -561,31 +560,31 @@ namespace UngDungQuanLiNhaHang.Migrations
                     Rating = table.Column<int>(type: "int", nullable: false),
                     Comment = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Create_At = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    customerId = table.Column<int>(type: "int", nullable: false),
-                    customersCustomerId = table.Column<int>(type: "int", nullable: true),
-                    invoiceId = table.Column<int>(type: "int", nullable: false),
-                    productId = table.Column<int>(type: "int", nullable: false),
-                    productsProductId = table.Column<int>(type: "int", nullable: true)
+                    CustomerId = table.Column<int>(type: "int", nullable: false),
+                    InvoiceId = table.Column<int>(type: "int", nullable: false),
+                    ProductId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_productReviews", x => x.ProductReviewId);
                     table.ForeignKey(
-                        name: "FK_productReviews_customers_customersCustomerId",
-                        column: x => x.customersCustomerId,
+                        name: "FK_productReviews_customers_CustomerId",
+                        column: x => x.CustomerId,
                         principalTable: "customers",
-                        principalColumn: "CustomerId");
+                        principalColumn: "CustomerId",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_productReviews_invoices_invoiceId",
-                        column: x => x.invoiceId,
+                        name: "FK_productReviews_invoices_InvoiceId",
+                        column: x => x.InvoiceId,
                         principalTable: "invoices",
                         principalColumn: "InvoiceId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_productReviews_products_productsProductId",
-                        column: x => x.productsProductId,
+                        name: "FK_productReviews_products_ProductId",
+                        column: x => x.ProductId,
                         principalTable: "products",
-                        principalColumn: "ProductId");
+                        principalColumn: "ProductId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -597,21 +596,21 @@ namespace UngDungQuanLiNhaHang.Migrations
                     Quantity = table.Column<double>(type: "float", nullable: false),
                     Price = table.Column<double>(type: "float", nullable: false),
                     Unit = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    purchaseInvoiceId = table.Column<int>(type: "int", nullable: false),
-                    ingredientId = table.Column<int>(type: "int", nullable: false)
+                    PurchaseInvoiceId = table.Column<int>(type: "int", nullable: false),
+                    IngredientId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_purchaseInvoiceItem", x => x.PurchaseInvoiceItemID);
                     table.ForeignKey(
-                        name: "FK_purchaseInvoiceItem_ingredients_ingredientId",
-                        column: x => x.ingredientId,
+                        name: "FK_purchaseInvoiceItem_ingredients_IngredientId",
+                        column: x => x.IngredientId,
                         principalTable: "ingredients",
                         principalColumn: "IngredientId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_purchaseInvoiceItem_purchaseInvoice_purchaseInvoiceId",
-                        column: x => x.purchaseInvoiceId,
+                        name: "FK_purchaseInvoiceItem_purchaseInvoice_PurchaseInvoiceId",
+                        column: x => x.PurchaseInvoiceId,
                         principalTable: "purchaseInvoice",
                         principalColumn: "PurchaseInvoiceId",
                         onDelete: ReferentialAction.Cascade);
@@ -643,41 +642,6 @@ namespace UngDungQuanLiNhaHang.Migrations
                     { 4, "Món Nướng", true },
                     { 5, "Món Bún/Phở", true },
                     { 6, "Nước Uống", true }
-                });
-
-            migrationBuilder.InsertData(
-                table: "images",
-                columns: new[] { "ImagesId", "ImagesUrl", "productId", "productsProductId" },
-                values: new object[,]
-                {
-                    { 1, "/ImageProducts/product1.png", 1, null },
-                    { 2, "/ImageProducts/product2.png", 2, null },
-                    { 3, "/ImageProducts/product3.png", 3, null },
-                    { 4, "/ImageProducts/product4.png", 4, null },
-                    { 5, "/ImageProducts/product5.png", 5, null },
-                    { 6, "/ImageProducts/product6.png", 6, null },
-                    { 7, "/ImageProducts/product7.png", 7, null },
-                    { 8, "/ImageProducts/product8.png", 8, null },
-                    { 9, "/ImageProducts/product9.png", 9, null },
-                    { 10, "/ImageProducts/product10.png", 10, null },
-                    { 11, "/ImageProducts/product11.png", 11, null },
-                    { 12, "/ImageProducts/product12.png", 12, null },
-                    { 13, "/ImageProducts/product13.png", 13, null },
-                    { 14, "/ImageProducts/product14.png", 14, null },
-                    { 15, "/ImageProducts/product15.png", 15, null },
-                    { 16, "/ImageProducts/product16.png", 16, null },
-                    { 17, "/ImageProducts/product17.png", 17, null },
-                    { 18, "/ImageProducts/product18.png", 18, null },
-                    { 19, "/ImageProducts/product19.png", 19, null },
-                    { 20, "/ImageProducts/product20.png", 20, null },
-                    { 21, "/ImageProducts/product21.png", 21, null },
-                    { 22, "/ImageProducts/product22.png", 22, null },
-                    { 23, "/ImageProducts/product23.png", 23, null },
-                    { 24, "/ImageProducts/product24.png", 24, null },
-                    { 25, "/ImageProducts/product25.png", 25, null },
-                    { 26, "/ImageProducts/product26.png", 26, null },
-                    { 27, "/ImageProducts/product27.png", 27, null },
-                    { 28, "/ImageProducts/product28.png", 28, null }
                 });
 
             migrationBuilder.InsertData(
@@ -716,17 +680,6 @@ namespace UngDungQuanLiNhaHang.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "invoicesItems",
-                columns: new[] { "InvoiceItemId", "Price", "Quantity", "invoiceId", "invoicesInvoiceId", "productId", "productsProductId" },
-                values: new object[,]
-                {
-                    { 1, 75000.0, 2, 1, null, 4, null },
-                    { 2, 250000.0, 1, 1, null, 8, null },
-                    { 3, 120000.0, 1, 2, null, 22, null },
-                    { 4, 150000.0, 1, 2, null, 19, null }
-                });
-
-            migrationBuilder.InsertData(
                 table: "invoicesStatus",
                 columns: new[] { "InvoiceStatusId", "Description", "InvoiceStatusName" },
                 values: new object[,]
@@ -762,112 +715,55 @@ namespace UngDungQuanLiNhaHang.Migrations
 
             migrationBuilder.InsertData(
                 table: "customers",
-                columns: new[] { "CustomerId", "Email", "FullName", "IsActive", "Password", "Phone", "cartId", "roleId" },
+                columns: new[] { "CustomerId", "Email", "FullName", "IsActive", "Password", "Phone", "RoleId" },
                 values: new object[,]
                 {
-                    { 1, "a@gmail.com", "Nguyễn Văn A", true, "thanhtam1", "0909092321", null, 4 },
-                    { 2, "b@gmail.com", "Nguyễn Văn B", true, "thanhtam1", "0909092389", null, 4 }
+                    { 1, "a@gmail.com", "Nguyễn Văn A", true, "$2a$11$VNeE3dx3kAH4jlMywC81duZnXD.jDTIHPmNkxIeYSHJovscjL7FJa", "0909092321", 4 },
+                    { 2, "b@gmail.com", "Nguyễn Văn B", true, "$2a$11$VNeE3dx3kAH4jlMywC81duZnXD.jDTIHPmNkxIeYSHJovscjL7FJa", "0909092389", 4 }
                 });
 
             migrationBuilder.InsertData(
                 table: "invoices",
-                columns: new[] { "InvoiceId", "Create_At", "InvoiceType", "IsPayment", "TotalAmount", "TotalQuantity", "addressId", "customerId", "customersCustomerId", "invoiceStatusId", "paymentMethodId", "tableId", "tablesTableId" },
+                columns: new[] { "InvoiceId", "AddressId", "Create_At", "InvoiceStatusId", "InvoiceType", "IsPayment", "PaymentMethodId", "TotalAmount", "TotalQuantity", "customerId", "customersCustomerId", "tableId", "tablesTableId" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2025, 10, 5, 6, 36, 23, 545, DateTimeKind.Utc).AddTicks(1151), false, true, 400000.0, 3, 1, 1, null, 4, 1, null, null },
-                    { 2, new DateTime(2025, 10, 5, 6, 36, 23, 545, DateTimeKind.Utc).AddTicks(1156), false, false, 270000.0, 2, 1, 1, null, 4, 3, null, null }
+                    { 1, 1, new DateTime(2025, 10, 6, 14, 20, 16, 969, DateTimeKind.Utc).AddTicks(8945), 4, false, true, 1, 400000.0, 3, 1, null, null, null },
+                    { 2, 1, new DateTime(2025, 10, 6, 14, 20, 16, 969, DateTimeKind.Utc).AddTicks(8948), 4, false, false, 3, 270000.0, 2, 1, null, null, null }
                 });
 
             migrationBuilder.InsertData(
                 table: "products",
-                columns: new[] { "ProductId", "AverageRating", "Create_At", "Description", "IsActive", "Price", "PriceSale", "ProductName", "Quantity", "SoldCount", "TotalReviews", "Update_At", "categoryId" },
+                columns: new[] { "ProductId", "AverageRating", "CategoryId", "Create_At", "Description", "IsActive", "Price", "PriceSale", "ProductName", "Quantity", "SoldCount", "TotalReviews", "Update_At" },
                 values: new object[,]
                 {
-                    { 1, 5.0, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "", true, 50000.0, 45000.0, "Phở Bò", 40, 2000, 1, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), 5 },
-                    { 2, 5.0, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "", true, 55000.0, 50000.0, "Bún Bò", 40, 100, 1, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), 5 },
-                    { 3, 5.0, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "", true, 55000.0, 50000.0, "Bún Mọc", 30, 100, 1, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), 5 },
-                    { 4, 5.0, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "", true, 80000.0, 75000.0, "Bún Hải Sản", 30, 100, 1, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), 5 },
-                    { 5, 5.0, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "", true, 250000.0, 250000.0, "Cua Sốt Bơ Tỏi", 30, 100, 1, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), 1 },
-                    { 6, 5.0, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "", true, 250000.0, 250000.0, "Cua Sốt Phô Mai", 30, 100, 1, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), 1 },
-                    { 7, 5.0, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "", true, 250000.0, 250000.0, "Tôm Hùm Sốt Bơ Tỏi", 30, 100, 1, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), 1 },
-                    { 8, 5.0, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "", true, 250000.0, 250000.0, "Tôm Hùm Sốt Phô Mai", 30, 100, 1, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), 1 },
-                    { 9, 5.0, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "", true, 300000.0, 250000.0, "Lẩu Hải Sản", 30, 100, 1, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), 3 },
-                    { 10, 5.0, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "", true, 200000.0, 200000.0, "Lẩu Cá Đuối", 30, 100, 1, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), 3 },
-                    { 11, 5.0, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "", true, 200000.0, 200000.0, "Mực Hấp ", 30, 100, 1, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), 2 },
-                    { 12, 5.0, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "", true, 100000.0, 90000.0, "Bò Nướng Ngói", 30, 100, 1, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), 4 },
-                    { 13, 5.0, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "", true, 80000.0, 70000.0, "Hàu Nướng Mỡ Hành", 30, 200, 1, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), 4 },
-                    { 14, 5.0, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "", true, 80000.0, 70000.0, "Hàu Nướng Phô Mai", 30, 200, 1, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), 4 },
-                    { 15, 5.0, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "", true, 80000.0, 70000.0, "Ốc Móng Tay Cháy Tỏi", 30, 200, 1, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), 1 },
-                    { 16, 5.0, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "", true, 80000.0, 70000.0, "Miến Xào Thịt Cua", 30, 200, 1, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), 1 },
-                    { 17, 5.0, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "", true, 150000.0, 140000.0, "Ốc Hương Sốt Trứng Muối", 50, 200, 1, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), 1 },
-                    { 18, 5.0, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "", true, 150000.0, 140000.0, "Cơm Chiên Hải Sản", 50, 200, 1, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), 1 },
-                    { 19, 5.0, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "", true, 150000.0, 140000.0, "Mì Xào Bò", 50, 200, 1, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), 1 },
-                    { 20, 5.0, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "", true, 120000.0, 100000.0, "Sò Huyết Cháy Tỏi", 50, 200, 1, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), 1 },
-                    { 21, 5.0, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "", true, 120000.0, 100000.0, "Sò Huyết Sốt Thái", 50, 200, 1, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), 1 },
-                    { 22, 5.0, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "1 phần gồm 300g mực tươi hấp với hành và các gia vị.", true, 120000.0, 100000.0, "Mực Hấp Hành", 50, 200, 1, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), 2 },
-                    { 23, 5.0, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "1 phần gồm 1 con cá mú hấp vớ  các gia vị.", true, 200000.0, 100000.0, "Cá Mú Hấp", 50, 200, 1, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), 2 },
-                    { 24, 5.0, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "1 phần gồm 500g Nghêu", true, 200000.0, 100000.0, "Nghêu Hấp", 50, 200, 1, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), 2 },
-                    { 25, 5.0, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "", true, 20000.0, 18000.0, "Coca Cola Lon", 50, 200, 1, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), 5 },
-                    { 26, 5.0, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "", true, 20000.0, 18000.0, "Pepsi Lon", 50, 200, 1, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), 5 },
-                    { 27, 5.0, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "", true, 25000.0, 22000.0, "Bia Tiger Lon", 50, 200, 1, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), 5 },
-                    { 28, 5.0, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "", true, 30000.0, 25000.0, "Bia Heniken Lon", 50, 200, 1, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), 5 }
-                });
-
-            migrationBuilder.InsertData(
-                table: "recipes",
-                columns: new[] { "RecipeId", "Quantity", "Unit", "ingredientId", "productId", "productsProductId" },
-                values: new object[,]
-                {
-                    { 1, 100.0, "g", 1, 1, null },
-                    { 2, 200.0, "g", 2, 1, null },
-                    { 3, 300.0, "ml", 3, 1, null },
-                    { 4, 100.0, "g", 1, 2, null },
-                    { 5, 300.0, "ml", 4, 2, null },
-                    { 6, 50.0, "g", 5, 2, null },
-                    { 7, 50.0, "g", 6, 2, null },
-                    { 8, 200.0, "g", 7, 2, null },
-                    { 9, 100.0, "g", 9, 3, null },
-                    { 10, 50.0, "g", 8, 3, null },
-                    { 11, 100.0, "g", 7, 3, null },
-                    { 12, 50.0, "g", 10, 3, null },
-                    { 13, 50.0, "g", 11, 4, null },
-                    { 14, 50.0, "g", 12, 4, null },
-                    { 15, 50.0, "g", 14, 4, null },
-                    { 16, 50.0, "g", 15, 4, null },
-                    { 17, 150.0, "g", 7, 4, null },
-                    { 18, 2.0, "con", 14, 5, null },
-                    { 19, 100.0, "g", 16, 5, null },
-                    { 20, 2.0, "con", 14, 6, null },
-                    { 21, 100.0, "g", 17, 6, null },
-                    { 22, 1.0, "con", 13, 7, null },
-                    { 23, 100.0, "g", 16, 7, null },
-                    { 24, 1.0, "con", 13, 8, null },
-                    { 25, 100.0, "g", 17, 8, null },
-                    { 26, 200.0, "g", 11, 9, null },
-                    { 27, 200.0, "g", 12, 9, null },
-                    { 28, 200.0, "g", 14, 9, null },
-                    { 29, 200.0, "g", 1, 9, null },
-                    { 30, 200.0, "g", 7, 9, null },
-                    { 31, 500.0, "g", 18, 10, null },
-                    { 32, 200.0, "g", 19, 10, null },
-                    { 33, 300.0, "g", 11, 11, null },
-                    { 34, 200.0, "g", 1, 12, null },
-                    { 35, 1.0, "kg", 20, 13, null },
-                    { 36, 1.0, "kg", 20, 14, null },
-                    { 37, 300.0, "g", 21, 15, null },
-                    { 38, 200.0, "g", 22, 16, null },
-                    { 39, 200.0, "g", 14, 16, null },
-                    { 40, 300.0, "g", 24, 17, null },
-                    { 41, 100.0, "g", 23, 17, null },
-                    { 42, 200.0, "g", 12, 18, null },
-                    { 43, 200.0, "g", 11, 18, null },
-                    { 44, 200.0, "g", 25, 18, null },
-                    { 45, 300.0, "g", 26, 19, null },
-                    { 46, 200.0, "g", 1, 19, null },
-                    { 47, 300.0, "g", 27, 20, null },
-                    { 48, 300.0, "g", 27, 21, null },
-                    { 49, 300.0, "g", 11, 22, null },
-                    { 50, 500.0, "g", 28, 23, null }
+                    { 1, 5.0, 5, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "", true, 50000.0, 45000.0, "Phở Bò", 40, 2000, 1, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 2, 5.0, 5, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "", true, 55000.0, 50000.0, "Bún Bò", 40, 100, 1, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 3, 5.0, 5, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "", true, 55000.0, 50000.0, "Bún Mọc", 30, 100, 1, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 4, 5.0, 5, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "", true, 80000.0, 75000.0, "Bún Hải Sản", 30, 100, 1, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 5, 5.0, 1, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "", true, 250000.0, 250000.0, "Cua Sốt Bơ Tỏi", 30, 100, 1, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 6, 5.0, 1, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "", true, 250000.0, 250000.0, "Cua Sốt Phô Mai", 30, 100, 1, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 7, 5.0, 1, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "", true, 250000.0, 250000.0, "Tôm Hùm Sốt Bơ Tỏi", 30, 100, 1, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 8, 5.0, 1, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "", true, 250000.0, 250000.0, "Tôm Hùm Sốt Phô Mai", 30, 100, 1, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 9, 5.0, 3, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "", true, 300000.0, 250000.0, "Lẩu Hải Sản", 30, 100, 1, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 10, 5.0, 3, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "", true, 200000.0, 200000.0, "Lẩu Cá Đuối", 30, 100, 1, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 11, 5.0, 2, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "", true, 200000.0, 200000.0, "Mực Hấp ", 30, 100, 1, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 12, 5.0, 4, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "", true, 100000.0, 90000.0, "Bò Nướng Ngói", 30, 100, 1, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 13, 5.0, 4, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "", true, 80000.0, 70000.0, "Hàu Nướng Mỡ Hành", 30, 200, 1, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 14, 5.0, 4, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "", true, 80000.0, 70000.0, "Hàu Nướng Phô Mai", 30, 200, 1, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 15, 5.0, 1, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "", true, 80000.0, 70000.0, "Ốc Móng Tay Cháy Tỏi", 30, 200, 1, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 16, 5.0, 1, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "", true, 80000.0, 70000.0, "Miến Xào Thịt Cua", 30, 200, 1, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 17, 5.0, 1, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "", true, 150000.0, 140000.0, "Ốc Hương Sốt Trứng Muối", 50, 200, 1, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 18, 5.0, 1, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "", true, 150000.0, 140000.0, "Cơm Chiên Hải Sản", 50, 200, 1, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 19, 5.0, 1, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "", true, 150000.0, 140000.0, "Mì Xào Bò", 50, 200, 1, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 20, 5.0, 1, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "", true, 120000.0, 100000.0, "Sò Huyết Cháy Tỏi", 50, 200, 1, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 21, 5.0, 1, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "", true, 120000.0, 100000.0, "Sò Huyết Sốt Thái", 50, 200, 1, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 22, 5.0, 2, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "1 phần gồm 300g mực tươi hấp với hành và các gia vị.", true, 120000.0, 100000.0, "Mực Hấp Hành", 50, 200, 1, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 23, 5.0, 2, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "1 phần gồm 1 con cá mú hấp vớ  các gia vị.", true, 200000.0, 100000.0, "Cá Mú Hấp", 50, 200, 1, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 24, 5.0, 2, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "1 phần gồm 500g Nghêu", true, 200000.0, 100000.0, "Nghêu Hấp", 50, 200, 1, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 25, 5.0, 5, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "", true, 20000.0, 18000.0, "Coca Cola Lon", 50, 200, 1, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 26, 5.0, 5, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "", true, 20000.0, 18000.0, "Pepsi Lon", 50, 200, 1, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 27, 5.0, 5, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "", true, 25000.0, 22000.0, "Bia Tiger Lon", 50, 200, 1, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 28, 5.0, 5, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "", true, 30000.0, 25000.0, "Bia Heniken Lon", 50, 200, 1, new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified) }
                 });
 
             migrationBuilder.InsertData(
@@ -877,11 +773,20 @@ namespace UngDungQuanLiNhaHang.Migrations
 
             migrationBuilder.InsertData(
                 table: "suppliers",
-                columns: new[] { "SupplierID", "Email", "Phone", "SupplierName", "addressID" },
+                columns: new[] { "SupplierID", "AddressId", "Email", "Phone", "SupplierName" },
                 values: new object[,]
                 {
-                    { 1, "ctyabc@gmail.com", "0239092399", "Công Ty Thực Phẩm Sạch ABC", 7 },
-                    { 2, "haisan23@gmail.com", "0239092459", "Công Ty Hải Sản Cà Mau", 8 }
+                    { 1, 7, "ctyabc@gmail.com", "0239092399", "Công Ty Thực Phẩm Sạch ABC" },
+                    { 2, 8, "haisan23@gmail.com", "0239092459", "Công Ty Hải Sản Cà Mau" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "carts",
+                columns: new[] { "CartId", "CustomerId", "TotalAmount", "TotalQuantity" },
+                values: new object[,]
+                {
+                    { 1, 1, 0.0, 0 },
+                    { 2, 2, 0.0, 0 }
                 });
 
             migrationBuilder.InsertData(
@@ -893,6 +798,109 @@ namespace UngDungQuanLiNhaHang.Migrations
                     { 2, 3, "thien@gmail.com", "Nguyễn Thanh Thiên", true, "thanhtam1", "0909092325", 1, 2, "thien@gmail.com" },
                     { 3, 4, "qui@gmail.com", "Nguyễn Hoàng Quí", true, "thanhtam1", "0909092326", 1, 3, "qui@gmail.com" },
                     { 4, 5, "phuc@gmail.com", "Nguyễn Hoàng Phúc", true, "thanhtam1", "0909092327", 1, 3, "phuc@gmail.com" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "images",
+                columns: new[] { "ImagesId", "ImagesUrl", "ProductId" },
+                values: new object[,]
+                {
+                    { 1, "/ImageProducts/product1.png", 1 },
+                    { 2, "/ImageProducts/product2.png", 2 },
+                    { 3, "/ImageProducts/product3.png", 3 },
+                    { 4, "/ImageProducts/product4.png", 4 },
+                    { 5, "/ImageProducts/product5.png", 5 },
+                    { 6, "/ImageProducts/product6.png", 6 },
+                    { 7, "/ImageProducts/product7.png", 7 },
+                    { 8, "/ImageProducts/product8.png", 8 },
+                    { 9, "/ImageProducts/product9.png", 9 },
+                    { 10, "/ImageProducts/product10.png", 10 },
+                    { 11, "/ImageProducts/product11.png", 11 },
+                    { 12, "/ImageProducts/product12.png", 12 },
+                    { 13, "/ImageProducts/product13.png", 13 },
+                    { 14, "/ImageProducts/product14.png", 14 },
+                    { 15, "/ImageProducts/product15.png", 15 },
+                    { 16, "/ImageProducts/product16.png", 16 },
+                    { 17, "/ImageProducts/product17.png", 17 },
+                    { 18, "/ImageProducts/product18.png", 18 },
+                    { 19, "/ImageProducts/product19.png", 19 },
+                    { 20, "/ImageProducts/product20.png", 20 },
+                    { 21, "/ImageProducts/product21.png", 21 },
+                    { 22, "/ImageProducts/product22.png", 22 },
+                    { 23, "/ImageProducts/product23.png", 23 },
+                    { 24, "/ImageProducts/product24.png", 24 },
+                    { 25, "/ImageProducts/product25.png", 25 },
+                    { 26, "/ImageProducts/product26.png", 26 },
+                    { 27, "/ImageProducts/product27.png", 27 },
+                    { 28, "/ImageProducts/product28.png", 28 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "invoicesItems",
+                columns: new[] { "InvoiceItemId", "InvoiceId", "Price", "ProductId", "Quantity" },
+                values: new object[,]
+                {
+                    { 1, 1, 75000.0, 4, 2 },
+                    { 2, 1, 250000.0, 8, 1 },
+                    { 3, 2, 120000.0, 22, 1 },
+                    { 4, 2, 150000.0, 19, 1 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "recipes",
+                columns: new[] { "RecipeId", "IngredientId", "ProductId", "Quantity", "Unit" },
+                values: new object[,]
+                {
+                    { 1, 1, 1, 100.0, "g" },
+                    { 2, 2, 1, 200.0, "g" },
+                    { 3, 3, 1, 300.0, "ml" },
+                    { 4, 1, 2, 100.0, "g" },
+                    { 5, 4, 2, 300.0, "ml" },
+                    { 6, 5, 2, 50.0, "g" },
+                    { 7, 6, 2, 50.0, "g" },
+                    { 8, 7, 2, 200.0, "g" },
+                    { 9, 9, 3, 100.0, "g" },
+                    { 10, 8, 3, 50.0, "g" },
+                    { 11, 7, 3, 100.0, "g" },
+                    { 12, 10, 3, 50.0, "g" },
+                    { 13, 11, 4, 50.0, "g" },
+                    { 14, 12, 4, 50.0, "g" },
+                    { 15, 14, 4, 50.0, "g" },
+                    { 16, 15, 4, 50.0, "g" },
+                    { 17, 7, 4, 150.0, "g" },
+                    { 18, 14, 5, 2.0, "con" },
+                    { 19, 16, 5, 100.0, "g" },
+                    { 20, 14, 6, 2.0, "con" },
+                    { 21, 17, 6, 100.0, "g" },
+                    { 22, 13, 7, 1.0, "con" },
+                    { 23, 16, 7, 100.0, "g" },
+                    { 24, 13, 8, 1.0, "con" },
+                    { 25, 17, 8, 100.0, "g" },
+                    { 26, 11, 9, 200.0, "g" },
+                    { 27, 12, 9, 200.0, "g" },
+                    { 28, 14, 9, 200.0, "g" },
+                    { 29, 1, 9, 200.0, "g" },
+                    { 30, 7, 9, 200.0, "g" },
+                    { 31, 18, 10, 500.0, "g" },
+                    { 32, 19, 10, 200.0, "g" },
+                    { 33, 11, 11, 300.0, "g" },
+                    { 34, 1, 12, 200.0, "g" },
+                    { 35, 20, 13, 1.0, "kg" },
+                    { 36, 20, 14, 1.0, "kg" },
+                    { 37, 21, 15, 300.0, "g" },
+                    { 38, 22, 16, 200.0, "g" },
+                    { 39, 14, 16, 200.0, "g" },
+                    { 40, 24, 17, 300.0, "g" },
+                    { 41, 23, 17, 100.0, "g" },
+                    { 42, 12, 18, 200.0, "g" },
+                    { 43, 11, 18, 200.0, "g" },
+                    { 44, 25, 18, 200.0, "g" },
+                    { 45, 26, 19, 300.0, "g" },
+                    { 46, 1, 19, 200.0, "g" },
+                    { 47, 27, 20, 300.0, "g" },
+                    { 48, 27, 21, 300.0, "g" },
+                    { 49, 11, 22, 300.0, "g" },
+                    { 50, 28, 23, 500.0, "g" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -911,26 +919,25 @@ namespace UngDungQuanLiNhaHang.Migrations
                 column: "TablesTableId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_cartItems_CartsCartId",
+                name: "IX_cartItems_CartId",
                 table: "cartItems",
-                column: "CartsCartId");
+                column: "CartId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_cartItems_ProductsProductId",
+                name: "IX_cartItems_ProductId",
                 table: "cartItems",
-                column: "ProductsProductId");
+                column: "ProductId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_customers_cartId",
-                table: "customers",
-                column: "cartId",
-                unique: true,
-                filter: "[cartId] IS NOT NULL");
+                name: "IX_carts_CustomerId",
+                table: "carts",
+                column: "CustomerId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_customers_roleId",
+                name: "IX_customers_RoleId",
                 table: "customers",
-                column: "roleId");
+                column: "RoleId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_employees_AddressId",
@@ -948,14 +955,14 @@ namespace UngDungQuanLiNhaHang.Migrations
                 column: "RoleId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_images_productsProductId",
+                name: "IX_images_ProductId",
                 table: "images",
-                column: "productsProductId");
+                column: "ProductId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_invoices_addressId",
+                name: "IX_invoices_AddressId",
                 table: "invoices",
-                column: "addressId");
+                column: "AddressId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_invoices_customersCustomerId",
@@ -963,14 +970,14 @@ namespace UngDungQuanLiNhaHang.Migrations
                 column: "customersCustomerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_invoices_invoiceStatusId",
+                name: "IX_invoices_InvoiceStatusId",
                 table: "invoices",
-                column: "invoiceStatusId");
+                column: "InvoiceStatusId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_invoices_paymentMethodId",
+                name: "IX_invoices_PaymentMethodId",
                 table: "invoices",
-                column: "paymentMethodId");
+                column: "PaymentMethodId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_invoices_tablesTableId",
@@ -978,65 +985,65 @@ namespace UngDungQuanLiNhaHang.Migrations
                 column: "tablesTableId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_invoicesItems_invoicesInvoiceId",
+                name: "IX_invoicesItems_InvoiceId",
                 table: "invoicesItems",
-                column: "invoicesInvoiceId");
+                column: "InvoiceId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_invoicesItems_productsProductId",
+                name: "IX_invoicesItems_ProductId",
                 table: "invoicesItems",
-                column: "productsProductId");
+                column: "ProductId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_productReviews_customersCustomerId",
+                name: "IX_productReviews_CustomerId",
                 table: "productReviews",
-                column: "customersCustomerId");
+                column: "CustomerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_productReviews_invoiceId",
+                name: "IX_productReviews_InvoiceId",
                 table: "productReviews",
-                column: "invoiceId",
+                column: "InvoiceId",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_productReviews_productsProductId",
+                name: "IX_productReviews_ProductId",
                 table: "productReviews",
-                column: "productsProductId");
+                column: "ProductId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_products_categoryId",
+                name: "IX_products_CategoryId",
                 table: "products",
-                column: "categoryId");
+                column: "CategoryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_purchaseInvoice_employeesEmployeeId",
+                name: "IX_purchaseInvoice_EmployeeId",
                 table: "purchaseInvoice",
-                column: "employeesEmployeeId");
+                column: "EmployeeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_purchaseInvoice_suppliersSupplierID",
+                name: "IX_purchaseInvoice_SupplierId",
                 table: "purchaseInvoice",
-                column: "suppliersSupplierID");
+                column: "SupplierId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_purchaseInvoiceItem_ingredientId",
+                name: "IX_purchaseInvoiceItem_IngredientId",
                 table: "purchaseInvoiceItem",
-                column: "ingredientId");
+                column: "IngredientId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_purchaseInvoiceItem_purchaseInvoiceId",
+                name: "IX_purchaseInvoiceItem_PurchaseInvoiceId",
                 table: "purchaseInvoiceItem",
-                column: "purchaseInvoiceId");
+                column: "PurchaseInvoiceId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_recipes_ingredientId",
+                name: "IX_recipes_IngredientId",
                 table: "recipes",
-                column: "ingredientId");
+                column: "IngredientId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_recipes_productsProductId",
+                name: "IX_recipes_ProductId",
                 table: "recipes",
-                column: "productsProductId");
+                column: "ProductId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_refreshTokens_CustomersCustomerId",
@@ -1055,9 +1062,9 @@ namespace UngDungQuanLiNhaHang.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_suppliers_addressID",
+                name: "IX_suppliers_AddressId",
                 table: "suppliers",
-                column: "addressID");
+                column: "AddressId");
         }
 
         /// <inheritdoc />
@@ -1091,6 +1098,9 @@ namespace UngDungQuanLiNhaHang.Migrations
                 name: "refreshTokens");
 
             migrationBuilder.DropTable(
+                name: "carts");
+
+            migrationBuilder.DropTable(
                 name: "invoices");
 
             migrationBuilder.DropTable(
@@ -1122,9 +1132,6 @@ namespace UngDungQuanLiNhaHang.Migrations
 
             migrationBuilder.DropTable(
                 name: "categories");
-
-            migrationBuilder.DropTable(
-                name: "carts");
 
             migrationBuilder.DropTable(
                 name: "restaurants");

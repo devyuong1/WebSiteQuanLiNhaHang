@@ -16,14 +16,14 @@ namespace UngDungQuanLiNhaHang.Repository {
         }
         public async Task<Customers?> GetCustomerByEmail(string email) {
             return await _context.customers
-                .Include(c => c.role)
+                .Include(c => c.Role)
                 .Include(c => c.refreshTokens)
                 .FirstOrDefaultAsync(c => c.Email == email);
         }
         public async Task<Customers?> GetCustomerById(int customerId) {
             return await _context.customers
                 .Include(c => c.refreshTokens)
-                .Include(c => c.role)
+                .Include(c => c.Role)
                 .Include(c => c.addresses)
                 .FirstOrDefaultAsync(c => c.CustomerId == customerId);
         }

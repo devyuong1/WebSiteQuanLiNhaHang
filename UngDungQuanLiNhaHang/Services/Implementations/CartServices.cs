@@ -14,7 +14,7 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
 
         public async Task<ApiResponse<CartResponse>> GetCartItems(int customerId) {
             var cart = await cartRepo.GetCartByCustomerId(customerId);
-            if ( cart == null || cart.CartItems.Any(s => s.Products == null) ) {
+            if ( cart == null || cart.TotalQuantity <= 0 ) {
                 return ApiResponse<CartResponse>.FailResponse("Cart not found");
             }
             var cartResponse = new CartResponse {
@@ -23,7 +23,7 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
                 totalQuantity = cart.TotalQuantity,
                 cartItems= cart.CartItems.Select(ci => new CartItemResponse {
                      cartItemId = ci.CartItemId,
-                     productId = ci.productId,
+                     productId = ci.ProductId,
                      productName = ci.Products!.ProductName,
                      quantity = ci.Quantity,
                      price = ci.Price,
@@ -33,9 +33,29 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
             return ApiResponse<CartResponse>.SuccessResponse(cartResponse);
         }
 
-        public Task<ApiResponse<bool>> RemoveFromCart(int customerId, int foodId) {
-            throw new NotImplementedException();
-        }
+        public async Task<ApiResponse<bool>> RemoveFromCart(int customerId, int cartItemId) {
+            var cart = await cartRepo.GetCart(customerId);
+            if ( cart == null ) {
+                return ApiResponse<bool>.FailResponse("Cart not found");
+            }
+            var cartItem = cart.CartItems.FirstOrDefault(ci => ci.CartItemId == cartItemId);
+            if ( cartItem == null ) {
+                return ApiResponse<bool>.FailResponse("Cart item not found");
+            }
+            try {
+                               await transactionRepo.BeginTransactionAsync();
+                cart.TotalAmount -= cartItem.Quantity * cartItem.Price;
+                cart.TotalQuantity -= 1;
+                cart.CartItems.Remove(cartItem);
+                cartRepo.UpdateCart(cart);
+                await transactionRepo.CompleteAsync();
+                await transactionRepo.CommitAsync();
+                return ApiResponse<bool>.SuccessResponse(true,"Xoá Thành Công.");
+            }
+            catch ( Exception ex ) {
+                await transactionRepo.RollbackAsync();
+                return ApiResponse<bool>.FailResponse(ex.Message);
+            }}
 
         public async Task<ApiResponse<bool>> UpdateCartItem(int customerId, AddItemCartDTO addItemCartDTO) {
             var cart = await cartRepo.GetCartByCustomerId(customerId);
@@ -47,7 +67,7 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
                 return ApiResponse<bool>.FailResponse("Product not found");
             }
             // neu co san pham trong gio hang thi cap nhat so luong
-            var cartItem = cart.CartItems.FirstOrDefault(ci => ci.productId == addItemCartDTO.productid);
+            var cartItem = cart.CartItems.FirstOrDefault(ci => ci.ProductId == addItemCartDTO.productid);
             try {
                 await transactionRepo.BeginTransactionAsync();
                 if ( cartItem != null ) {
@@ -59,7 +79,7 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
                 else {
                     CartItems items = new() {
                         Price = addItemCartDTO.price,
-                        productId = addItemCartDTO.productid,
+                        ProductId = addItemCartDTO.productid,
                         Quantity = addItemCartDTO.quantity,
                     };
                     cart.TotalQuantity += 1;

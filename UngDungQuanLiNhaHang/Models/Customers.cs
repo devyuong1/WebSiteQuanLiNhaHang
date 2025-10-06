@@ -11,11 +11,12 @@ namespace UngDungQuanLiNhaHang.Models {
         public required string Phone {  get; set; }
         public required string Password { get; set; }
         public bool IsActive { get; set; } = true;
-
-        public int roleId { get; set; }
-        public Roles? role { get; set; }
-        public int? cartId { get; set; }
-        public Carts? cart { get; set; }
+        
+        public int RoleId { get; set; }
+        [ForeignKey("RoleId")]
+        public Roles? Role { get; set; }
+       
+        public Carts Cart { get; set; }
         public ICollection<Address> addresses { get; set; } = [];
         public ICollection<Invoices> invoices { get; set; } = new List<Invoices>();
         public ICollection<ProductReviews> productReviews { get; set; } = new List<ProductReviews>();

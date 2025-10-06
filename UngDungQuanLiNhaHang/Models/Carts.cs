@@ -9,8 +9,10 @@ namespace UngDungQuanLiNhaHang.Models {
         public int TotalQuantity { get; set; }
         public double TotalAmount { get; set; }
 
-        public int customerId { get; set; }
-        public Customers? Customers { get; set; }
+        
+        public int CustomerId { get; set; }
+        [ForeignKey("CustomerId")]
+        public Customers Customers { get; set; }
         public ICollection<CartItems> CartItems { get; set; } = new List<CartItems>();
     }
 }

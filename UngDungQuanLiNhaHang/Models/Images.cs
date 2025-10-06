@@ -7,8 +7,9 @@ namespace UngDungQuanLiNhaHang.Models {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ImagesId { get; set; }
         public required string ImagesUrl { get; set; }
-
-        public int productId { get; set; }
-        public Products? products { get; set; }
+       
+        public int ProductId { get; set; }
+        [ForeignKey("ProductId")]
+        public Products? Products { get; set; }
     }
 }

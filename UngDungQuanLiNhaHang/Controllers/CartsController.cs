@@ -1,108 +1,83 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using UngDungQuanLiNhaHang.Data;
 using UngDungQuanLiNhaHang.Models;
+using UngDungQuanLiNhaHang.RequestDTO;
+using UngDungQuanLiNhaHang.ResponseDTO;
+using UngDungQuanLiNhaHang.Services.Interfaces;
 
 namespace UngDungQuanLiNhaHang.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CartsController : ControllerBase
+    public class CartsController(ICartServices cartServices) : ControllerBase
     {
-        private readonly DataDbConText _context;
-
-        public CartsController(DataDbConText context)
-        {
-            _context = context;
-        }
-
-        // GET: api/Carts
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Carts>>> Getcarts()
-        {
-            return await _context.carts.ToListAsync();
-        }
 
         // GET: api/Carts/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Carts>> GetCarts(int id)
+        [Authorize]
+        [HttpGet]
+        public async Task<ActionResult<ApiResponse<CartResponse>>> GetCarts()
         {
-            var carts = await _context.carts.FindAsync(id);
+            var userIdClaim = User.FindFirst("UserID");
 
-            if (carts == null)
+            if ( userIdClaim == null )
+                return Unauthorized("Token không hợp lệ hoặc thiếu thông tin UserID.");
+
+            int customerId = int.Parse(userIdClaim.Value);
+            var cart = await cartServices.GetCartItems(customerId);
+
+            if (!cart.Success)
             {
-                return NotFound();
+                return NotFound(cart);
             }
 
-            return carts;
+            return Ok(cart);
         }
 
         // PUT: api/Carts/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutCarts(int id, Carts carts)
+        [HttpPut]
+        [Authorize]
+        public async Task<IActionResult> DeleteProduct(int cartItemId)
         {
-            if (id != carts.CartId)
-            {
-                return BadRequest();
-            }
+            var userIdClaim = User.FindFirst("UserID");
 
-            _context.Entry(carts).State = EntityState.Modified;
+            if ( userIdClaim == null )
+                return Unauthorized("Token không hợp lệ hoặc thiếu thông tin UserID.");
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!CartsExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            int customerId = int.Parse(userIdClaim.Value);
+            var result = await cartServices.RemoveFromCart(customerId, cartItemId);
+            if (result.Success)
+                return Ok(result);
+            return BadRequest(result);
         }
 
         // POST: api/Carts
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [Authorize]
         [HttpPost]
-        public async Task<ActionResult<Carts>> PostCarts(Carts carts)
+        public async Task<ActionResult<Carts>> PostCarts([FromBody] AddItemCartDTO addItemCartDTO)
+            
         {
-            _context.carts.Add(carts);
-            await _context.SaveChangesAsync();
+            var userIdClaim = User.FindFirst("UserID");
 
-            return CreatedAtAction("GetCarts", new { id = carts.CartId }, carts);
+            if ( userIdClaim == null )
+                return Unauthorized("Token không hợp lệ hoặc thiếu thông tin UserID.");
+
+            int customerId = int.Parse(userIdClaim.Value);
+            var result = await cartServices.UpdateCartItem(customerId, addItemCartDTO);
+            if (result.Success)
+                return Ok(result);
+            return BadRequest(result);
         }
 
-        // DELETE: api/Carts/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCarts(int id)
-        {
-            var carts = await _context.carts.FindAsync(id);
-            if (carts == null)
-            {
-                return NotFound();
-            }
-
-            _context.carts.Remove(carts);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        private bool CartsExists(int id)
-        {
-            return _context.carts.Any(e => e.CartId == id);
-        }
+     
+      
     }
 }

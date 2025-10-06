@@ -10,10 +10,14 @@ namespace UngDungQuanLiNhaHang.Models {
         
         public DateTime Create_At { get; set; }
         public bool IsPayment {  get; set; }
-        public int supplierId { get; set; }
-        public Suppliers? suppliers { get; set; }
+        public int SupplierId { get; set; }
+        [ForeignKey("SupplierId")]
+
+        public Suppliers? Suppliers { get; set; }
         public ICollection<PurchaseInvoiceItem> purchaseInvoiceItems { get; set; } = new List<PurchaseInvoiceItem>();
-        public int employeeId { get; set; }
-        public Employees? employees { get; set; }
+        public int EmployeeId { get; set; }
+        [ForeignKey("EmployeeId")]
+
+        public Employees? Employees { get; set; }
     }
 }

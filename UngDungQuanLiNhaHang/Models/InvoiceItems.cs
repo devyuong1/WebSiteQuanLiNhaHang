@@ -9,11 +9,13 @@ namespace UngDungQuanLiNhaHang.Models {
         public int Quantity { get; set; }
         public double Price { get; set; }
 
+        public int ProductId { get; set; }
+        [ForeignKey("ProductId")]
 
-        public int productId { get; set; }
-        public Products? products { get; set; }
+        public Products? Products { get; set; }
+        public int InvoiceId { get; set; }
+        [ForeignKey("InvoiceId")]
 
-        public int invoiceId { get; set; }
-        public Invoices? invoices { get; set; }
+        public Invoices? Invoices { get; set; }
     }
 }

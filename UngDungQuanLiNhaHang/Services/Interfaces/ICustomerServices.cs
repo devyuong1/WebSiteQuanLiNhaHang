@@ -2,14 +2,16 @@
 using UngDungQuanLiNhaHang.RequestDTO;
 using UngDungQuanLiNhaHang.ResponseDTO;
 
-namespace UngDungQuanLiNhaHang.Services.IServices {
+namespace UngDungQuanLiNhaHang.Services.Interfaces {
     public interface ICustomerServices {
         
-        public  Task<bool> UpdateCustomer(CustomerDTO customer);
+        public  Task<ApiResponse<bool>> UpdateCustomer(int customerID, CustomerDTO customer);
         public  Task<ApiResponse<CustomerResponse>> GetCustomersById(int id);
-        public  Task<ApiResponse<bool>> UpdateAddress(AddressDTO address);
-        public Task<ApiResponse<bool>> AddAddress(AddressDTO address);
-        public  Task<bool> DeleteAddress(int addressId);
+        public  Task<ApiResponse<bool>> UpdateAddress(int customerID, AddressDTO address);
+        public Task<ApiResponse<bool>> AddAddress(int customerID,AddressDTO address);
+        public  Task<ApiResponse<bool>> DeleteAddress(int customerId,int addressId);
+        public  Task<ApiResponse<bool>> SetDefaultAddress(int customerId,int addressId);
+        public  Task<ApiResponse<bool>> ChangePassword(int customerId,string oldPassword,string newPassword);
 
     }
 }

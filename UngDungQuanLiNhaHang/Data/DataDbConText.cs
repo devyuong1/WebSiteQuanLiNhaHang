@@ -39,12 +39,16 @@ namespace UngDungQuanLiNhaHang.Data {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Invoices>()
                 .HasOne(i => i.productReviews)
-                .WithOne(pr => pr.invoices)
-                .HasForeignKey<ProductReviews>(pr => pr.invoiceId);
+                .WithOne(pr => pr.Invoices)
+                .HasForeignKey<ProductReviews>(pr => pr.InvoiceId);
+
+            modelBuilder.Entity<PurchaseInvoice>()
+                   .HasOne(pi => pi.Suppliers)
+                   .WithMany(s => s.purchaseInvoices)
+                   .HasForeignKey(pi => pi.SupplierId)
+                   .OnDelete(DeleteBehavior.NoAction); //
 
 
-
-            
             modelBuilder.Entity<Employees>()
                 .HasOne(e => e.Restaurant)
                 .WithMany(r => r.Employees)
@@ -200,15 +204,15 @@ namespace UngDungQuanLiNhaHang.Data {
                     new PaymentMethod { PaymentMethodId = 2, PaymentMethodName = "MoMo" },
                     new PaymentMethod { PaymentMethodId = 3, PaymentMethodName = "Thahh Toán Khi Nhận Hàng" }
                 );
-
+            
             modelBuilder.Entity<Customers>().HasData(
                 new Customers {
                     CustomerId = 1,
                     FullName = "Nguyễn Văn A",
                     Email = "a@gmail.com",
                     Phone = "0909092321",
-                    Password = "thanhtam1",
-                    roleId = 4,
+                    Password = "$2a$11$VNeE3dx3kAH4jlMywC81duZnXD.jDTIHPmNkxIeYSHJovscjL7FJa",
+                    RoleId = 4,
                     
                 },
                 new Customers {
@@ -216,25 +220,39 @@ namespace UngDungQuanLiNhaHang.Data {
                     FullName = "Nguyễn Văn B",
                     Email = "b@gmail.com",
                     Phone = "0909092389",
-                    Password = "thanhtam1",
-                    roleId = 4
+                    Password = "$2a$11$VNeE3dx3kAH4jlMywC81duZnXD.jDTIHPmNkxIeYSHJovscjL7FJa",
+                    RoleId = 4,
+                    
                 }
             );
-
+            modelBuilder.Entity<Carts>().HasData(
+                new Carts {
+                    CartId = 1,
+                    TotalAmount = 0,
+                    TotalQuantity = 0,
+                    CustomerId = 1
+                },
+                new Carts {
+                    CartId = 2,
+                    TotalAmount = 0,
+                    TotalQuantity = 0,
+                    CustomerId = 2
+                }
+            );
             modelBuilder.Entity<Suppliers>().HasData(
                 new Suppliers {
                     SupplierID = 1,
                     SupplierName = "Công Ty Thực Phẩm Sạch ABC",
                     Email = "ctyabc@gmail.com",
                     Phone = "0239092399",
-                    addressID = 7
+                    AddressId = 7
                 },
                 new Suppliers {
                     SupplierID = 2,
                     SupplierName = "Công Ty Hải Sản Cà Mau",
                     Email = "haisan23@gmail.com",
                     Phone = "0239092459",
-                    addressID = 8
+                    AddressId = 8
                 }
             );
 
@@ -474,7 +492,7 @@ namespace UngDungQuanLiNhaHang.Data {
                         PriceSale = 45000.0,
                         Quantity = 40,
                         SoldCount = 2000,
-                        categoryId = 5,
+                        CategoryId = 5,
                         Create_At = new DateTime(2025, 7, 12),
                         Update_At = new DateTime(2025, 7, 12)
                     },
@@ -486,7 +504,7 @@ namespace UngDungQuanLiNhaHang.Data {
                         PriceSale = 50000.0,
                         Quantity = 40,
                         SoldCount = 100,
-                        categoryId = 5,
+                        CategoryId = 5,
                         Create_At = new DateTime(2025, 7, 12),
                         Update_At = new DateTime(2025, 7, 12)
                     },
@@ -498,7 +516,7 @@ namespace UngDungQuanLiNhaHang.Data {
                         PriceSale = 50000.0,
                         Quantity = 30,
                         SoldCount = 100,
-                        categoryId = 5,
+                        CategoryId = 5,
                         Create_At = new DateTime(2025, 7, 12),
                         Update_At = new DateTime(2025, 7, 12)
                     },
@@ -510,7 +528,7 @@ namespace UngDungQuanLiNhaHang.Data {
                         PriceSale = 75000.0,
                         Quantity = 30,
                         SoldCount = 100,
-                        categoryId = 5,
+                        CategoryId = 5,
                         Create_At = new DateTime(2025, 7, 12),
                         Update_At = new DateTime(2025, 7, 12)
                     },
@@ -522,7 +540,7 @@ namespace UngDungQuanLiNhaHang.Data {
                         PriceSale = 250000.0,
                         Quantity = 30,
                         SoldCount = 100,
-                        categoryId = 1,
+                        CategoryId = 1,
                         Create_At = new DateTime(2025, 7, 12),
                         Update_At = new DateTime(2025, 7, 12)
                     },
@@ -534,7 +552,7 @@ namespace UngDungQuanLiNhaHang.Data {
                         PriceSale = 250000.0,
                         Quantity = 30,
                         SoldCount = 100,
-                        categoryId = 1,
+                        CategoryId = 1,
                         Create_At = new DateTime(2025, 7, 12),
                         Update_At = new DateTime(2025, 7, 12)
                     },
@@ -546,7 +564,7 @@ namespace UngDungQuanLiNhaHang.Data {
                         PriceSale = 250000.0,
                         Quantity = 30,
                         SoldCount = 100,
-                        categoryId = 1,
+                        CategoryId = 1,
                         Create_At = new DateTime(2025, 7, 12),
                         Update_At = new DateTime(2025, 7, 12)
                     },
@@ -558,7 +576,7 @@ namespace UngDungQuanLiNhaHang.Data {
                         PriceSale = 250000.0,
                         Quantity = 30,
                         SoldCount = 100,
-                        categoryId = 1,
+                        CategoryId = 1,
                         Create_At = new DateTime(2025, 7, 12),
                         Update_At = new DateTime(2025, 7, 12)
                     },
@@ -570,7 +588,7 @@ namespace UngDungQuanLiNhaHang.Data {
                         PriceSale = 250000.0,
                         Quantity = 30,
                         SoldCount = 100,
-                        categoryId = 3,
+                        CategoryId = 3,
                         Create_At = new DateTime(2025, 7, 12),
                         Update_At = new DateTime(2025, 7, 12)
                     },
@@ -582,7 +600,7 @@ namespace UngDungQuanLiNhaHang.Data {
                         PriceSale = 200000.0,
                         Quantity = 30,
                         SoldCount = 100,
-                        categoryId = 3,
+                        CategoryId = 3,
                         Create_At = new DateTime(2025, 7, 12),
                         Update_At = new DateTime(2025, 7, 12)
                     },
@@ -594,7 +612,7 @@ namespace UngDungQuanLiNhaHang.Data {
                         PriceSale = 200000.0,
                         Quantity = 30,
                         SoldCount = 100,
-                        categoryId = 2,
+                        CategoryId = 2,
                         Create_At = new DateTime(2025, 7, 12),
                         Update_At = new DateTime(2025, 7, 12)
                     },
@@ -606,7 +624,7 @@ namespace UngDungQuanLiNhaHang.Data {
                         PriceSale = 90000.0,
                         Quantity = 30,
                         SoldCount = 100,
-                        categoryId = 4,
+                        CategoryId = 4,
                         Create_At = new DateTime(2025, 7, 12),
                         Update_At = new DateTime(2025, 7, 12)
                     },
@@ -618,7 +636,7 @@ namespace UngDungQuanLiNhaHang.Data {
                         PriceSale = 70000.0,
                         Quantity = 30,
                         SoldCount = 200,
-                        categoryId = 4,
+                        CategoryId = 4,
                         Create_At = new DateTime(2025, 7, 12),
                         Update_At = new DateTime(2025, 7, 12)
                     },
@@ -630,7 +648,7 @@ namespace UngDungQuanLiNhaHang.Data {
                         PriceSale = 70000.0,
                         Quantity = 30,
                         SoldCount = 200,
-                        categoryId = 4,
+                        CategoryId = 4,
                         Create_At = new DateTime(2025, 7, 12),
                         Update_At = new DateTime(2025, 7, 12)
                     },
@@ -642,7 +660,7 @@ namespace UngDungQuanLiNhaHang.Data {
                         PriceSale = 70000.0,
                         Quantity = 30,
                         SoldCount = 200,
-                        categoryId = 1,
+                        CategoryId = 1,
                         Create_At = new DateTime(2025, 7, 12),
                         Update_At = new DateTime(2025, 7, 12)
                     },
@@ -654,7 +672,7 @@ namespace UngDungQuanLiNhaHang.Data {
                         PriceSale = 70000.0,
                         Quantity = 30,
                         SoldCount = 200,
-                        categoryId = 1,
+                        CategoryId = 1,
                         Create_At = new DateTime(2025, 7, 12),
                         Update_At = new DateTime(2025, 7, 12)
                     },
@@ -666,7 +684,7 @@ namespace UngDungQuanLiNhaHang.Data {
                         PriceSale = 140000.0,
                         Quantity = 50,
                         SoldCount = 200,
-                        categoryId = 1,
+                        CategoryId = 1,
                         Create_At = new DateTime(2025, 7, 12),
                         Update_At = new DateTime(2025, 7, 12)
                     },
@@ -678,7 +696,7 @@ namespace UngDungQuanLiNhaHang.Data {
                         PriceSale = 140000.0,
                         Quantity = 50,
                         SoldCount = 200,
-                        categoryId = 1,
+                        CategoryId = 1,
                         Create_At = new DateTime(2025, 7, 12),
                         Update_At = new DateTime(2025, 7, 12)
                     },
@@ -690,7 +708,7 @@ namespace UngDungQuanLiNhaHang.Data {
                         PriceSale = 140000.0,
                         Quantity = 50,
                         SoldCount = 200,
-                        categoryId = 1,
+                        CategoryId = 1,
                         Create_At = new DateTime(2025, 7, 12),
                         Update_At = new DateTime(2025, 7, 12)
                     },
@@ -702,7 +720,7 @@ namespace UngDungQuanLiNhaHang.Data {
                         PriceSale = 100000.0,
                         Quantity = 50,
                         SoldCount = 200,
-                        categoryId = 1,
+                        CategoryId = 1,
                         Create_At = new DateTime(2025, 7, 12),
                         Update_At = new DateTime(2025, 7, 12)
                     },
@@ -714,7 +732,7 @@ namespace UngDungQuanLiNhaHang.Data {
                         PriceSale = 100000.0,
                         Quantity = 50,
                         SoldCount = 200,
-                        categoryId = 1,
+                        CategoryId = 1,
                         Create_At = new DateTime(2025, 7, 12),
                         Update_At = new DateTime(2025, 7, 12)
                     },
@@ -726,7 +744,7 @@ namespace UngDungQuanLiNhaHang.Data {
                         PriceSale = 100000.0,
                         Quantity = 50,
                         SoldCount = 200,
-                        categoryId = 2,
+                        CategoryId = 2,
                         Create_At = new DateTime(2025, 7, 12),
                         Update_At = new DateTime(2025, 7, 12)
                     },
@@ -738,7 +756,7 @@ namespace UngDungQuanLiNhaHang.Data {
                         PriceSale = 100000.0,
                         Quantity = 50,
                         SoldCount = 200,
-                        categoryId = 2,
+                        CategoryId = 2,
                         Create_At = new DateTime(2025, 7, 12),
                         Update_At = new DateTime(2025, 7, 12)
                     },
@@ -750,7 +768,7 @@ namespace UngDungQuanLiNhaHang.Data {
                         PriceSale = 100000.0,
                         Quantity = 50,
                         SoldCount = 200,
-                        categoryId = 2,
+                        CategoryId = 2,
                         Create_At = new DateTime(2025, 7, 12),
                         Update_At = new DateTime(2025, 7, 12)
                     },
@@ -762,7 +780,7 @@ namespace UngDungQuanLiNhaHang.Data {
                         PriceSale = 18000.0,
                         Quantity = 50,
                         SoldCount = 200,
-                        categoryId = 5,
+                        CategoryId = 5,
                         Create_At = new DateTime(2025, 7, 12),
                         Update_At = new DateTime(2025, 7, 12)
                     },
@@ -774,7 +792,7 @@ namespace UngDungQuanLiNhaHang.Data {
                         PriceSale = 18000.0,
                         Quantity = 50,
                         SoldCount = 200,
-                        categoryId = 5,
+                        CategoryId = 5,
                         Create_At = new DateTime(2025, 7, 12),
                         Update_At = new DateTime(2025, 7, 12)
                     },
@@ -786,7 +804,7 @@ namespace UngDungQuanLiNhaHang.Data {
                         PriceSale = 22000.0,
                         Quantity = 50,
                         SoldCount = 200,
-                        categoryId = 5,
+                        CategoryId = 5,
                         Create_At = new DateTime(2025, 7, 12),
                         Update_At = new DateTime(2025, 7, 12)
                     },
@@ -798,116 +816,116 @@ namespace UngDungQuanLiNhaHang.Data {
                         PriceSale = 25000.0,
                         Quantity = 50,
                         SoldCount = 200,
-                        categoryId = 5,
+                        CategoryId = 5,
                         Create_At = new DateTime(2025, 7, 12),
                         Update_At = new DateTime(2025, 7, 12)
                     }
 
                 );
             modelBuilder.Entity<Images>().HasData(
-                    new Images { ImagesId = 1, ImagesUrl = "/ImageProducts/product1.png", productId = 1 },
-                    new Images { ImagesId = 2, ImagesUrl = "/ImageProducts/product2.png", productId = 2 },
-                    new Images { ImagesId = 3, ImagesUrl = "/ImageProducts/product3.png", productId = 3 },
-                    new Images { ImagesId = 4, ImagesUrl = "/ImageProducts/product4.png", productId = 4 },
-                    new Images { ImagesId = 5, ImagesUrl = "/ImageProducts/product5.png", productId = 5 },
-                    new Images { ImagesId = 6, ImagesUrl = "/ImageProducts/product6.png", productId = 6 },
-                    new Images { ImagesId = 7, ImagesUrl = "/ImageProducts/product7.png", productId = 7 },
-                    new Images { ImagesId = 8, ImagesUrl = "/ImageProducts/product8.png", productId = 8 },
-                    new Images { ImagesId = 9, ImagesUrl = "/ImageProducts/product9.png", productId = 9 },
-                    new Images { ImagesId = 10, ImagesUrl = "/ImageProducts/product10.png", productId = 10 },
-                    new Images { ImagesId = 11, ImagesUrl = "/ImageProducts/product11.png", productId = 11 },
-                    new Images { ImagesId = 12, ImagesUrl = "/ImageProducts/product12.png", productId = 12 },
-                    new Images { ImagesId = 13, ImagesUrl = "/ImageProducts/product13.png", productId = 13 },
-                    new Images { ImagesId = 14, ImagesUrl = "/ImageProducts/product14.png", productId = 14 },
-                    new Images { ImagesId = 15, ImagesUrl = "/ImageProducts/product15.png", productId = 15 },
-                    new Images { ImagesId = 16, ImagesUrl = "/ImageProducts/product16.png", productId = 16 },
-                    new Images { ImagesId = 17, ImagesUrl = "/ImageProducts/product17.png", productId = 17 },
-                    new Images { ImagesId = 18, ImagesUrl = "/ImageProducts/product18.png", productId = 18 },
-                    new Images { ImagesId = 19, ImagesUrl = "/ImageProducts/product19.png", productId = 19 },
-                    new Images { ImagesId = 20, ImagesUrl = "/ImageProducts/product20.png", productId = 20 },
-                    new Images { ImagesId = 21, ImagesUrl = "/ImageProducts/product21.png", productId = 21 },
-                    new Images { ImagesId = 22, ImagesUrl = "/ImageProducts/product22.png", productId = 22 },
-                    new Images { ImagesId = 23, ImagesUrl = "/ImageProducts/product23.png", productId = 23 },
-                    new Images { ImagesId = 24, ImagesUrl = "/ImageProducts/product24.png", productId = 24 },
-                    new Images { ImagesId = 25, ImagesUrl = "/ImageProducts/product25.png", productId = 25 },
-                    new Images { ImagesId = 26, ImagesUrl = "/ImageProducts/product26.png", productId = 26 },
-                    new Images { ImagesId = 27, ImagesUrl = "/ImageProducts/product27.png", productId = 27 },
-                    new Images { ImagesId = 28, ImagesUrl = "/ImageProducts/product28.png", productId = 28 }
+                    new Images { ImagesId = 1, ImagesUrl = "/ImageProducts/product1.png", ProductId = 1 },
+                    new Images { ImagesId = 2, ImagesUrl = "/ImageProducts/product2.png", ProductId = 2 },
+                    new Images { ImagesId = 3, ImagesUrl = "/ImageProducts/product3.png", ProductId = 3 },
+                    new Images { ImagesId = 4, ImagesUrl = "/ImageProducts/product4.png", ProductId = 4 },
+                    new Images { ImagesId = 5, ImagesUrl = "/ImageProducts/product5.png", ProductId = 5 },
+                    new Images { ImagesId = 6, ImagesUrl = "/ImageProducts/product6.png", ProductId = 6 },
+                    new Images { ImagesId = 7, ImagesUrl = "/ImageProducts/product7.png", ProductId = 7 },
+                    new Images { ImagesId = 8, ImagesUrl = "/ImageProducts/product8.png", ProductId = 8 },
+                    new Images { ImagesId = 9, ImagesUrl = "/ImageProducts/product9.png", ProductId = 9 },
+                    new Images { ImagesId = 10, ImagesUrl = "/ImageProducts/product10.png", ProductId = 10 },
+                    new Images { ImagesId = 11, ImagesUrl = "/ImageProducts/product11.png", ProductId = 11 },
+                    new Images { ImagesId = 12, ImagesUrl = "/ImageProducts/product12.png", ProductId = 12 },
+                    new Images { ImagesId = 13, ImagesUrl = "/ImageProducts/product13.png", ProductId = 13 },
+                    new Images { ImagesId = 14, ImagesUrl = "/ImageProducts/product14.png", ProductId = 14 },
+                    new Images { ImagesId = 15, ImagesUrl = "/ImageProducts/product15.png", ProductId = 15 },
+                    new Images { ImagesId = 16, ImagesUrl = "/ImageProducts/product16.png", ProductId = 16 },
+                    new Images { ImagesId = 17, ImagesUrl = "/ImageProducts/product17.png", ProductId = 17 },
+                    new Images { ImagesId = 18, ImagesUrl = "/ImageProducts/product18.png", ProductId = 18 },
+                    new Images { ImagesId = 19, ImagesUrl = "/ImageProducts/product19.png", ProductId = 19 },
+                    new Images { ImagesId = 20, ImagesUrl = "/ImageProducts/product20.png", ProductId = 20 },
+                    new Images { ImagesId = 21, ImagesUrl = "/ImageProducts/product21.png", ProductId = 21 },
+                    new Images { ImagesId = 22, ImagesUrl = "/ImageProducts/product22.png", ProductId = 22 },
+                    new Images { ImagesId = 23, ImagesUrl = "/ImageProducts/product23.png", ProductId = 23 },
+                    new Images { ImagesId = 24, ImagesUrl = "/ImageProducts/product24.png", ProductId = 24 },
+                    new Images { ImagesId = 25, ImagesUrl = "/ImageProducts/product25.png", ProductId = 25 },
+                    new Images { ImagesId = 26, ImagesUrl = "/ImageProducts/product26.png", ProductId = 26 },
+                    new Images { ImagesId = 27, ImagesUrl = "/ImageProducts/product27.png", ProductId = 27 },
+                    new Images { ImagesId = 28, ImagesUrl = "/ImageProducts/product28.png", ProductId = 28 }
                 );
             modelBuilder.Entity<Recipes>().HasData(
                 // cong thuc mon pho 
-                    new Recipes { RecipeId = 1, Quantity = 100, Unit = "g", ingredientId = 1, productId = 1},
-                    new Recipes { RecipeId = 2, Quantity = 200, Unit = "g", ingredientId = 2, productId = 1},
-                    new Recipes { RecipeId = 3, Quantity = 300, Unit = "ml", ingredientId = 3, productId = 1},
+                    new Recipes { RecipeId = 1, Quantity = 100, Unit = "g", IngredientId = 1, ProductId = 1},
+                    new Recipes { RecipeId = 2, Quantity = 200, Unit = "g", IngredientId = 2, ProductId = 1},
+                    new Recipes { RecipeId = 3, Quantity = 300, Unit = "ml", IngredientId = 3, ProductId = 1},
                     // cong thuc mon bun bo
-                    new Recipes { RecipeId = 4, Quantity = 100, Unit = "g", ingredientId = 1, productId = 2 },
-                    new Recipes { RecipeId = 5, Quantity = 300, Unit = "ml", ingredientId = 4, productId = 2 },
-                    new Recipes { RecipeId = 6, Quantity = 50, Unit = "g", ingredientId = 5, productId = 2 },
-                    new Recipes { RecipeId = 7, Quantity = 50, Unit = "g", ingredientId = 6, productId = 2 },
-                    new Recipes { RecipeId = 8, Quantity = 200, Unit = "g", ingredientId =7, productId = 2 },
+                    new Recipes { RecipeId = 4, Quantity = 100, Unit = "g", IngredientId = 1, ProductId = 2 },
+                    new Recipes { RecipeId = 5, Quantity = 300, Unit = "ml", IngredientId = 4, ProductId = 2 },
+                    new Recipes { RecipeId = 6, Quantity = 50, Unit = "g", IngredientId = 5, ProductId = 2 },
+                    new Recipes { RecipeId = 7, Quantity = 50, Unit = "g", IngredientId = 6, ProductId = 2 },
+                    new Recipes { RecipeId = 8, Quantity = 200, Unit = "g", IngredientId =7, ProductId = 2 },
                     // cong thuc mon bun moc
-                    new Recipes { RecipeId = 9, Quantity = 100, Unit = "g", ingredientId = 9, productId = 3 },
-                    new Recipes { RecipeId = 10, Quantity = 50, Unit = "g", ingredientId = 8, productId = 3 },
-                    new Recipes { RecipeId = 11, Quantity = 100, Unit = "g", ingredientId = 7, productId = 3 },
-                    new Recipes { RecipeId = 12, Quantity = 50, Unit = "g", ingredientId = 10, productId = 3 },
+                    new Recipes { RecipeId = 9, Quantity = 100, Unit = "g", IngredientId = 9, ProductId = 3 },
+                    new Recipes { RecipeId = 10, Quantity = 50, Unit = "g", IngredientId = 8, ProductId = 3 },
+                    new Recipes { RecipeId = 11, Quantity = 100, Unit = "g", IngredientId = 7, ProductId = 3 },
+                    new Recipes { RecipeId = 12, Quantity = 50, Unit = "g", IngredientId = 10, ProductId = 3 },
                     // cong thuc mon bun hai san
-                    new Recipes { RecipeId = 13, Quantity = 50, Unit = "g", ingredientId = 11, productId = 4 },
-                    new Recipes { RecipeId = 14, Quantity = 50, Unit = "g", ingredientId = 12, productId = 4 },
-                    new Recipes { RecipeId = 15, Quantity = 50, Unit = "g", ingredientId = 14, productId = 4 },
-                    new Recipes { RecipeId = 16, Quantity = 50, Unit = "g", ingredientId = 15, productId = 4 },
-                    new Recipes { RecipeId = 17, Quantity = 150, Unit = "g", ingredientId = 7, productId = 4 },
+                    new Recipes { RecipeId = 13, Quantity = 50, Unit = "g", IngredientId = 11, ProductId = 4 },
+                    new Recipes { RecipeId = 14, Quantity = 50, Unit = "g", IngredientId = 12, ProductId = 4 },
+                    new Recipes { RecipeId = 15, Quantity = 50, Unit = "g", IngredientId = 14, ProductId = 4 },
+                    new Recipes { RecipeId = 16, Quantity = 50, Unit = "g", IngredientId = 15, ProductId = 4 },
+                    new Recipes { RecipeId = 17, Quantity = 150, Unit = "g", IngredientId = 7, ProductId = 4 },
                     // cong thuc mon cua sot bo toi
-                    new Recipes { RecipeId = 18, Quantity = 2, Unit = "con", ingredientId = 14, productId = 5 },
-                    new Recipes { RecipeId = 19, Quantity = 100, Unit = "g", ingredientId = 16, productId = 5 },
+                    new Recipes { RecipeId = 18, Quantity = 2, Unit = "con", IngredientId = 14, ProductId = 5 },
+                    new Recipes { RecipeId = 19, Quantity = 100, Unit = "g", IngredientId = 16, ProductId = 5 },
                     // cong thuc mon cua sot pho mai
-                    new Recipes { RecipeId = 20, Quantity = 2, Unit = "con", ingredientId = 14, productId = 6 },
-                    new Recipes { RecipeId = 21, Quantity = 100, Unit = "g", ingredientId = 17, productId = 6 },
+                    new Recipes { RecipeId = 20, Quantity = 2, Unit = "con", IngredientId = 14, ProductId = 6 },
+                    new Recipes { RecipeId = 21, Quantity = 100, Unit = "g", IngredientId = 17, ProductId = 6 },
                     // cong thuc mon tom hum sot bo toi
-                    new Recipes { RecipeId = 22, Quantity = 1, Unit = "con", ingredientId = 13, productId = 7 },
-                    new Recipes { RecipeId = 23, Quantity = 100, Unit = "g", ingredientId = 16, productId = 7 },
+                    new Recipes { RecipeId = 22, Quantity = 1, Unit = "con", IngredientId = 13, ProductId = 7 },
+                    new Recipes { RecipeId = 23, Quantity = 100, Unit = "g", IngredientId = 16, ProductId = 7 },
                     // cong thuc mon tom hum sot pho mai
-                    new Recipes { RecipeId = 24, Quantity = 1, Unit = "con", ingredientId = 13, productId = 8 },
-                    new Recipes { RecipeId = 25, Quantity = 100, Unit = "g", ingredientId = 17, productId = 8 },
+                    new Recipes { RecipeId = 24, Quantity = 1, Unit = "con", IngredientId = 13, ProductId = 8 },
+                    new Recipes { RecipeId = 25, Quantity = 100, Unit = "g", IngredientId = 17, ProductId = 8 },
                     // cong thuc mon lau hai san
-                    new Recipes { RecipeId = 26, Quantity = 200, Unit = "g", ingredientId = 11, productId = 9 },
-                    new Recipes { RecipeId = 27, Quantity = 200, Unit = "g", ingredientId = 12, productId = 9 },
-                    new Recipes { RecipeId = 28, Quantity = 200, Unit = "g", ingredientId = 14, productId = 9 },
-                    new Recipes { RecipeId = 29, Quantity = 200, Unit = "g", ingredientId = 1, productId = 9 },
-                    new Recipes { RecipeId = 30, Quantity = 200, Unit = "g", ingredientId = 7, productId = 9 },
+                    new Recipes { RecipeId = 26, Quantity = 200, Unit = "g", IngredientId = 11, ProductId = 9 },
+                    new Recipes { RecipeId = 27, Quantity = 200, Unit = "g", IngredientId = 12, ProductId = 9 },
+                    new Recipes { RecipeId = 28, Quantity = 200, Unit = "g", IngredientId = 14, ProductId = 9 },
+                    new Recipes { RecipeId = 29, Quantity = 200, Unit = "g", IngredientId = 1, ProductId = 9 },
+                    new Recipes { RecipeId = 30, Quantity = 200, Unit = "g", IngredientId = 7, ProductId = 9 },
                     // cong thuc mon lau ca doi
-                    new Recipes { RecipeId = 31, Quantity = 500, Unit = "g", ingredientId = 18, productId = 10 },
-                    new Recipes { RecipeId = 32, Quantity = 200, Unit = "g", ingredientId = 19, productId = 10 },
+                    new Recipes { RecipeId = 31, Quantity = 500, Unit = "g", IngredientId = 18, ProductId = 10 },
+                    new Recipes { RecipeId = 32, Quantity = 200, Unit = "g", IngredientId = 19, ProductId = 10 },
                     // cong thuc mon muc hap
-                    new Recipes { RecipeId = 33, Quantity = 300, Unit = "g", ingredientId = 11, productId = 11 },
+                    new Recipes { RecipeId = 33, Quantity = 300, Unit = "g", IngredientId = 11, ProductId = 11 },
                     // cong thuc mon bo nuong ngoi
-                    new Recipes { RecipeId = 34, Quantity = 200, Unit = "g", ingredientId = 1, productId = 12 }
+                    new Recipes { RecipeId = 34, Quantity = 200, Unit = "g", IngredientId = 1, ProductId = 12 }
                     // cong thuc mon hau nuong mo hanh  
-                    , new Recipes { RecipeId = 35, Quantity = 1, Unit = "kg", ingredientId = 20, productId = 13 }
+                    , new Recipes { RecipeId = 35, Quantity = 1, Unit = "kg", IngredientId = 20, ProductId = 13 }
                     // cong thuc mon hau nuong pho mai
-                    , new Recipes { RecipeId = 36, Quantity = 1, Unit = "kg", ingredientId = 20, productId = 14 }
+                    , new Recipes { RecipeId = 36, Quantity = 1, Unit = "kg", IngredientId = 20, ProductId = 14 }
                     // cong thuc mon oc mong tay chay toi
-                    , new Recipes { RecipeId = 37, Quantity = 300, Unit = "g", ingredientId = 21, productId = 15 }
+                    , new Recipes { RecipeId = 37, Quantity = 300, Unit = "g", IngredientId = 21, ProductId = 15 }
                     // cong thuc mon mien xao thit cua
-                    , new Recipes { RecipeId = 38, Quantity = 200, Unit = "g", ingredientId = 22, productId = 16 }
-                    , new Recipes { RecipeId = 39, Quantity = 200, Unit = "g", ingredientId = 14, productId = 16 }
+                    , new Recipes { RecipeId = 38, Quantity = 200, Unit = "g", IngredientId = 22, ProductId = 16 }
+                    , new Recipes { RecipeId = 39, Quantity = 200, Unit = "g", IngredientId = 14, ProductId = 16 }
                     // cong thuc mon oc huong sot trung muoi
-                    , new Recipes { RecipeId = 40, Quantity = 300, Unit = "g", ingredientId = 24, productId = 17 }
-                    , new Recipes { RecipeId = 41, Quantity = 100, Unit = "g", ingredientId = 23, productId = 17 }
+                    , new Recipes { RecipeId = 40, Quantity = 300, Unit = "g", IngredientId = 24, ProductId = 17 }
+                    , new Recipes { RecipeId = 41, Quantity = 100, Unit = "g", IngredientId = 23, ProductId = 17 }
                     // cong thuc mon com chien hai san
-                    , new Recipes { RecipeId = 42, Quantity = 200, Unit = "g", ingredientId = 12, productId = 18 }
-                    , new Recipes { RecipeId = 43, Quantity = 200, Unit = "g", ingredientId = 11, productId = 18 }
-                    , new Recipes { RecipeId = 44, Quantity = 200, Unit = "g", ingredientId = 25, productId = 18 }
+                    , new Recipes { RecipeId = 42, Quantity = 200, Unit = "g", IngredientId = 12, ProductId = 18 }
+                    , new Recipes { RecipeId = 43, Quantity = 200, Unit = "g", IngredientId = 11,   ProductId = 18 }
+                    , new Recipes { RecipeId = 44, Quantity = 200, Unit = "g", IngredientId = 25, ProductId = 18 }
                     // cong thuc mon mi xao bo
-                    , new Recipes { RecipeId = 45, Quantity = 300, Unit = "g", ingredientId = 26, productId = 19 }
-                    , new Recipes { RecipeId = 46, Quantity = 200, Unit = "g", ingredientId = 1, productId = 19 }
+                    , new Recipes { RecipeId = 45, Quantity = 300, Unit = "g", IngredientId = 26, ProductId = 19 }
+                    , new Recipes { RecipeId = 46, Quantity = 200, Unit = "g", IngredientId = 1, ProductId = 19 }
                     // cong thuc mon so huyet chay toi
-                    , new Recipes { RecipeId = 47, Quantity = 300, Unit = "g", ingredientId = 27, productId = 20 }
+                    , new Recipes { RecipeId = 47, Quantity = 300, Unit = "g", IngredientId = 27, ProductId = 20 }
                     // cong thuc mon so huyet sot thai
-                    , new Recipes { RecipeId = 48, Quantity = 300, Unit = "g", ingredientId = 27, productId = 21 }
+                    , new Recipes { RecipeId = 48, Quantity = 300, Unit = "g", IngredientId = 27, ProductId = 21 }
                     // cong thuc mon muc hap hanh
-                    , new Recipes { RecipeId = 49, Quantity = 300, Unit = "g", ingredientId = 11, productId = 22 }
+                    , new Recipes { RecipeId = 49, Quantity = 300, Unit = "g", IngredientId = 11, ProductId = 22 }
                     // cong thuc mon ca mu hap
-                    , new Recipes { RecipeId = 50, Quantity = 500, Unit = "g", ingredientId = 28, productId = 23 }
+                    , new Recipes { RecipeId = 50, Quantity = 500, Unit = "g", IngredientId = 28, ProductId = 23 }
                 );
             modelBuilder.Entity<InvoiceStatus>().HasData(
                 new InvoiceStatus { InvoiceStatusId = 1,InvoiceStatusName = "Pending", Description = "Chờ Xác Nhận" },
@@ -926,9 +944,9 @@ namespace UngDungQuanLiNhaHang.Data {
                     IsPayment = true,
                     InvoiceType = false,
                     customerId = 1,
-                    invoiceStatusId = 4,
-                    paymentMethodId = 1,
-                    addressId = 1
+                    InvoiceStatusId = 4,
+                    PaymentMethodId = 1,
+                   AddressId = 1
                 },
                 new Invoices {
                     InvoiceId = 2,
@@ -938,16 +956,16 @@ namespace UngDungQuanLiNhaHang.Data {
                     IsPayment = false,
                     InvoiceType = false,
                     customerId = 1,
-                    invoiceStatusId = 4,
-                    paymentMethodId = 3,
-                    addressId = 1
+                    InvoiceStatusId = 4,
+                    PaymentMethodId = 3,
+                    AddressId = 1
                 }
             );
             modelBuilder.Entity<InvoiceItems>().HasData(
-                new InvoiceItems { InvoiceItemId = 1, Quantity = 2, Price = 75000.0, productId = 4, invoiceId = 1 },
-                new InvoiceItems { InvoiceItemId = 2, Quantity = 1, Price = 250000.0, productId = 8, invoiceId = 1 },
-                new InvoiceItems { InvoiceItemId = 3, Quantity = 1, Price = 120000.0, productId = 22, invoiceId = 2 },
-                new InvoiceItems { InvoiceItemId = 4, Quantity = 1, Price = 150000.0, productId = 19, invoiceId = 2 }
+                new InvoiceItems { InvoiceItemId = 1, Quantity = 2, Price = 75000.0, ProductId = 4, InvoiceId = 1 },
+                new InvoiceItems { InvoiceItemId = 2, Quantity = 1, Price = 250000.0, ProductId = 8, InvoiceId = 1 },
+                new InvoiceItems { InvoiceItemId = 3, Quantity = 1, Price = 120000.0, ProductId = 22, InvoiceId = 2 },
+                new InvoiceItems { InvoiceItemId = 4, Quantity = 1, Price = 150000.0, ProductId = 19, InvoiceId = 2 }
             );
         }
     }
