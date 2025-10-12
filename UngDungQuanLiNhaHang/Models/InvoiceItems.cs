@@ -17,5 +17,6 @@ namespace UngDungQuanLiNhaHang.Models {
         [ForeignKey("InvoiceId")]
 
         public Invoices? Invoices { get; set; }
+        public ICollection<OrderItemOption> orderItemOptions { get; set; } = new List<OrderItemOption>();
     }
 }

@@ -5,7 +5,7 @@ using UngDungQuanLiNhaHang.ResponseDTO;
 using UngDungQuanLiNhaHang.Services.Interfaces;
 
 namespace UngDungQuanLiNhaHang.Services.Implementations {
-    public class CustomerService(CustomerRepo customerRepo, TransactionRepo transactionRepo) : ICustomerServices {
+    public class CustomerService(CustomerRepo customerRepo, TransactionRepo transactionRepo,AddressRepo addressRepo) : ICustomerServices {
 
 
         public async Task<ApiResponse<bool>> DeleteAddress(int customerId, int addressId) {
@@ -13,13 +13,13 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
             if ( customer == null ) {
                 return ApiResponse<bool>.FailResponse("Customer not found");
             }
-            var address = customer.addresses.FirstOrDefault(a => a.AddressId == addressId);
+            var address = customer.AddressCustomers.FirstOrDefault(a => a.AddressId == addressId);
             if ( address == null ) {
                 return ApiResponse<bool>.FailResponse("Address not found");
             }
             try {
                 await transactionRepo.BeginTransactionAsync();
-                customer.addresses.Remove(address);
+                customer.AddressCustomers.Remove(address);
                 customerRepo.UpdateCustomer(customer);
                 await transactionRepo.CompleteAsync();
                 await transactionRepo.CommitAsync();
@@ -33,6 +33,7 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
 
         public async Task<ApiResponse<CustomerResponse>> GetCustomersById(int id) {
             var customer = await customerRepo.GetCustomerById(id);
+            
             if ( customer == null )
                 return ApiResponse<CustomerResponse>.FailResponse("Customer not found");
             var response = new CustomerResponse() {
@@ -40,15 +41,18 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
                 fullName = customer.FullName,
                 email = customer.Email,
                 phone = customer.Phone,
-                address = customer.addresses.Select(a => new AddressResponse {
-                    addressId = a.AddressId,
-                    province = a.Province,
-                    district = a.District,
-                    hamlet = a.Hamlet,
-                    street = a.Street,
-                    houseNumber = a.HouseNumber,
-                    isDefault = a.IsDefault
-                }).ToList()
+                address = customer.AddressCustomers
+                .Where(a => a.Address != null)
+                    .Select(a => new AddressResponse {
+                        addressId = a.AddressId,
+                        province = a.Address!.Province,
+                        district = a.Address.District,
+                        hamlet = a.Address.Province,
+                        street = a.Address.Street,
+                        houseNumber = a.Address.Province,
+                        isDefault = a.Address.IsDefault
+                    })
+                    .ToList()
             };
 
             return ApiResponse<CustomerResponse>.SuccessResponse(response, "Get customer successfully");
@@ -58,12 +62,16 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
             var customer = await customerRepo.GetCustomerForAddress(customerID);
             if ( customer == null )
                 return ApiResponse<bool>.FailResponse("Customer not found");
+
             if (address.isDefault) {
-                foreach ( var item in customer.addresses ) {
-                    item.IsDefault = false;
+                foreach ( var item in customer.AddressCustomers ) {
+                    if ( item.Address != null ) {
+                        item.Address.IsDefault = false;
+                    }
                 }
             }
             Address address1 = new() {
+                    
                 Province = address.province,
                 District = address.district,
                 Hamlet = address.hamlet,
@@ -71,12 +79,25 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
                 HouseNumber = address.houseNumber,
                 IsDefault = address.isDefault,
             };
-            var addr = customer.addresses.Contains(address1);
+            var addr = customer.AddressCustomers.Any(item =>
+                            item.Address.Province == address1.Province &&
+                            item.Address.District == address1.District &&
+                            item.Address.Hamlet == address1.Hamlet &&
+                            item.Address.Street == address1.Street &&
+                            item.Address.HouseNumber == address1.HouseNumber
+                        );
             if ( !addr ) {
                 try {
                     await transactionRepo.BeginTransactionAsync();
-                    customer.addresses.Add(address1);
-                    customerRepo.UpdateCustomer(customer);
+                    await addressRepo.AddAddress(address1);
+                    await transactionRepo.CompleteAsync();
+                    AddressCustomer addressCustomer = new AddressCustomer() {
+                        CustomerId = customer.CustomerId,
+                        AddressId = address1.AddressId
+                    };
+                    customer.AddressCustomers.Add(addressCustomer);
+
+                    
                     await transactionRepo.CompleteAsync();
                     await transactionRepo.CommitAsync();
                     return ApiResponse<bool>.SuccessResponse(true, "Add address successfully");
@@ -119,19 +140,29 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
             if ( customer == null )
                 return ApiResponse<bool>.FailResponse("Customer not found");
 
-            var addr = customer.addresses.FirstOrDefault(s => s.AddressId == address.addressId);
-            if ( addr == null ) {
+            var addr = customer.AddressCustomers.FirstOrDefault(s => s.AddressId == address.addressId);
+            if ( addr == null || addr.Address == null ) {
                 return ApiResponse<bool>.FailResponse("Address not found");
             }
-            addr.Province = address.province;
-            addr.District = address.district;
-            addr.Hamlet = address.hamlet;
-            addr.Street = address.street;
-            addr.HouseNumber = address.houseNumber;
-            addr.IsDefault = address.isDefault;
+            addr.Address.Province = address.province;
+            addr.Address.District = address.district;
+            addr.Address.Hamlet = address.hamlet;
+            addr.Address.Street = address.street;
+            addr.Address.HouseNumber = address.houseNumber;
+            if ( address.isDefault ) {
+                foreach ( var item in customer.AddressCustomers ) {
+                    if ( item.Address != null ) {
+                        item.Address.IsDefault = false;
+                    }
+                }
+                addr.Address.IsDefault = true;
+            }
+            else {
+                addr.Address.IsDefault = false;
+            }
             try {
                 await transactionRepo.BeginTransactionAsync();
-                customer.addresses.Add(addr);
+                
                 customerRepo.UpdateCustomer(customer);
                 await transactionRepo.CompleteAsync();
                 await transactionRepo.CommitAsync();
@@ -150,16 +181,19 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
             if ( customer == null ) {
                 return ApiResponse<bool>.FailResponse("Customer not found");
             }
-            var addressOld = customer.addresses.FirstOrDefault(a => a.IsDefault == true);
-            var addressNew = customer.addresses.FirstOrDefault(a => a.AddressId == addressId);
+           
+            var addressNew = customer.AddressCustomers.FirstOrDefault(a => a.AddressId == addressId);
 
-            if ( addressNew == null ) {
+            if ( addressNew == null || addressNew.Address == null) {
                 return ApiResponse<bool>.FailResponse("Address not found");
             }
-            if ( addressOld != null ) {
-                addressOld.IsDefault = false;
+
+            foreach ( var item in customer.AddressCustomers ) {
+                if ( item.Address != null ) {
+                    item.Address.IsDefault = false;
+                }
             }
-            addressNew.IsDefault = true;
+            addressNew.Address.IsDefault = true;
             try {
                 await transactionRepo.BeginTransactionAsync();
                 customerRepo.UpdateCustomer(customer);

@@ -34,9 +34,21 @@ namespace UngDungQuanLiNhaHang.Data {
         public DbSet<RefreshTokens> refreshTokens { get; set; }
         public DbSet<Tables> tables { get; set; }
         public DbSet<BookTable> bookTables { get; set; }
-
+        public DbSet<AddressCustomer> addressCustomers { get; set; }
+        public DbSet<ProductOptions> productOptions { get; set; }
+        public DbSet<OrderItemOption> orderItemOptions { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
             base.OnModelCreating(modelBuilder);
+            
+            modelBuilder.Entity<AddressCustomer>()
+            .HasOne(ac => ac.Customer)
+            .WithMany(c => c.AddressCustomers)
+            .HasForeignKey(ac => ac.CustomerId);
+
+                modelBuilder.Entity<AddressCustomer>()
+                    .HasOne(ac => ac.Address)
+                    .WithMany(a => a.AddressCustomers)
+                    .HasForeignKey(ac => ac.AddressId);
             modelBuilder.Entity<Invoices>()
                 .HasOne(i => i.productReviews)
                 .WithOne(pr => pr.Invoices)
@@ -48,7 +60,23 @@ namespace UngDungQuanLiNhaHang.Data {
                    .HasForeignKey(pi => pi.SupplierId)
                    .OnDelete(DeleteBehavior.NoAction); //
 
+            modelBuilder.Entity<OrderItemOption>()
+                .HasOne(oio => oio.InvoiceItem)
+                .WithMany(ii => ii.orderItemOptions)
+                .HasForeignKey(oio => oio.InvoiceItemId)
+                .OnDelete(DeleteBehavior.Cascade);
 
+
+            modelBuilder.Entity<ProductOptions>()
+                .HasOne(oio => oio.Product)
+                .WithMany(ii => ii.productOptions)
+                .HasForeignKey(oio => oio.ProductId)
+                .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<Recipes>()
+                .HasOne(oio => oio.Products)
+                .WithMany(ii => ii.recipes)
+                .HasForeignKey(oio => oio.ProductId)
+                .OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<Employees>()
                 .HasOne(e => e.Restaurant)
                 .WithMany(r => r.Employees)
@@ -126,6 +154,23 @@ namespace UngDungQuanLiNhaHang.Data {
                   },
                    new Address {
                        AddressId = 8,
+                       Province = "Cần Thơ",
+                       District = "Phường Thốt Nốt",
+                       Hamlet = " Khu vực 7",
+                       Street = "Đường Lê Bình",
+                       HouseNumber = "45"
+                   }
+                   ,
+                   new Address {
+                       AddressId = 9,
+                       Province = "Cần Thơ",
+                       District = "Phường Thốt Nốt",
+                       Hamlet = " Khu vực 7",
+                       Street = "Đường Lê Bình",
+                       HouseNumber = "45"
+                   },
+                   new Address {
+                       AddressId = 10,
                        Province = "Cần Thơ",
                        District = "Phường Thốt Nốt",
                        Hamlet = " Khu vực 7",
@@ -225,6 +270,10 @@ namespace UngDungQuanLiNhaHang.Data {
                     
                 }
             );
+            modelBuilder.Entity<AddressCustomer>().HasData(
+                    new AddressCustomer {Id = 1, AddressId = 9, CustomerId = 1 },
+                    new AddressCustomer {Id =2 , AddressId = 10, CustomerId = 2 }
+                );
             modelBuilder.Entity<Carts>().HasData(
                 new Carts {
                     CartId = 1,

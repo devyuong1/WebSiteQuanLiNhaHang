@@ -81,12 +81,13 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
 
         }
 
-        public async Task<ApiResponse<IEnumerable<EmployeeResponse>>> GetAllEmployees() {
+        public async Task<ApiResponse<PageResponse<EmployeeResponse>>> GetAllEmployees(int page = 1) {
+            int pageSize = 12;
             var employees = await employeeRepo.GetAllEmployees();
             if ( !employees.Any() ) {
-                return ApiResponse<IEnumerable<EmployeeResponse>>.FailResponse("Không có nhân viên");
+                return ApiResponse<PageResponse<EmployeeResponse>>.FailResponse("Không có nhân viên");
             }
-            IEnumerable<EmployeeResponse> list = employees.Select(e => new EmployeeResponse() {
+            var list = employees.Select(e => new EmployeeResponse() {
                 employeeId = e.EmployeeId,
                 username = e.UserName,
                 fullname = e.Fullname,
@@ -103,8 +104,21 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
                     houseNumber = e.Address.HouseNumber
 
                 }
-            });
-            return ApiResponse<IEnumerable<EmployeeResponse>>.SuccessResponse(list, "Lấy danh sách nhân viên thành công.");
+            }).ToList();
+            var pagedList = list
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+            var totalItems = list.Count;
+            var totalPages = (int)Math.Ceiling((double)totalItems / pageSize);
+            var pageResponse = new PageResponse<EmployeeResponse> {
+                totalItems = totalItems,
+                totalPages = totalPages,
+                pageSize = pageSize,
+                page = page,
+                list = pagedList
+            };
+            return ApiResponse<PageResponse<EmployeeResponse>>.SuccessResponse(pageResponse, "Lấy danh sách nhân viên thành công.");
         }
 
         public async Task<ApiResponse<EmployeeResponse>> GetEmployeeById(int employeeId) {

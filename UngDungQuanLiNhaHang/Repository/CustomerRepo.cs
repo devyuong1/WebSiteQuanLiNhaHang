@@ -24,14 +24,18 @@ namespace UngDungQuanLiNhaHang.Repository {
             return await _context.customers
                 .Include(c => c.refreshTokens)
                 .Include(c => c.Role)
-                .Include(c => c.addresses)
+                .Include(c => c.AddressCustomers)
+                    .ThenInclude(a => a.Address)
                 .FirstOrDefaultAsync(c => c.CustomerId == customerId);
         }
         public async Task<Customers?> GetCustomerForAddress(int customerId) {
             return await _context.customers
-                .Include(c => c.addresses)
+                .Include(c => c.AddressCustomers)
+                    .ThenInclude(a => a.Address)
                 .FirstOrDefaultAsync(c => c.CustomerId == customerId);
         }
+        
+
         public async Task<Customers?> GetCustomerByPhonel(string phone) {
             return await _context.customers
                

@@ -7,7 +7,7 @@ namespace UngDungQuanLiNhaHang.Services.Interfaces {
         public Task<ApiResponse<bool>> UpdateIngredient(IngredientDTO ingredientDTO);
 
         public Task<ApiResponse<bool>> DisableIngredient(int ingredientId);
-        public Task<ApiResponse<IEnumerable<IngredientResponse>>> GetAllIngredients();
+        public Task<ApiResponse<PageResponse<IngredientResponse>>> GetAllIngredients(int page =1);
         public Task<ApiResponse<IngredientResponse>> GetIngredientById(int ingredientId);
     }
 }

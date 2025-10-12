@@ -39,9 +39,7 @@ namespace UngDungQuanLiNhaHang.Controllers
 
             return Ok(cart);
         }
-
         // PUT: api/Carts/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut]
         [Authorize]
         public async Task<IActionResult> DeleteProduct(int cartItemId)
@@ -57,9 +55,7 @@ namespace UngDungQuanLiNhaHang.Controllers
                 return Ok(result);
             return BadRequest(result);
         }
-
         // POST: api/Carts
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [Authorize]
         [HttpPost]
         public async Task<ActionResult<Carts>> PostCarts([FromBody] AddItemCartDTO addItemCartDTO)

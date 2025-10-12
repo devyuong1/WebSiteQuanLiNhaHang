@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using System.Security.Claims;
 using System.Text;
 using UngDungQuanLiNhaHang.Data;
+using UngDungQuanLiNhaHang.Helpers;
 using UngDungQuanLiNhaHang.Repository;
 using UngDungQuanLiNhaHang.Security;
 using UngDungQuanLiNhaHang.Services.Implementations;
@@ -12,13 +14,42 @@ using UngDungQuanLiNhaHang.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
 builder.Services.AddDbContext<DataDbConText>(options => 
 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Add services to the container.
 
 builder.Services.AddControllers();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "API", Version = "v1" });
+
+    // 👇 Thêm phần này để Swagger nhận JWT token
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme {
+        Description = "Nhập JWT token theo dạng: Bearer {token}",
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.Http,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+    });
+
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            new string[] {}
+        }
+    });
+});
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -64,6 +95,17 @@ builder.Services.AddScoped<ICustomerServices, CustomerService>();
 builder.Services.AddScoped<CartRepo>();
 builder.Services.AddScoped<ICartServices, CartServices>();
 builder.Services.AddScoped<ProductRepo>();
+builder.Services.AddScoped<IProductService, ProductServices>();
+
+builder.Services.AddScoped<CategoryRepo>();
+builder.Services.AddScoped<ICategoryServices, CategoryServiceṣ̣̣̣̣̣>();
+
+builder.Services.AddScoped<PurchaseInvoiceRepo>();
+builder.Services.AddScoped<IPurchaseInvoiceServices, PurchaseInvoiceServices>();
+builder.Services.AddScoped<HandlerFiles>();
+builder.Services.AddScoped<Logger<ProductServices>>();
+builder.Services.AddScoped<SupplierRepo>();
+builder.Services.AddScoped<ISupplierServices, SupplierServices>();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAllOrigins",
@@ -89,6 +131,7 @@ if (app.Environment.IsDevelopment())
 
 
 app.UseHttpsRedirection();
+
 app.UseAuthentication();
 app.UseAuthorization();
 

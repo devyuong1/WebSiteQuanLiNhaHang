@@ -13,7 +13,7 @@ namespace UngDungQuanLiNhaHang.Security {
 
         public string GenerateJWT(string userName, int khachHangID, string role) {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.UTF8.GetBytes(configuration["Jwt:Key"] ?? "thanhtam1");
+            var key = Encoding.UTF8.GetBytes(configuration["Jwt:Key"] ?? "ashsjabhdsjksdfjkdsfjsdjkfbsdjk123");
             var tokenDescriptor = new SecurityTokenDescriptor {
                 Subject = new ClaimsIdentity(new Claim[]
                 {

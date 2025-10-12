@@ -21,10 +21,7 @@ namespace UngDungQuanLiNhaHang.Models {
         public PaymentMethod? PaymentMethod { get; set; }
         public int InvoiceStatusId { get; set; }
         [ForeignKey("InvoiceStatusId")]
-
         public InvoiceStatus? InvoiceStatus { get; set; }
-      
-        
         public ProductReviews? productReviews { get; set; }
         public int AddressId { get; set; }
         [ForeignKey("AddressId")]

@@ -14,7 +14,7 @@ namespace UngDungQuanLiNhaHang.Models {
         public bool IsDefault { get; set; } = true;
         
         public Restaurants? Restaurant { get; set; }
-        public ICollection<Customers> customers { get; set; } = new List<Customers>();
+        public ICollection<AddressCustomer> AddressCustomers { get; set; } = new List<AddressCustomer>();
         public ICollection<Employees> employees { get; set; } = new List<Employees>();
 
         

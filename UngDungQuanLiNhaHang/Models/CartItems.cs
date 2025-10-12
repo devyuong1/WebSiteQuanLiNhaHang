@@ -11,10 +11,11 @@ namespace UngDungQuanLiNhaHang.Models {
         
         public int CartId { get; set; }
         [ForeignKey("CartId")]
-        public Carts Carts { get; set; }
+        public Carts? Carts { get; set; }
         public int ProductId { get; set; }
         [ForeignKey("ProductId")]
 
-        public Products Products { get; set; }
+        public Products? Products { get; set; }
+        public ICollection<CartItemOption> CartItemOptions = new List<CartItemOption>();
     }
 }

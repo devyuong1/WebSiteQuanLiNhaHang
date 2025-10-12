@@ -21,9 +21,9 @@ namespace UngDungQuanLiNhaHang.Controllers
 
         // GET: api/Ingredients
         [HttpGet]
-        public async Task<ActionResult<ApiResponse<IEnumerable<IngredientResponse>>>> Getingredients()
+        public async Task<ActionResult<ApiResponse<IEnumerable<IngredientResponse>>>> Getingredients(int page = 1)
         {
-            var result = await services.GetAllIngredients();
+            var result = await services.GetAllIngredients(page);
             if (result.Success) {
                 return Ok(result);
             }

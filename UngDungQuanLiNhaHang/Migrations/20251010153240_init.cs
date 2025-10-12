@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace UngDungQuanLiNhaHang.Migrations
 {
     /// <inheritdoc />
-    public partial class Init : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -278,6 +278,36 @@ namespace UngDungQuanLiNhaHang.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "productOptions",
+                columns: table => new
+                {
+                    ProductOptionId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    OptionName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    OptionValue = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Unit = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Price = table.Column<double>(type: "float", nullable: false),
+                    ProductId = table.Column<int>(type: "int", nullable: false),
+                    IngredientId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_productOptions", x => x.ProductOptionId);
+                    table.ForeignKey(
+                        name: "FK_productOptions_ingredients_IngredientId",
+                        column: x => x.IngredientId,
+                        principalTable: "ingredients",
+                        principalColumn: "IngredientId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_productOptions_products_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "products",
+                        principalColumn: "ProductId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "recipes",
                 columns: table => new
                 {
@@ -306,24 +336,26 @@ namespace UngDungQuanLiNhaHang.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AddressCustomers",
+                name: "addressCustomers",
                 columns: table => new
                 {
-                    addressesAddressId = table.Column<int>(type: "int", nullable: false),
-                    customersCustomerId = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    AddressId = table.Column<int>(type: "int", nullable: false),
+                    CustomerId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AddressCustomers", x => new { x.addressesAddressId, x.customersCustomerId });
+                    table.PrimaryKey("PK_addressCustomers", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_AddressCustomers_addresses_addressesAddressId",
-                        column: x => x.addressesAddressId,
+                        name: "FK_addressCustomers_addresses_AddressId",
+                        column: x => x.AddressId,
                         principalTable: "addresses",
                         principalColumn: "AddressId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_AddressCustomers_customers_customersCustomerId",
-                        column: x => x.customersCustomerId,
+                        name: "FK_addressCustomers_customers_CustomerId",
+                        column: x => x.CustomerId,
                         principalTable: "customers",
                         principalColumn: "CustomerId",
                         onDelete: ReferentialAction.Cascade);
@@ -616,6 +648,28 @@ namespace UngDungQuanLiNhaHang.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "orderItemOptions",
+                columns: table => new
+                {
+                    OrderItemOptionId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    OrderItemOptionName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Quantity = table.Column<int>(type: "int", nullable: false),
+                    Price = table.Column<double>(type: "float", nullable: false),
+                    InvoiceItemId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_orderItemOptions", x => x.OrderItemOptionId);
+                    table.ForeignKey(
+                        name: "FK_orderItemOptions_invoicesItems_InvoiceItemId",
+                        column: x => x.InvoiceItemId,
+                        principalTable: "invoicesItems",
+                        principalColumn: "InvoiceItemId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.InsertData(
                 table: "addresses",
                 columns: new[] { "AddressId", "District", "Hamlet", "HouseNumber", "IsDefault", "Province", "Street" },
@@ -628,7 +682,9 @@ namespace UngDungQuanLiNhaHang.Migrations
                     { 5, "Phường Cái Răng", " Khu vực 6", "54", true, "Cần Thơ", "Đường 19/8" },
                     { 6, "Phường Ninh Kiều", " Khu vực 7", "23", true, "Cần Thơ", "Đường 19/8" },
                     { 7, "Phường Cái Răng", " Khu vực 7", "45", true, "Cần Thơ", "Đường Lê Bình" },
-                    { 8, "Phường Thốt Nốt", " Khu vực 7", "45", true, "Cần Thơ", "Đường Lê Bình" }
+                    { 8, "Phường Thốt Nốt", " Khu vực 7", "45", true, "Cần Thơ", "Đường Lê Bình" },
+                    { 9, "Phường Thốt Nốt", " Khu vực 7", "45", true, "Cần Thơ", "Đường Lê Bình" },
+                    { 10, "Phường Thốt Nốt", " Khu vực 7", "45", true, "Cần Thơ", "Đường Lê Bình" }
                 });
 
             migrationBuilder.InsertData(
@@ -727,8 +783,8 @@ namespace UngDungQuanLiNhaHang.Migrations
                 columns: new[] { "InvoiceId", "AddressId", "Create_At", "InvoiceStatusId", "InvoiceType", "IsPayment", "PaymentMethodId", "TotalAmount", "TotalQuantity", "customerId", "customersCustomerId", "tableId", "tablesTableId" },
                 values: new object[,]
                 {
-                    { 1, 1, new DateTime(2025, 10, 6, 14, 20, 16, 969, DateTimeKind.Utc).AddTicks(8945), 4, false, true, 1, 400000.0, 3, 1, null, null, null },
-                    { 2, 1, new DateTime(2025, 10, 6, 14, 20, 16, 969, DateTimeKind.Utc).AddTicks(8948), 4, false, false, 3, 270000.0, 2, 1, null, null, null }
+                    { 1, 1, new DateTime(2025, 10, 10, 15, 32, 40, 317, DateTimeKind.Utc).AddTicks(8938), 4, false, true, 1, 400000.0, 3, 1, null, null, null },
+                    { 2, 1, new DateTime(2025, 10, 10, 15, 32, 40, 317, DateTimeKind.Utc).AddTicks(8941), 4, false, false, 3, 270000.0, 2, 1, null, null, null }
                 });
 
             migrationBuilder.InsertData(
@@ -778,6 +834,15 @@ namespace UngDungQuanLiNhaHang.Migrations
                 {
                     { 1, 7, "ctyabc@gmail.com", "0239092399", "Công Ty Thực Phẩm Sạch ABC" },
                     { 2, 8, "haisan23@gmail.com", "0239092459", "Công Ty Hải Sản Cà Mau" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "addressCustomers",
+                columns: new[] { "Id", "AddressId", "CustomerId" },
+                values: new object[,]
+                {
+                    { 1, 9, 1 },
+                    { 2, 10, 2 }
                 });
 
             migrationBuilder.InsertData(
@@ -904,9 +969,14 @@ namespace UngDungQuanLiNhaHang.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_AddressCustomers_customersCustomerId",
-                table: "AddressCustomers",
-                column: "customersCustomerId");
+                name: "IX_addressCustomers_AddressId",
+                table: "addressCustomers",
+                column: "AddressId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_addressCustomers_CustomerId",
+                table: "addressCustomers",
+                column: "CustomerId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_bookTables_CustomersCustomerId",
@@ -995,6 +1065,21 @@ namespace UngDungQuanLiNhaHang.Migrations
                 column: "ProductId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_orderItemOptions_InvoiceItemId",
+                table: "orderItemOptions",
+                column: "InvoiceItemId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_productOptions_IngredientId",
+                table: "productOptions",
+                column: "IngredientId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_productOptions_ProductId",
+                table: "productOptions",
+                column: "ProductId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_productReviews_CustomerId",
                 table: "productReviews",
                 column: "CustomerId");
@@ -1071,7 +1156,7 @@ namespace UngDungQuanLiNhaHang.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "AddressCustomers");
+                name: "addressCustomers");
 
             migrationBuilder.DropTable(
                 name: "bookTables");
@@ -1083,7 +1168,10 @@ namespace UngDungQuanLiNhaHang.Migrations
                 name: "images");
 
             migrationBuilder.DropTable(
-                name: "invoicesItems");
+                name: "orderItemOptions");
+
+            migrationBuilder.DropTable(
+                name: "productOptions");
 
             migrationBuilder.DropTable(
                 name: "productReviews");
@@ -1101,7 +1189,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                 name: "carts");
 
             migrationBuilder.DropTable(
-                name: "invoices");
+                name: "invoicesItems");
 
             migrationBuilder.DropTable(
                 name: "purchaseInvoice");
@@ -1110,7 +1198,16 @@ namespace UngDungQuanLiNhaHang.Migrations
                 name: "ingredients");
 
             migrationBuilder.DropTable(
+                name: "invoices");
+
+            migrationBuilder.DropTable(
                 name: "products");
+
+            migrationBuilder.DropTable(
+                name: "employees");
+
+            migrationBuilder.DropTable(
+                name: "suppliers");
 
             migrationBuilder.DropTable(
                 name: "customers");
@@ -1123,12 +1220,6 @@ namespace UngDungQuanLiNhaHang.Migrations
 
             migrationBuilder.DropTable(
                 name: "tables");
-
-            migrationBuilder.DropTable(
-                name: "employees");
-
-            migrationBuilder.DropTable(
-                name: "suppliers");
 
             migrationBuilder.DropTable(
                 name: "categories");

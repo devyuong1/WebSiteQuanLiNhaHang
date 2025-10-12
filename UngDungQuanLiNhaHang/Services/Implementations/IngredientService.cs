@@ -57,10 +57,11 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
             }
         }
 
-        public async Task<ApiResponse<IEnumerable<IngredientResponse>>> GetAllIngredients() {
+        public async Task<ApiResponse<PageResponse<IngredientResponse>>> GetAllIngredients(int page =1) {
+            int pageSize = 12;
             var ingredients = await ingredientRepo.GetAllIngredients();
             if ( ingredients == null || !ingredients.Any() ) {
-                return ApiResponse<IEnumerable<IngredientResponse>>.FailResponse("Không có nguyên liệu nào");
+                return ApiResponse<PageResponse<IngredientResponse>>.FailResponse("Không có nguyên liệu nào");
             }
             var response = ingredients.Select(i => new IngredientResponse {
                 ingredientId = i.IngredientId,
@@ -70,8 +71,20 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
                 quantity = i.Quantity,
                 minQuantity = i.MinQuantity,
                 isActive = i.IsActive
-            });
-            return ApiResponse<IEnumerable<IngredientResponse>>.SuccessResponse(response);
+            }).ToList();
+            int totalItems = response.Count();
+            var pagedResponse = response
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+            PageResponse<IngredientResponse> responsePage = new PageResponse<IngredientResponse> {
+                page = page,
+                pageSize = pageSize,
+                totalItems = totalItems,
+                totalPages = (int)Math.Ceiling((double)totalItems / pageSize),
+                list = pagedResponse
+            };
+            return ApiResponse<PageResponse<IngredientResponse>>.SuccessResponse(responsePage);
         }
 
         public async Task<ApiResponse<IngredientResponse>> GetIngredientById(int ingredientId) {

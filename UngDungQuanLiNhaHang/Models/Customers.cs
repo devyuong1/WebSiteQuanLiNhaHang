@@ -17,7 +17,7 @@ namespace UngDungQuanLiNhaHang.Models {
         public Roles? Role { get; set; }
        
         public Carts Cart { get; set; }
-        public ICollection<Address> addresses { get; set; } = [];
+        public ICollection<AddressCustomer> AddressCustomers { get; set; } = [];
         public ICollection<Invoices> invoices { get; set; } = new List<Invoices>();
         public ICollection<ProductReviews> productReviews { get; set; } = new List<ProductReviews>();
         public ICollection<RefreshTokens> refreshTokens { get; set; } = new List<RefreshTokens>();

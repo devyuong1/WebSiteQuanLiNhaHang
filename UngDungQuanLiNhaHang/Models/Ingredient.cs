@@ -15,5 +15,6 @@ namespace UngDungQuanLiNhaHang.Models {
 
         public ICollection<Recipes> Recipes { get; set; } = [];
         public ICollection<PurchaseInvoiceItem> PurchaseInvoiceItems { get; set;} = [];
+        public ICollection<ProductOptions> ProductOptions { get; set; } = [];
     }
 }

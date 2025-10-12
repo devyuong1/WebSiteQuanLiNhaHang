@@ -45,7 +45,14 @@ namespace UngDungQuanLiNhaHang.Controllers
         [Authorize]
         public async Task<IActionResult> PutCustomers([FromBody] CustomerDTO customer)
         {
-            var result = await customerServices.UpdateCustomer(customer);
+
+            var userIdClaim = User.FindFirst("UserID");
+
+            if ( userIdClaim == null )
+                return Unauthorized("Token không hợp lệ hoặc thiếu thông tin UserID.");
+
+            int customerId = int.Parse(userIdClaim.Value);
+            var result = await customerServices.UpdateCustomer(customerId,customer);
             if (!result.Success)
             {
                 return BadRequest(result);
@@ -56,7 +63,12 @@ namespace UngDungQuanLiNhaHang.Controllers
         [Authorize]
         public async Task<IActionResult> PutAddress([FromBody]  AddressDTO address)
         {
-            var result = await customerServices.UpdateAddress(address);
+            var userIdClaim = User.FindFirst("UserID");
+            if ( userIdClaim == null )
+                return Unauthorized("Token không hợp lệ hoặc thiếu thông tin UserID.");
+
+            int customerId = int.Parse(userIdClaim.Value);
+            var result = await customerServices.UpdateAddress(customerId, address);
             if (!result.Success)
             {
                 return BadRequest(result);

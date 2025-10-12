@@ -12,8 +12,8 @@ using UngDungQuanLiNhaHang.Data;
 namespace UngDungQuanLiNhaHang.Migrations
 {
     [DbContext(typeof(DataDbConText))]
-    [Migration("20251006142017_Init")]
-    partial class Init
+    [Migration("20251011032104_updateDatabase2")]
+    partial class updateDatabase2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,21 +24,6 @@ namespace UngDungQuanLiNhaHang.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("AddressCustomers", b =>
-                {
-                    b.Property<int>("addressesAddressId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("customersCustomerId")
-                        .HasColumnType("int");
-
-                    b.HasKey("addressesAddressId", "customersCustomerId");
-
-                    b.HasIndex("customersCustomerId");
-
-                    b.ToTable("AddressCustomers");
-                });
 
             modelBuilder.Entity("UngDungQuanLiNhaHang.Models.Address", b =>
                 {
@@ -153,6 +138,63 @@ namespace UngDungQuanLiNhaHang.Migrations
                             IsDefault = true,
                             Province = "Cần Thơ",
                             Street = "Đường Lê Bình"
+                        },
+                        new
+                        {
+                            AddressId = 9,
+                            District = "Phường Thốt Nốt",
+                            Hamlet = " Khu vực 7",
+                            HouseNumber = "45",
+                            IsDefault = true,
+                            Province = "Cần Thơ",
+                            Street = "Đường Lê Bình"
+                        },
+                        new
+                        {
+                            AddressId = 10,
+                            District = "Phường Thốt Nốt",
+                            Hamlet = " Khu vực 7",
+                            HouseNumber = "45",
+                            IsDefault = true,
+                            Province = "Cần Thơ",
+                            Street = "Đường Lê Bình"
+                        });
+                });
+
+            modelBuilder.Entity("UngDungQuanLiNhaHang.Models.AddressCustomer", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AddressId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CustomerId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AddressId");
+
+                    b.HasIndex("CustomerId");
+
+                    b.ToTable("addressCustomers");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            AddressId = 9,
+                            CustomerId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            AddressId = 10,
+                            CustomerId = 2
                         });
                 });
 
@@ -1188,7 +1230,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                         {
                             InvoiceId = 1,
                             AddressId = 1,
-                            Create_At = new DateTime(2025, 10, 6, 14, 20, 16, 969, DateTimeKind.Utc).AddTicks(8945),
+                            Create_At = new DateTime(2025, 10, 11, 3, 21, 2, 37, DateTimeKind.Utc).AddTicks(5683),
                             InvoiceStatusId = 4,
                             InvoiceType = false,
                             IsPayment = true,
@@ -1201,7 +1243,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                         {
                             InvoiceId = 2,
                             AddressId = 1,
-                            Create_At = new DateTime(2025, 10, 6, 14, 20, 16, 969, DateTimeKind.Utc).AddTicks(8948),
+                            Create_At = new DateTime(2025, 10, 11, 3, 21, 2, 37, DateTimeKind.Utc).AddTicks(5689),
                             InvoiceStatusId = 4,
                             InvoiceType = false,
                             IsPayment = false,
@@ -1210,6 +1252,34 @@ namespace UngDungQuanLiNhaHang.Migrations
                             TotalQuantity = 2,
                             customerId = 1
                         });
+                });
+
+            modelBuilder.Entity("UngDungQuanLiNhaHang.Models.OrderItemOption", b =>
+                {
+                    b.Property<int>("OrderItemOptionId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OrderItemOptionId"));
+
+                    b.Property<int>("InvoiceItemId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("OrderItemOptionName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("Price")
+                        .HasColumnType("float");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.HasKey("OrderItemOptionId");
+
+                    b.HasIndex("InvoiceItemId");
+
+                    b.ToTable("orderItemOptions");
                 });
 
             modelBuilder.Entity("UngDungQuanLiNhaHang.Models.PaymentMethod", b =>
@@ -1244,6 +1314,43 @@ namespace UngDungQuanLiNhaHang.Migrations
                             PaymentMethodId = 3,
                             PaymentMethodName = "Thahh Toán Khi Nhận Hàng"
                         });
+                });
+
+            modelBuilder.Entity("UngDungQuanLiNhaHang.Models.ProductOptions", b =>
+                {
+                    b.Property<int>("ProductOptionId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProductOptionId"));
+
+                    b.Property<int>("IngredientId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("OptionName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("OptionValue")
+                        .HasColumnType("float");
+
+                    b.Property<double>("Price")
+                        .HasColumnType("float");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Unit")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ProductOptionId");
+
+                    b.HasIndex("IngredientId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("productOptions");
                 });
 
             modelBuilder.Entity("UngDungQuanLiNhaHang.Models.ProductReviews", b =>
@@ -2507,19 +2614,23 @@ namespace UngDungQuanLiNhaHang.Migrations
                     b.ToTable("tables");
                 });
 
-            modelBuilder.Entity("AddressCustomers", b =>
+            modelBuilder.Entity("UngDungQuanLiNhaHang.Models.AddressCustomer", b =>
                 {
-                    b.HasOne("UngDungQuanLiNhaHang.Models.Address", null)
-                        .WithMany()
-                        .HasForeignKey("addressesAddressId")
+                    b.HasOne("UngDungQuanLiNhaHang.Models.Address", "Address")
+                        .WithMany("AddressCustomers")
+                        .HasForeignKey("AddressId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("UngDungQuanLiNhaHang.Models.Customers", null)
-                        .WithMany()
-                        .HasForeignKey("customersCustomerId")
+                    b.HasOne("UngDungQuanLiNhaHang.Models.Customers", "Customer")
+                        .WithMany("AddressCustomers")
+                        .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Address");
+
+                    b.Navigation("Customer");
                 });
 
             modelBuilder.Entity("UngDungQuanLiNhaHang.Models.BookTable", b =>
@@ -2673,6 +2784,36 @@ namespace UngDungQuanLiNhaHang.Migrations
                     b.Navigation("tables");
                 });
 
+            modelBuilder.Entity("UngDungQuanLiNhaHang.Models.OrderItemOption", b =>
+                {
+                    b.HasOne("UngDungQuanLiNhaHang.Models.InvoiceItems", "InvoiceItem")
+                        .WithMany("orderItemOptions")
+                        .HasForeignKey("InvoiceItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("InvoiceItem");
+                });
+
+            modelBuilder.Entity("UngDungQuanLiNhaHang.Models.ProductOptions", b =>
+                {
+                    b.HasOne("UngDungQuanLiNhaHang.Models.Ingredient", "Ingredient")
+                        .WithMany("ProductOptions")
+                        .HasForeignKey("IngredientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("UngDungQuanLiNhaHang.Models.Products", "Product")
+                        .WithMany("productOptions")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Ingredient");
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("UngDungQuanLiNhaHang.Models.ProductReviews", b =>
                 {
                     b.HasOne("UngDungQuanLiNhaHang.Models.Customers", "Customers")
@@ -2807,6 +2948,8 @@ namespace UngDungQuanLiNhaHang.Migrations
 
             modelBuilder.Entity("UngDungQuanLiNhaHang.Models.Address", b =>
                 {
+                    b.Navigation("AddressCustomers");
+
                     b.Navigation("Restaurant");
 
                     b.Navigation("employees");
@@ -2828,6 +2971,8 @@ namespace UngDungQuanLiNhaHang.Migrations
 
             modelBuilder.Entity("UngDungQuanLiNhaHang.Models.Customers", b =>
                 {
+                    b.Navigation("AddressCustomers");
+
                     b.Navigation("Cart")
                         .IsRequired();
 
@@ -2847,9 +2992,16 @@ namespace UngDungQuanLiNhaHang.Migrations
 
             modelBuilder.Entity("UngDungQuanLiNhaHang.Models.Ingredient", b =>
                 {
+                    b.Navigation("ProductOptions");
+
                     b.Navigation("PurchaseInvoiceItems");
 
                     b.Navigation("Recipes");
+                });
+
+            modelBuilder.Entity("UngDungQuanLiNhaHang.Models.InvoiceItems", b =>
+                {
+                    b.Navigation("orderItemOptions");
                 });
 
             modelBuilder.Entity("UngDungQuanLiNhaHang.Models.InvoiceStatus", b =>
@@ -2876,6 +3028,8 @@ namespace UngDungQuanLiNhaHang.Migrations
                     b.Navigation("images");
 
                     b.Navigation("invoiceItems");
+
+                    b.Navigation("productOptions");
 
                     b.Navigation("productReviews");
 

@@ -26,6 +26,7 @@ namespace UngDungQuanLiNhaHang.Models {
         public ICollection<Recipes> recipes { get; set; } = new List<Recipes>();
 
         public ICollection<InvoiceItems> invoiceItems { get; set; } = new List<InvoiceItems>();
+        public ICollection<ProductOptions> productOptions { get; set; } = new List<ProductOptions>();
         public ICollection<ProductReviews> productReviews { get; set; } = new List<ProductReviews>();
         public ICollection<CartItems> cartItems { get; set; }= new List<CartItems>();
     }

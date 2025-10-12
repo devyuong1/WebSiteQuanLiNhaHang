@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using UngDungQuanLiNhaHang.Data;
 using UngDungQuanLiNhaHang.Models;
 using UngDungQuanLiNhaHang.RequestDTO;
 using UngDungQuanLiNhaHang.ResponseDTO;
@@ -23,9 +17,10 @@ namespace UngDungQuanLiNhaHang.Controllers
 
         // GET: api/Employees
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<EmployeeResponse>>> Getemployees()
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult<IEnumerable<EmployeeResponse>>> Getemployees(int page = 1)
         {
-            var result = await services.GetAllEmployees();
+            var result = await services.GetAllEmployees(page);
             if ( result.Success) {
                 return Ok(result.Access);
             }

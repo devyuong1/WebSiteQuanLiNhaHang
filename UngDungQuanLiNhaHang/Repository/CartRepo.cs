@@ -19,8 +19,11 @@ namespace UngDungQuanLiNhaHang.Repository {
         public void UpdateCart(Carts cart) {
             _context.carts.Update(cart);
         }   
+
         public async Task AddCart(Carts cart) {
             await _context.carts.AddAsync(cart);
         }
+
+        
     }
 }
