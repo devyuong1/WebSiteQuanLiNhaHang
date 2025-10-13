@@ -7,6 +7,7 @@ namespace UngDungQuanLiNhaHang.Repository {
         public async Task<bool> IsProductExists(int productId) {
             return await _context.products.AnyAsync(p => p.ProductId == productId);
         }
+
         public async Task<bool> IsProductExistsByName(string productName) {
             return await _context.products.AnyAsync(p => p.ProductName == productName);
         }

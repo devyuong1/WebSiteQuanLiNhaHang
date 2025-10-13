@@ -9,7 +9,7 @@ namespace UngDungQuanLiNhaHang.Models {
         public required string OrderItemOptionName { get; set; }
         public int Quantity { get; set; }
         public double Price { get; set; }
-
+        public required int productOptionId { get; set; }
         public int InvoiceItemId { get; set; }
 
         [ForeignKey("InvoiceItemId")]

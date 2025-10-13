@@ -15,7 +15,8 @@ namespace UngDungQuanLiNhaHang.Models {
         public Customers? customers { get; set; }
         public int? tableId { get; set; }
         public Tables? tables { get; set; }
-        
+        public int employeeId { get; set; } = 0;
+
         public int PaymentMethodId { get; set; }
         [ForeignKey("PaymentMethodId")]
         public PaymentMethod? PaymentMethod { get; set; }

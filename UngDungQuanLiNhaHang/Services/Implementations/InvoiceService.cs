@@ -9,49 +9,419 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
         TransactionRepo transactionRepo,
         ProductRepo productRepo,
         ProductOptionRepo productOptionRepo,
-        CartRepo cartRepo
+        CartRepo cartRepo,
+        EmployeeRepo employeeRepo,
+        BookTableRepo bookTableRepo
         ) : IInvoiceServices {
-        public async Task<ApiResponse<int>> CreateInvoiceForOnline(InvoiceDTO invoiceDTO) {
-            // kiem tra du lieu
-            if (invoiceDTO == null) {
-                return ApiResponse<int>.FailResponse("Invalid invoice data.");
+        public async Task<ApiResponse<bool>> AddInvoiceItem(int employeeId, InvoiceItemDTO invoiceItemDTO) {
+            bool isEmployeeExists = await employeeRepo.IsEmployeeExists(employeeId);
+            if ( !isEmployeeExists ) {
+                return ApiResponse<bool>.FailResponse("Nhân viên không tồn tại.");
             }
-            foreach (var item in invoiceDTO.invoiceItems) {
-                bool product = await productRepo.IsProductExists(item.productId);
-                if (item == null || item.quantity <= 0 || item.price <= 0 || product == false)  {
-                    return ApiResponse<int>.FailResponse("Invalid item data.");
-                }
+            var invoice = await invoiceRepo.GetByInvoiceIdForAddItem(invoiceItemDTO.invoiceId);
+            if ( invoice == null ) {
+                return ApiResponse<bool>.FailResponse("Không có hóa đơn");
             }
-            // kiem tra cart 
-            var carts = await cartRepo.GetCart(invoiceDTO.customerId);
+            if ( invoice.InvoiceStatusId != 2 ) {
+                return ApiResponse<bool>.FailResponse("Chỉ có thể thêm sản phẩm vào hóa đơn đang đã xác nhận.");
+            }
+            try {
+                await transactionRepo.BeginTransactionAsync();
+                var product = await productRepo.GetProductById(invoiceItemDTO.productId);
+                if ( product == null )
+                    return ApiResponse<bool>.FailResponse("Dữ liệu product  không hợp lệ.");
+                var invoiceItem = invoice.invoiceItems.FirstOrDefault(s => s.ProductId == invoiceItemDTO.productId);
+                if ( invoiceItem == null ) {
+                    InvoiceItems items = new InvoiceItems() {
+                        Quantity = invoiceItemDTO.quantity,
+                        Price = invoiceItemDTO.price,
+                        ProductId = invoiceItemDTO.productId,
+                        InvoiceId = invoice.InvoiceId,
+                    };
+                    product.Quantity -= items.Quantity;
+                    if (invoiceItemDTO.productOptions.Any()) {
+                        foreach ( var i in invoiceItemDTO.productOptions ) {
+                            var productOption = await productOptionRepo.GetById(i.Id);
+                            if ( productOption == null ) {
+                                return ApiResponse<bool>.FailResponse("Dữ liệu option  không hợp lệ.");
+                            }
+                            if ( i.quantity > productOption.OptionValue ) {
+                                return ApiResponse<bool>.FailResponse("Số lượng option vượt quá số lượng trong kho.");
+                            }
+                            OrderItemOption order = new OrderItemOption() {
+                                OrderItemOptionName = productOption.OptionName,
+                                Price = productOption.Price,
+                                Quantity = i.quantity,
+                                productOptionId = productOption.ProductOptionId,
+                                InvoiceItem = items
 
-            if ( carts == null || carts.CartItems.Count == 0 ) {
-                return ApiResponse<int>.FailResponse("Customer not found");
+                            };
+                            items.orderItemOptions.Add(order);
+                            // cap nhat lai so luong option trong kho
+                            productOption.OptionValue -= i.quantity;
+                            invoice.TotalAmount += i.quantity * productOption.Price;
+                        }
+                    }
+                    // them InvoiceItem vao hoa don
+                    invoice.invoiceItems.Add(items);
+                    invoice.TotalAmount += invoiceItemDTO.quantity * invoiceItemDTO.price;
+                    invoice.TotalQuantity += 1;
+                }
+                else {
+
+                    if (invoiceItemDTO.quantity > 0) {
+                        invoiceItem.Quantity += invoiceItemDTO.quantity;
+                        product.Quantity -= invoiceItemDTO.quantity;
+                        invoice.TotalAmount += invoiceItemDTO.price * invoiceItemDTO.quantity;
+                    }
+                    if ( invoiceItemDTO.productOptions.Any() ) {
+                        foreach ( var i in invoiceItemDTO.productOptions ) {
+                            var productOption = await productOptionRepo.GetById(i.Id);
+                            if ( productOption == null ) {
+                                return ApiResponse<bool>.FailResponse("Dữ liệu option  không hợp lệ.");
+                            }
+                            if ( i.quantity > productOption.OptionValue ) {
+                                return ApiResponse<bool>.FailResponse("Số lượng option vượt quá số lượng trong kho.");
+                            }
+
+                            var orderItemOption = invoiceItem.orderItemOptions
+                                .FirstOrDefault(s => s.productOptionId == productOption.ProductOptionId);
+                            if ( orderItemOption == null ) {
+                                OrderItemOption order = new() { 
+                                    OrderItemOptionName =productOption.OptionName,
+                                    Quantity = i.quantity,
+                                    Price = productOption.Price,
+                                    InvoiceItemId = invoiceItem.InvoiceItemId,
+                                    productOptionId = productOption.ProductOptionId
+
+                                };
+                                invoiceItem.orderItemOptions.Add(order);
+
+                            }
+                            else {
+                                orderItemOption.Quantity += i.quantity;
+                            }
+                            productOption.OptionValue -= i.quantity;
+                            invoice.TotalAmount += i.quantity * productOption.Price;
+                        }
+                    }
+
+                }
+                await transactionRepo.CompleteAsync();
+                await transactionRepo.CommitAsync();
+
+                return ApiResponse<bool>.SuccessResponse(true);
+
+
+            } 
+            catch(Exception e) {
+                await transactionRepo.RollbackAsync();
+                return ApiResponse<bool>.FailResponse("Loi khi them mon an vao hoa don");
+            }
+        }
+
+        public async Task<ApiResponse<bool>> CancellInvoiceForCustomer(int customerId, int invoiceId) {
+            var invoice = await invoiceRepo.GetByCustomerIdAndInvoiceIdForCancell(customerId, invoiceId);
+            if ( invoice == null ) {
+                return ApiResponse<bool>.FailResponse("Không có hóa đơn");
+            }
+            if ( invoice.InvoiceStatusId != 1 ) {
+                return ApiResponse<bool>.FailResponse("Chỉ có thể hủy hóa đơn đang chờ xử lý.");
+            }
+            invoice.InvoiceStatusId = 5; // trạng thái hủy
+            
+            try {
+                await transactionRepo.BeginTransactionAsync();
+                var cart = await cartRepo.GetCart(customerId);
+                if ( cart != null) {  
+                    // rollback lai san pham trong gio hang
+                    foreach ( var item in invoice.invoiceItems ) {
+                        var cartItem = cart.CartItems.Where(s => s.ProductId == item.ProductId).FirstOrDefault();
+                        if ( cartItem != null ) {
+                            cartItem.Quantity += item.Quantity;
+                        }
+                        else {
+                            CartItems newCartItem = new CartItems() {
+                                ProductId = item.ProductId,
+                                Quantity = item.Quantity,
+                                Price = item.Price,
+                                Carts = cart
+                            };
+                            cart.CartItems.Add(newCartItem);
+                        }
+                    }
+                    
+                    cartRepo.UpdateCart(cart);
+                }
+                
+                // cap nhat lai so luong san pham trong kho
+                foreach ( var item in invoice.invoiceItems ) {
+                    var product = await productRepo.GetProductById(item.ProductId);
+                    if ( product != null ) {
+                        product.Quantity += item.Quantity;
+                    }
+                    // cap nhat lai so luong option trong kho
+                    if ( item.orderItemOptions != null && item.orderItemOptions.Any() ) {
+                        foreach ( var option in item.orderItemOptions ) {
+                            var productOption = await productOptionRepo.GetById(option.OrderItemOptionId);
+                            if ( productOption != null ) {
+                                productOption.OptionValue += option.Quantity;
+                            }
+                        }
+                    }
+                }
+                invoiceRepo.UpdateInvoice(invoice);
+                await transactionRepo.CompleteAsync();
+                await transactionRepo.CommitAsync();
+                return ApiResponse<bool>.SuccessResponse(true);
+            }
+            catch ( Exception ex ) {
+                await transactionRepo.RollbackAsync();
+                return ApiResponse<bool>.FailResponse("Lỗi khi hủy hóa đơn."+ex.Message);
+            }
+        }
+        public async Task<ApiResponse<bool>> CancellInvoiceOfflineForStaff(int employeeId, int invoiceId) {
+            bool isEmployeeExists = await employeeRepo.IsEmployeeExists(employeeId);
+            if ( !isEmployeeExists ) {
+                return ApiResponse<bool>.FailResponse("Nhân viên không tồn tại.");
+            }
+
+            var invoice = await invoiceRepo.GetByInvoiceIdForCancell(invoiceId);
+            if ( invoice == null ) {
+                return ApiResponse<bool>.FailResponse("Không có hóa đơn");
+            }
+            if ( invoice.InvoiceStatusId != 1 ) {
+                return ApiResponse<bool>.FailResponse("Chỉ có thể hủy hóa đơn đang chờ xử lý.");
+            }
+            invoice.InvoiceStatusId = 5; // trạng thái hủy
+            
+            invoice.employeeId = employeeId; // nhan vien thuc hien huy hoa don
+            try {
+                await transactionRepo.BeginTransactionAsync();
+                
+                // cap nhat lai so luong san pham trong kho
+                foreach ( var item in invoice.invoiceItems ) {
+                    var product = await productRepo.GetProductById(item.ProductId);
+                    if ( product != null ) {
+                        product.Quantity += item.Quantity;
+                    }
+                    // cap nhat lai so luong option trong kho
+                    if ( item.orderItemOptions != null && item.orderItemOptions.Any() ) {
+                        foreach ( var option in item.orderItemOptions ) {
+                            var productOption = await productOptionRepo.GetById(option.OrderItemOptionId);
+                            if ( productOption != null ) {
+                                productOption.OptionValue += option.Quantity;
+                            }
+                        }
+                    }
+                }
+                invoiceRepo.UpdateInvoice(invoice);
+                await transactionRepo.CompleteAsync();
+                await transactionRepo.CommitAsync();
+                return ApiResponse<bool>.SuccessResponse(true);
+            }
+            catch ( Exception ex ) {
+                await transactionRepo.RollbackAsync();
+                return ApiResponse<bool>.FailResponse("Lỗi khi hủy hóa đơn." + ex.Message);
+            }
+        }
+
+        public async Task<ApiResponse<bool>> CancellInvoiceOnlineForStaff(int employeeId, int invoiceId) {
+
+            bool isEmployeeExists = await employeeRepo.IsEmployeeExists(employeeId);
+            if ( !isEmployeeExists ) {
+                return ApiResponse<bool>.FailResponse("Nhân viên không tồn tại.");
+            }
+
+            var invoice = await invoiceRepo.GetByInvoiceIdForCancell( invoiceId);
+            if ( invoice == null ) {
+                return ApiResponse<bool>.FailResponse("Không có hóa đơn");
+            }
+            if ( invoice.InvoiceStatusId != 1 ) {
+                return ApiResponse<bool>.FailResponse("Chỉ có thể hủy hóa đơn đang chờ xử lý.");
+            }
+            invoice.InvoiceStatusId = 5; // trạng thái hủy
+            int customerId = invoice.customerId ?? 0;
+            invoice.employeeId = employeeId; // nhan vien thuc hien huy hoa don
+            try {
+                await transactionRepo.BeginTransactionAsync();
+                var cart = await cartRepo.GetCart(customerId);
+                if ( cart != null ) {
+                    // rollback lai san pham trong gio hang
+                    foreach ( var item in invoice.invoiceItems ) {
+                        var cartItem = cart.CartItems.Where(s => s.ProductId == item.ProductId).FirstOrDefault();
+                        if ( cartItem != null ) {
+                            cartItem.Quantity += item.Quantity;
+                        }
+                        else {
+                            CartItems newCartItem = new CartItems() {
+                                ProductId = item.ProductId,
+                                Quantity = item.Quantity,
+                                Price = item.Price,
+                                Carts = cart
+                            };
+                            cart.CartItems.Add(newCartItem);
+                        }
+                    }
+
+                    cartRepo.UpdateCart(cart);
+                }
+
+                // cap nhat lai so luong san pham trong kho
+                foreach ( var item in invoice.invoiceItems ) {
+                    var product = await productRepo.GetProductById(item.ProductId);
+                    if ( product != null ) {
+                        product.Quantity += item.Quantity;
+                    }
+                    // cap nhat lai so luong option trong kho
+                    if ( item.orderItemOptions != null && item.orderItemOptions.Any() ) {
+                        foreach ( var option in item.orderItemOptions ) {
+                            var productOption = await productOptionRepo.GetById(option.OrderItemOptionId);
+                            if ( productOption != null ) {
+                                productOption.OptionValue += option.Quantity;
+                            }
+                        }
+                    }
+                }
+                invoiceRepo.UpdateInvoice(invoice);
+                await transactionRepo.CompleteAsync();
+                await transactionRepo.CommitAsync();
+                return ApiResponse<bool>.SuccessResponse(true);
+            }
+            catch ( Exception ex ) {
+                await transactionRepo.RollbackAsync();
+                return ApiResponse<bool>.FailResponse("Lỗi khi hủy hóa đơn." + ex.Message);
+            }
+        }
+        // tao hoa don offline cho khach hang dat ban
+        public async Task<ApiResponse<bool>> CreateInvoiceForBookTable(int employeeId, InvoiceOffLineDTO invoiceDTO) {
+            var bookTable = await bookTableRepo.GetBookTableByDate(DateTime.Now, invoiceDTO.tableId);
+            if ( bookTable == null ) {
+                return ApiResponse<bool>.FailResponse("Bàn chưa được đặt.");
+            }
+            if ( invoiceDTO == null ) {
+                return ApiResponse<bool>.FailResponse("Invalid invoice data.");
+            }
+            
+            // kiem tra so luong tung san pham 
+            foreach ( var item in invoiceDTO.invoiceItems ) {
+                if ( item == null || item.quantity <= 0 || item.price <= 0 ) {
+                    return ApiResponse<bool>.FailResponse("Dữ liệu không hợp lệ");
+                }
             }
             // tao hoa don
             Invoices invoices = new Invoices();
-            invoices.customerId = invoiceDTO.customerId;
-            invoices.AddressId = invoiceDTO.addressId;
-            invoices.PaymentMethodId = invoiceDTO.paymentMethodId;
-
-            invoices.TotalQuantity = invoiceDTO.totalQuantity;
-            invoices.TotalAmount = invoiceDTO.invoiceItems.Sum( s => s.quantity * s.price);
-            invoices.IsPayment = invoiceDTO.isPayment;
-            invoices.InvoiceStatusId = invoiceDTO.invoiceStatusId;
-            invoices.InvoiceType = false;
+            invoices.TotalQuantity = invoiceDTO.invoiceItems.Count;
+            // tru di so tien coc DepositAmount
+            invoices.TotalAmount = invoiceDTO.invoiceItems.Sum(s => s.quantity * s.price) - bookTable.DepositAmount;
+            invoices.IsPayment = false;
+            invoices.InvoiceStatusId = 1;
+            invoices.InvoiceType = true;
             invoices.Create_At = DateTime.Now;
+            invoices.employeeId = employeeId;
+            invoices.tableId = invoiceDTO.tableId;
+            invoices.customerId = bookTable.customerId;
             try {
                 await transactionRepo.BeginTransactionAsync();
-                // xoa san pham trong gio hang
+                // xoa san pham trong gio hang va cap nhat so luong san pham
                 foreach ( var item in invoiceDTO.invoiceItems ) {
-                    // kiem tra san pham co ton tai trong gio hang hay khong
-                    var cartitem = carts.CartItems.Where(s => s.ProductId == item.productId).FirstOrDefault();
-                    if (cartitem == null) {
-                        return ApiResponse<int>.FailResponse("Invalid item data.");
+                    var product = await productRepo.GetProductById(item.productId);
+                    if ( product == null ) {
+                        return ApiResponse<bool>.FailResponse("Sản phẩm   không tồn tại");
                     }
-                    // xoa san pham ra khoi gio hang
-                    carts.CartItems.Remove(cartitem);
+                    if ( item.quantity > product.Quantity ) {
+                        return ApiResponse<bool>.FailResponse($"Số lượng sản phẩm {product.ProductName} vượt quá số lượng trong kho.");
+                    }
+                    product.Quantity -= item.quantity;
+                    // kiem tra san pham co ton tai trong gio hang hay khong
+                }
+                foreach ( var item in invoiceDTO.invoiceItems ) {
+                    // tao invoice item
+                    InvoiceItems items = new InvoiceItems() {
+                        Quantity = item.quantity,
+                        Price = item.price,
+                        ProductId = item.productId,
+                        Invoices = invoices
+                    };
+                    // kiem tra ton tai cua  item.productOptions 
+                    if ( item.productOptions != null && item.productOptions.Count() > 0 ) {
+                        foreach ( var i in item.productOptions ) {
+                            // kiem tra xem productOption co ton tai hay khong
+                            var productOption = await productOptionRepo.GetById(i.Id);
+                            if ( productOption == null )
+                                return ApiResponse<bool>.FailResponse("ProductOption không hợp lệ.");
+                            if ( i.quantity > productOption.OptionValue )
+                                return ApiResponse<bool>.FailResponse("Số lượng option vượt quá số lượng trong kho.");
+                            // them invoiceItemOption
+                            OrderItemOption invoiceItemOptions = new OrderItemOption() {
+                                OrderItemOptionName = productOption.OptionName,
+                                Quantity = i.quantity,
+                                Price = productOption.Price,
+                                InvoiceItem = items,
+                                productOptionId = productOption.ProductOptionId
+                                
+                            };
+                            // cap nhat lai so luong option
+                            productOption.OptionValue -= i.quantity;
+                            // cap nhat lai tong tien cua hoa don
+                            invoices.TotalAmount += i.quantity * productOption.Price;
 
+                            items.orderItemOptions.Add(invoiceItemOptions);
+
+                        }
+                    }
+                    // them InvoiceItem vao hoa don
+                    invoices.invoiceItems.Add(items);
+                }
+                // them hoa don
+                await invoiceRepo.AddInvoice(invoices);
+                await transactionRepo.CompleteAsync();
+
+
+                await transactionRepo.CommitAsync();
+                return ApiResponse<bool>.SuccessResponse(true);
+
+
+            }
+            catch ( Exception ex ) {
+                await transactionRepo.RollbackAsync();
+                return ApiResponse<bool>.FailResponse("Lỗi khi thêm hóa đơn." + ex.Message);
+            }
+        }
+
+        // tao hoa don offline cho khach hang tai quan
+        public async Task<ApiResponse<bool>> CreateInvoiceForOffLine(int employeeId, InvoiceOffLineDTO invoiceDTO) {
+            if ( invoiceDTO == null ) {
+                return ApiResponse<bool>.FailResponse("Invalid invoice data.");
+            }
+            // kiem tra so luong tung san pham 
+            foreach ( var item in invoiceDTO.invoiceItems ) {
+                if ( item == null || item.quantity <= 0 || item.price <= 0 ) {
+                    return ApiResponse<bool>.FailResponse("Dữ liệu không hợp lệ");
+                }
+            }
+            // tao hoa don
+            Invoices invoices = new Invoices();
+            invoices.TotalQuantity = invoiceDTO.invoiceItems.Count;
+            invoices.TotalAmount = invoiceDTO.invoiceItems.Sum(s => s.quantity * s.price);
+            invoices.IsPayment = false;
+            invoices.InvoiceStatusId = 1;
+            invoices.InvoiceType = true;
+            invoices.Create_At = DateTime.Now;
+            invoices.employeeId = employeeId;
+            try {
+                await transactionRepo.BeginTransactionAsync();
+                // xoa san pham trong gio hang va cap nhat so luong san pham
+                foreach ( var item in invoiceDTO.invoiceItems ) {
+                    var product = await productRepo.GetProductById(item.productId);
+                    if ( product == null ) {
+                        return ApiResponse<bool>.FailResponse("Sản phẩm   không tồn tại");
+                    }
+                    if ( item.quantity > product.Quantity ) {
+                        return ApiResponse<bool>.FailResponse($"Số lượng sản phẩm {product.ProductName} vượt quá số lượng trong kho.");
+                    }
+                    product.Quantity -= item.quantity;
+                    // kiem tra san pham co ton tai trong gio hang hay khong
                 }
                 foreach ( var item in invoiceDTO.invoiceItems ) {
                     // tao invoice item
@@ -67,41 +437,219 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
                             // kiem tra xem productOption co ton tai hay khong
                             var productOption = await productOptionRepo.GetById(i.Id);
                             if ( productOption == null )
-                                return ApiResponse<int>.FailResponse("ProductOption không hợp lệ.");
-                            // them cartItemOption
+                                return ApiResponse<bool>.FailResponse("ProductOption không hợp lệ.");
+                            if ( i.quantity > productOption.OptionValue )
+                                return ApiResponse<bool>.FailResponse("Số lượng option vượt quá số lượng trong kho.");
+                            // them invoiceItemOption
                             OrderItemOption invoiceItemOptions = new OrderItemOption() {
                                 OrderItemOptionName = productOption.OptionName,
                                 Quantity = i.quantity,
                                 Price = productOption.Price,
-                                InvoiceItem = items
+                                InvoiceItem = items,
+                                productOptionId = productOption.ProductOptionId
                             };
+                            // cap nhat lai so luong option
+                            productOption.OptionValue -= i.quantity;
+                            // cap nhat lai tong tien cua hoa don
                             invoices.TotalAmount += i.quantity * productOption.Price;
 
                             items.orderItemOptions.Add(invoiceItemOptions);
 
                         }
                     }
-                    // them cartitem vao cart
+                    // them InvoiceItem vao hoa don
                     invoices.invoiceItems.Add(items);
                 }
+                // them hoa don
                 await invoiceRepo.AddInvoice(invoices);
                 await transactionRepo.CompleteAsync();
 
+               
                 await transactionRepo.CommitAsync();
-                return ApiResponse<int>.SuccessResponse(invoices.InvoiceId);
+                return ApiResponse<bool>.SuccessResponse(true);
+
+
             }
             catch ( Exception ex ) {
                 await transactionRepo.RollbackAsync();
-                return ApiResponse<int>.FailResponse("Lỗi khi thêm hóa đơn."+ex.Message);
+                return ApiResponse<bool>.FailResponse("Lỗi khi thêm hóa đơn." + ex.Message);
             }
         }
 
-        public Task<ApiResponse<InvoiceResponse>> GetInvoiceDetailById(int customerId, int invoiceId) {
-            throw new NotImplementedException();
+        // Hoa don online cho khach hang kem voi thanh toan online
+        public async Task<ApiResponse<InvoideForPaymentResponse>> CreateInvoiceForOnline(int customerId, InvoiceDTO invoiceDTO) {
+            // kiem tra du lieu
+            if (invoiceDTO == null) {
+                return ApiResponse<InvoideForPaymentResponse>.FailResponse("Invalid invoice data.");
+            }
+            // kiem tra so luong tung san pham 
+            foreach (var item in invoiceDTO.invoiceItems) {
+                
+                if (item == null || item.quantity <= 0 || item.price <= 0)  {
+                    return ApiResponse<InvoideForPaymentResponse>.FailResponse("Dữ liệu không hợp lệ");
+                }
+                
+            }
+            // kiem tra cart 
+            var carts = await cartRepo.GetCart(customerId);
+
+            if ( carts == null || carts.CartItems.Count == 0 ) {
+                return ApiResponse<InvoideForPaymentResponse>.FailResponse("Customer not found");
+            }
+
+
+            // tao hoa don
+            Invoices invoices = new Invoices();
+            invoices.customerId = customerId;
+            invoices.AddressId = invoiceDTO.addressId;
+            invoices.PaymentMethodId = invoiceDTO.paymentMethodId;
+
+            invoices.TotalQuantity = invoiceDTO.totalQuantity;
+            invoices.TotalAmount = invoiceDTO.invoiceItems.Sum( s => s.quantity * s.price);
+            invoices.IsPayment = invoiceDTO.isPayment;
+            invoices.InvoiceStatusId = 1;
+            invoices.InvoiceType = false;
+            invoices.Create_At = DateTime.Now;
+            try {
+                await transactionRepo.BeginTransactionAsync();
+                // xoa san pham trong gio hang va cap nhat so luong san pham
+                foreach ( var item in invoiceDTO.invoiceItems ) {
+                    var product = await productRepo.GetProductById(item.productId);
+                    if ( product == null ) {
+                        return ApiResponse<InvoideForPaymentResponse>.FailResponse("Sản phẩm   không tồn tại");
+                    }
+                    if ( item.quantity > product.Quantity ) {
+                        return ApiResponse<InvoideForPaymentResponse>.FailResponse($"Số lượng sản phẩm {product.ProductName} vượt quá số lượng trong kho.");
+                    }
+                    product.Quantity -= item.quantity;
+                    // kiem tra san pham co ton tai trong gio hang hay khong
+                    var cartitem = carts.CartItems.Where(s => s.ProductId == item.productId).FirstOrDefault();
+                    if (cartitem == null) {
+                        return ApiResponse<InvoideForPaymentResponse>.FailResponse("Sản phẩm không tồn tại trong giỏ hàng");
+                    }
+                    // xoa san pham ra khoi gio hang
+                    carts.CartItems.Remove(cartitem);
+                    
+                }
+                foreach ( var item in invoiceDTO.invoiceItems ) {
+                    // tao invoice item
+                    InvoiceItems items = new InvoiceItems() {
+                        Quantity = item.quantity,
+                        Price = item.price,
+                        ProductId = item.productId,
+                        Invoices = invoices
+                    };
+                    // kiem tra ton tai cua  item.productOptions 
+                    if ( item.productOptions != null && item.productOptions.Any() ) {
+                        foreach ( var i in item.productOptions ) {
+                            // kiem tra xem productOption co ton tai hay khong
+                            var productOption = await productOptionRepo.GetById(i.Id);
+                            if ( productOption == null )
+                                return ApiResponse<InvoideForPaymentResponse>.FailResponse("ProductOption không hợp lệ.");
+                            if ( i.quantity > productOption.OptionValue )
+                                return ApiResponse<InvoideForPaymentResponse>.FailResponse("Số lượng option vượt quá số lượng trong kho.");
+                            // them invoiceItemOption
+                            OrderItemOption invoiceItemOptions = new OrderItemOption() {
+                                OrderItemOptionName = productOption.OptionName,
+                                Quantity = i.quantity,
+                                Price = productOption.Price,
+                                InvoiceItem = items,
+                                productOptionId = productOption.ProductOptionId
+                            };
+                            // cap nhat lai so luong option
+                            productOption.OptionValue -= i.quantity;
+                            // cap nhat lai tong tien cua hoa don
+                            invoices.TotalAmount += i.quantity * productOption.Price;
+
+                            items.orderItemOptions.Add(invoiceItemOptions);
+
+                        }
+                    }
+                    // them InvoiceItem vao hoa don
+                    invoices.invoiceItems.Add(items);
+                }
+                // them hoa don
+                await invoiceRepo.AddInvoice(invoices);
+                await transactionRepo.CompleteAsync();
+
+                var response = new InvoideForPaymentResponse {
+                    invoiceId = invoices.InvoiceId,
+                    totalAmount = invoices.TotalAmount,
+                    customerName = carts.Customers.FullName,
+                    isPayMent = false,
+                    paymentMethodId = invoices.PaymentMethodId,
+                    invoiceStatusId = invoices.InvoiceStatusId,
+                    invoiceType = false,
+                    create_At = invoices.Create_At
+                };
+
+                await transactionRepo.CommitAsync();
+                return ApiResponse<InvoideForPaymentResponse>.SuccessResponse(response);
+
+
+            }
+            catch ( Exception ex ) {
+                await transactionRepo.RollbackAsync();
+                return ApiResponse<InvoideForPaymentResponse>.FailResponse("Lỗi khi thêm hóa đơn."+ex.Message);
+            }
         }
 
-        public Task<ApiResponse<List<InvoiceResponse>>> GetInvoicesByCustomerId(int customerId) {
-            throw new NotImplementedException();
+        public async Task<ApiResponse<List<InvoiceForCustomerResponse>>> GetInvoicesByCustomerId(int customerId) {
+            var invoices = await invoiceRepo.GetInvoicesByCustomerId(customerId);
+            if ( invoices == null || invoices.Count == 0 ) {
+                return ApiResponse<List<InvoiceForCustomerResponse>>.FailResponse("No invoices found for the customer.");
+            }
+            if ( invoices.Any(i => i.invoiceItems == null || i.invoiceItems.Count == 0 ) ) {
+                return ApiResponse<List<InvoiceForCustomerResponse>>.FailResponse("Some invoices have no items.");
+            }
+            if ( invoices.Any(i => i.invoiceItems.Any(ii => ii.Products == null)) ) {
+                return ApiResponse<List<InvoiceForCustomerResponse>>.FailResponse("Some invoice items have no associated products.");
+            }
+            var response = invoices.Select(i => new InvoiceForCustomerResponse {
+                invoiceId = i.InvoiceId,
+                totalQuantity = i.TotalQuantity,
+                totalAmount = i.TotalAmount,
+                isPayMent = i.IsPayment,
+                invoiceType = i.InvoiceType,
+                create_At = i.Create_At,
+                paymentMethodName = i.PaymentMethod != null ? i.PaymentMethod.PaymentMethodName : "Dữ liệu lỗi. Vui lòng thử lại sao ",
+                invoiceStatusId = i.InvoiceStatusId,
+                invoiceItems = i.invoiceItems.Select(ii => new InvoiceItemResponse {
+                    productName = ii.Products != null ? ii.Products.ProductName : "Dữ liệu lỗi. Vui lòng thử lại sao ",
+                    quantity = ii.Quantity,
+                    price = ii.Price,
+                    productImage = ii.Products!= null ? (ii.Products.images !=null ? ii.Products.images.FirstOrDefault().ImagesUrl : "Img" ) : "Img",
+                    productOptions = ii.orderItemOptions != null ? ii.orderItemOptions.Select(oio => new ProductOptionResponse {
+                        optionName = oio.OrderItemOptionName,
+                        quantity = oio.Quantity,
+                        price = oio.Price
+                    }).ToList() : new List<ProductOptionResponse>()
+                }).ToList()
+            }).ToList();
+            return ApiResponse<List<InvoiceForCustomerResponse>>.SuccessResponse(response);
+        }
+
+        public async Task<ApiResponse<bool>> UpdateActiveInvoice(int invoiceId, int statusId) {
+            var invoice = await invoiceRepo.GetById(invoiceId);
+            if ( invoice == null ) {
+                return ApiResponse<bool>.FailResponse("Không có hóa đơn");
+            }
+            if ( statusId <= 0 || statusId > 4 || statusId <= invoice.InvoiceStatusId ) {
+                return ApiResponse<bool>.FailResponse("Trạng thái không hợp lệ");
+            }
+            invoice.InvoiceStatusId = statusId;
+            try {
+                await transactionRepo.BeginTransactionAsync();
+
+                await transactionRepo.CompleteAsync();
+                await transactionRepo.CommitAsync();
+                return ApiResponse<bool>.SuccessResponse(true, "Cập nhật trạng thái hóa đơn thành công.");
+            }
+            catch ( Exception ex ) {
+                await transactionRepo.RollbackAsync();
+                return ApiResponse<bool>.FailResponse("Lỗi khi cập nhật trạng thái hóa đơn." + ex.Message);
+
+            }
         }
     }
 }

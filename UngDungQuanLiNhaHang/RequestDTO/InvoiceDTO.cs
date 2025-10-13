@@ -9,7 +9,7 @@ namespace UngDungQuanLiNhaHang.RequestDTO {
         public double totalAmount { get; set; }
         public bool isPayment { get; set; } // true: da thanh toan, false: chua thanh toan
         public bool invoiceType { get; set; } // true: tai cho, false: online
-        public int customerId { get; set; }
+        
         public int paymentMethodId { get; set; }
         public int invoiceStatusId { get; set; }
         public int addressId { get; set; }
