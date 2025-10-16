@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using UngDungQuanLiNhaHang.RequestDTO;
 using UngDungQuanLiNhaHang.ResponseDTO;
@@ -9,7 +10,7 @@ namespace UngDungQuanLiNhaHang.Controllers {
     [ApiController]
     public class AuthController(IAuthServices authServices) : ControllerBase {
         [HttpPost("login")]
-        public async Task<ActionResult<ApiResponse<CustomerResponse>>> Login(LoginDTO customer) {
+        public async Task<ActionResult<ApiResponse<CustomerResponse>>> Login([FromBody]LoginDTO customer) {
             if (!ModelState.IsValid) {
                 return BadRequest("Dữ liệu không hợp lệ");
             }
@@ -30,12 +31,36 @@ namespace UngDungQuanLiNhaHang.Controllers {
             }
             return BadRequest(result);
         }
+        [Authorize]
         [HttpPost("refresh-token")]
         public async Task<IActionResult> RefreshToken([FromBody] TokenRequestDTO tokenRequest) {
             if (!ModelState.IsValid) {
                 return BadRequest("Dữ liệu không hợp lệ");
             }
             var result = await authServices.RefreshToken(tokenRequest);
+            if ( result.Success ) {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+        [Authorize]
+        [HttpPost("RefreshTokenEmployee")]
+        public async Task<IActionResult> RefreshTokenEmployee([FromBody] TokenRequestDTO tokenRequest) {
+            if (!ModelState.IsValid) {
+                return BadRequest("Dữ liệu không hợp lệ");
+            }
+            var result = await authServices.RefreshTokenEmployee(tokenRequest);
+            if ( result.Success ) {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+        [HttpPost("LoginEmployee")]
+        public async Task<ActionResult<ApiResponse<UserDetails>>> LoginEmployee([FromBody]LoginDTO employee) {
+            if ( !ModelState.IsValid ) {
+                return BadRequest("Dữ liệu không hợp lệ");
+            }
+            var result = await authServices.LoginEmployee(employee);
             if ( result.Success ) {
                 return Ok(result);
             }

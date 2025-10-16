@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using UngDungQuanLiNhaHang.Data;
 
@@ -11,9 +12,11 @@ using UngDungQuanLiNhaHang.Data;
 namespace UngDungQuanLiNhaHang.Migrations
 {
     [DbContext(typeof(DataDbConText))]
-    partial class DataDbConTextModelSnapshot : ModelSnapshot
+    [Migration("20251016103729_updatebooktable")]
+    partial class updatebooktable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -506,7 +509,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Email = "tam@gmail.com",
                             Fullname = "Nguyễn Thanh Tâm",
                             IsActive = true,
-                            Password = "$2a$11$VNeE3dx3kAH4jlMywC81duZnXD.jDTIHPmNkxIeYSHJovscjL7FJa",
+                            Password = "thanhtam1",
                             Phone = "0909092324",
                             RestaurantId = 1,
                             RoleId = 1,
@@ -519,7 +522,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Email = "thien@gmail.com",
                             Fullname = "Nguyễn Thanh Thiên",
                             IsActive = true,
-                            Password = "$2a$11$VNeE3dx3kAH4jlMywC81duZnXD.jDTIHPmNkxIeYSHJovscjL7FJa",
+                            Password = "thanhtam1",
                             Phone = "0909092325",
                             RestaurantId = 1,
                             RoleId = 2,
@@ -532,7 +535,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Email = "qui@gmail.com",
                             Fullname = "Nguyễn Hoàng Quí",
                             IsActive = true,
-                            Password = "$2a$11$VNeE3dx3kAH4jlMywC81duZnXD.jDTIHPmNkxIeYSHJovscjL7FJa",
+                            Password = "thanhtam1",
                             Phone = "0909092326",
                             RestaurantId = 1,
                             RoleId = 3,
@@ -545,7 +548,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Email = "phuc@gmail.com",
                             Fullname = "Nguyễn Hoàng Phúc",
                             IsActive = true,
-                            Password = "$2a$11$VNeE3dx3kAH4jlMywC81duZnXD.jDTIHPmNkxIeYSHJovscjL7FJa",
+                            Password = "thanhtam1",
                             Phone = "0909092327",
                             RestaurantId = 1,
                             RoleId = 3,
@@ -1251,7 +1254,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                         {
                             InvoiceId = 1,
                             AddressId = 1,
-                            Create_At = new DateTime(2025, 10, 16, 15, 26, 40, 849, DateTimeKind.Utc).AddTicks(9917),
+                            Create_At = new DateTime(2025, 10, 16, 10, 37, 27, 446, DateTimeKind.Utc).AddTicks(5887),
                             InvoiceStatusId = 4,
                             InvoiceType = false,
                             IsPayment = true,
@@ -1265,7 +1268,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                         {
                             InvoiceId = 2,
                             AddressId = 1,
-                            Create_At = new DateTime(2025, 10, 16, 15, 26, 40, 849, DateTimeKind.Utc).AddTicks(9920),
+                            Create_At = new DateTime(2025, 10, 16, 10, 37, 27, 446, DateTimeKind.Utc).AddTicks(5891),
                             InvoiceStatusId = 4,
                             InvoiceType = false,
                             IsPayment = false,
@@ -1410,7 +1413,8 @@ namespace UngDungQuanLiNhaHang.Migrations
 
                     b.HasIndex("CustomerId");
 
-                    b.HasIndex("InvoiceId");
+                    b.HasIndex("InvoiceId")
+                        .IsUnique();
 
                     b.HasIndex("ProductId");
 
@@ -2856,8 +2860,8 @@ namespace UngDungQuanLiNhaHang.Migrations
                         .IsRequired();
 
                     b.HasOne("UngDungQuanLiNhaHang.Models.Invoices", "Invoices")
-                        .WithMany("productReviews")
-                        .HasForeignKey("InvoiceId")
+                        .WithOne("productReviews")
+                        .HasForeignKey("UngDungQuanLiNhaHang.Models.ProductReviews", "InvoiceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

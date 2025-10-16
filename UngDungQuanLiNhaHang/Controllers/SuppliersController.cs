@@ -1,10 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using UngDungQuanLiNhaHang.Data;
 using UngDungQuanLiNhaHang.Models;
 using UngDungQuanLiNhaHang.RequestDTO;
@@ -21,6 +22,8 @@ namespace UngDungQuanLiNhaHang.Controllers
 
         // GET: api/Suppliers
         [HttpGet]
+        [Authorize(Roles = "Admin, Manager, Employee")]
+
         public async Task<ActionResult<ApiResponse<IEnumerable<Suppliers>>>> Getsuppliers(int page = 1)
         {
             var result = await supplierServices.GetAllSuppliers(page);
@@ -33,6 +36,8 @@ namespace UngDungQuanLiNhaHang.Controllers
 
         // GET: api/Suppliers/5
         [HttpGet("{id}")]
+        [Authorize(Roles = "Admin, Manager, Employee")]
+
         public async Task<ActionResult<ApiResponse<SupplierResponse>>> GetSuppliers(int id)
         {
             var result = await supplierServices.GetSupplierById(id);
@@ -46,6 +51,8 @@ namespace UngDungQuanLiNhaHang.Controllers
         // PUT: api/Suppliers/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut]
+        [Authorize(Roles = "Admin, Manager, Employee")]
+
         public async Task<ActionResult<ApiResponse<bool>>> PutSuppliers( SupplierDTO suppliers)
         {
             if ( suppliers == null || suppliers.address == null || !ModelState.IsValid ) {
@@ -62,6 +69,8 @@ namespace UngDungQuanLiNhaHang.Controllers
         // POST: api/Suppliers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+        [Authorize(Roles = "Admin, Manager, Employee")]
+
         public async Task<ActionResult<Suppliers>> PostSuppliers(SupplierDTO suppliers)
         {
             if (suppliers == null || suppliers.address == null || !ModelState.IsValid)

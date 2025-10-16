@@ -8,7 +8,7 @@ namespace UngDungQuanLiNhaHang.Models {
         public int BookTableId { get; set; }
         public DateTime BookingDate { get; set; }
         public int NumberOfGuests { get; set; }
-        public required string Status { get; set; }
+        
         public double DepositAmount { get; set;}
         public bool IsDepositPaid { get; set; }
         public DateTime Create_At { get; set; }
@@ -16,5 +16,8 @@ namespace UngDungQuanLiNhaHang.Models {
         public Tables? Tables { get; set; }
         public int customerId { get; set; }
         public Customers? Customers { get; set; }
+        public int bookTableStatusId { get; set; }
+        [ForeignKey("bookTableStatusId")]
+        public BookTableStatus? BookTableStatus { get; set; }
     }
 }

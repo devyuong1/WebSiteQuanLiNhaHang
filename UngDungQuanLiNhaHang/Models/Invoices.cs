@@ -11,11 +11,13 @@ namespace UngDungQuanLiNhaHang.Models {
         public DateTime Create_At { get; set; } 
         public bool IsPayment { get; set; } // true: da thanh toan, false: chua thanh toan
         public bool InvoiceType {  get; set; } // true: tai cho, false: online
+        public string? Note { get; set; }
         public int? customerId { get; set; }
         public Customers? customers { get; set; }
         public int? tableId { get; set; }
         public Tables? tables { get; set; }
         public int employeeId { get; set; } = 0;
+        
 
         public int PaymentMethodId { get; set; }
         [ForeignKey("PaymentMethodId")]
@@ -23,7 +25,7 @@ namespace UngDungQuanLiNhaHang.Models {
         public int InvoiceStatusId { get; set; }
         [ForeignKey("InvoiceStatusId")]
         public InvoiceStatus? InvoiceStatus { get; set; }
-        public ProductReviews? productReviews { get; set; }
+        public ICollection<ProductReviews> productReviews { get; set; } = new List<ProductReviews>();
         public int AddressId { get; set; }
         [ForeignKey("AddressId")]
 

@@ -1,10 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using UngDungQuanLiNhaHang.Data;
 using UngDungQuanLiNhaHang.Models;
 using UngDungQuanLiNhaHang.RequestDTO;
@@ -19,6 +20,8 @@ namespace UngDungQuanLiNhaHang.Controllers
     {
         // GET: api/Categorys
         [HttpGet]
+        [Authorize(Roles = "Admin, Manager, Employee")]
+
         public async Task<ActionResult<ApiResponse<IEnumerable<CategoryResponse>>>> Getcategories(int page = 1)
         {
             var result = await categoryService.GetAllCategories(page);
@@ -30,6 +33,7 @@ namespace UngDungQuanLiNhaHang.Controllers
         }
 
         // GET: api/Categorys/5
+        [Authorize(Roles = "Admin, Manager, Employee")]
         [HttpGet("{id}")]
         public async Task<ActionResult<Categorys>> GetCategorys(int id)
         {
@@ -43,6 +47,7 @@ namespace UngDungQuanLiNhaHang.Controllers
 
         // PUT: api/Categorys/5
         
+        [Authorize(Roles = "Admin, Manager, Employee")]
         [HttpPut]
         public async Task<IActionResult> PutCategorys([FromBody]CategoryDTO categoryDTO)
         {
@@ -60,6 +65,7 @@ namespace UngDungQuanLiNhaHang.Controllers
 
         // POST: api/Categorys
        
+        [Authorize(Roles = "Admin, Manager, Employee")]
         [HttpPost]
         public async Task<ActionResult<Categorys>> PostCategorys([FromBody]CategoryDTO categoryDTO)
         {
@@ -76,6 +82,7 @@ namespace UngDungQuanLiNhaHang.Controllers
         }
 
         // PUT: api/Categorys/5
+        [Authorize(Roles = "Admin, Manager, Employee")]
         [HttpPut("ActiveCategorys/{id}")]
         public async Task<IActionResult> ActiveCategorys( int id)
         {

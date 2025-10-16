@@ -49,10 +49,7 @@ namespace UngDungQuanLiNhaHang.Data {
                     .HasOne(ac => ac.Address)
                     .WithMany(a => a.AddressCustomers)
                     .HasForeignKey(ac => ac.AddressId);
-            modelBuilder.Entity<Invoices>()
-                .HasOne(i => i.productReviews)
-                .WithOne(pr => pr.Invoices)
-                .HasForeignKey<ProductReviews>(pr => pr.InvoiceId);
+            
 
             modelBuilder.Entity<PurchaseInvoice>()
                    .HasOne(pi => pi.Suppliers)
@@ -195,7 +192,7 @@ namespace UngDungQuanLiNhaHang.Data {
                     Fullname = "Nguyễn Thanh Tâm",
                     Email = "tam@gmail.com",
                     UserName = "tam@gmail.com",
-                    Password = "thanhtam1",
+                    Password = "$2a$11$VNeE3dx3kAH4jlMywC81duZnXD.jDTIHPmNkxIeYSHJovscjL7FJa",
                     Phone = "0909092324",
                     RestaurantId = 1,
                     RoleId = 1,
@@ -206,7 +203,7 @@ namespace UngDungQuanLiNhaHang.Data {
                     Fullname = "Nguyễn Thanh Thiên",
                     Email = "thien@gmail.com",
                     UserName = "thien@gmail.com",
-                    Password = "thanhtam1",
+                    Password = "$2a$11$VNeE3dx3kAH4jlMywC81duZnXD.jDTIHPmNkxIeYSHJovscjL7FJa",
                     Phone = "0909092325",
                     RestaurantId = 1,
                     RoleId = 2,
@@ -217,7 +214,7 @@ namespace UngDungQuanLiNhaHang.Data {
                     Fullname = "Nguyễn Hoàng Quí",
                     Email = "qui@gmail.com",
                     UserName = "qui@gmail.com",
-                    Password = "thanhtam1",
+                    Password = "$2a$11$VNeE3dx3kAH4jlMywC81duZnXD.jDTIHPmNkxIeYSHJovscjL7FJa",
                     Phone = "0909092326",
                     RestaurantId = 1,
                     RoleId = 3,
@@ -228,7 +225,7 @@ namespace UngDungQuanLiNhaHang.Data {
                     Fullname = "Nguyễn Hoàng Phúc",
                     Email = "phuc@gmail.com",
                     UserName = "phuc@gmail.com",
-                    Password = "thanhtam1",
+                    Password = "$2a$11$VNeE3dx3kAH4jlMywC81duZnXD.jDTIHPmNkxIeYSHJovscjL7FJa",
                     Phone = "0909092327",
                     RestaurantId = 1,
                     RoleId = 3,

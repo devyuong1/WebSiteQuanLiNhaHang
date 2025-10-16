@@ -23,7 +23,7 @@ namespace UngDungQuanLiNhaHang.Controllers
 
         // GET: api/Customers/5
         [HttpGet]
-        [Authorize]
+        [Authorize( Roles = "Customer")]
         public async Task<ActionResult<ApiResponse<CustomerResponse>>> GetCustomers()
         {
             var userIdClaim = User.FindFirst("UserID");
@@ -42,7 +42,8 @@ namespace UngDungQuanLiNhaHang.Controllers
             return Ok(customers);
         }
         [HttpPut("PutCustomers")]
-        [Authorize]
+        [Authorize(Roles = "Customer")]
+
         public async Task<IActionResult> PutCustomers([FromBody] CustomerDTO customer)
         {
 
@@ -60,7 +61,8 @@ namespace UngDungQuanLiNhaHang.Controllers
             return Ok(result);
         }
         [HttpPut("UpdateAddress")]
-        [Authorize]
+        [Authorize(Roles = "Customer")]
+
         public async Task<IActionResult> PutAddress([FromBody]  AddressDTO address)
         {
             var userIdClaim = User.FindFirst("UserID");
@@ -76,7 +78,8 @@ namespace UngDungQuanLiNhaHang.Controllers
             return Ok(result);
         }
         [HttpPost("AddAddress")]
-        [Authorize]
+        [Authorize(Roles = "Customer")]
+
         public async Task<IActionResult> AddAddress([FromBody] AddressDTO address)
         {
             var userIdClaim = User.FindFirst("UserID");
@@ -93,7 +96,8 @@ namespace UngDungQuanLiNhaHang.Controllers
             return Ok(result);
         }
         [HttpPost("ChangePassword")]
-        [Authorize]
+        [Authorize(Roles = "Customer")]
+
 
         public async Task<IActionResult> ChangePassword([FromBody] ChangePassword changePasswordDTO)
 
@@ -112,7 +116,8 @@ namespace UngDungQuanLiNhaHang.Controllers
             return Ok(result);
         }
         [HttpPost("DeleteAddress")]
-        [Authorize]
+        [Authorize(Roles = "Customer")]
+
         public async Task<IActionResult> DeleteAddress([FromBody] AddressCustomerDTO addressCustomerDTO)
         {
             var userIdClaim = User.FindFirst("UserID");
@@ -129,7 +134,8 @@ namespace UngDungQuanLiNhaHang.Controllers
             return Ok(result);
         }
         [HttpPost("SetDefaultAddress")]
-        [Authorize]
+        [Authorize(Roles = "Customer")]
+
         public async Task<IActionResult> SetDefaultAddress([FromBody] AddressCustomerDTO addressCustomerDTO)
         {
             var userIdClaim = User.FindFirst("UserID");
@@ -145,5 +151,7 @@ namespace UngDungQuanLiNhaHang.Controllers
             }
             return Ok(result);
         }
+
+
     }
 }

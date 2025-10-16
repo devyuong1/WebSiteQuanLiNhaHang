@@ -15,11 +15,15 @@ namespace UngDungQuanLiNhaHang.Repository {
             await _context.products.AddAsync(product);
             await _context.SaveChangesAsync();
         }
+        public async Task<Products?> GetByProductId(int productId) {
+            return await _context.products.FindAsync(productId);
+        }
         public async Task<Products?> GetProductById(int productId) {
             return await _context.products
                 .Include(p => p.images)
                 .FirstOrDefaultAsync(p => p.ProductId == productId);
         }
+        
         public async Task<Products?> GetProductById2(int productId) {
             return await _context.products
                 .Include(p => p.Category)

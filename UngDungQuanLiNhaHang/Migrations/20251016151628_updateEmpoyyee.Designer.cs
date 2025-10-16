@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using UngDungQuanLiNhaHang.Data;
 
@@ -11,9 +12,11 @@ using UngDungQuanLiNhaHang.Data;
 namespace UngDungQuanLiNhaHang.Migrations
 {
     [DbContext(typeof(DataDbConText))]
-    partial class DataDbConTextModelSnapshot : ModelSnapshot
+    [Migration("20251016151628_updateEmpoyyee")]
+    partial class updateEmpoyyee
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -506,7 +509,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Email = "tam@gmail.com",
                             Fullname = "Nguyễn Thanh Tâm",
                             IsActive = true,
-                            Password = "$2a$11$VNeE3dx3kAH4jlMywC81duZnXD.jDTIHPmNkxIeYSHJovscjL7FJa",
+                            Password = "thanhtam1$2a$11$VNeE3dx3kAH4jlMywC81duZnXD.jDTIHPmNkxIeYSHJovscjL7FJa",
                             Phone = "0909092324",
                             RestaurantId = 1,
                             RoleId = 1,
@@ -1251,7 +1254,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                         {
                             InvoiceId = 1,
                             AddressId = 1,
-                            Create_At = new DateTime(2025, 10, 16, 15, 26, 40, 849, DateTimeKind.Utc).AddTicks(9917),
+                            Create_At = new DateTime(2025, 10, 16, 15, 16, 27, 342, DateTimeKind.Utc).AddTicks(9021),
                             InvoiceStatusId = 4,
                             InvoiceType = false,
                             IsPayment = true,
@@ -1265,7 +1268,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                         {
                             InvoiceId = 2,
                             AddressId = 1,
-                            Create_At = new DateTime(2025, 10, 16, 15, 26, 40, 849, DateTimeKind.Utc).AddTicks(9920),
+                            Create_At = new DateTime(2025, 10, 16, 15, 16, 27, 342, DateTimeKind.Utc).AddTicks(9024),
                             InvoiceStatusId = 4,
                             InvoiceType = false,
                             IsPayment = false,

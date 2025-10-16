@@ -17,7 +17,8 @@ namespace UngDungQuanLiNhaHang.Controllers
 
         // GET: api/Employees
         [HttpGet]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin, Manager")]
+
         public async Task<ActionResult<IEnumerable<EmployeeResponse>>> Getemployees(int page = 1)
         {
             var result = await services.GetAllEmployees(page);
@@ -29,6 +30,9 @@ namespace UngDungQuanLiNhaHang.Controllers
 
         // GET: api/Employees/5
         [HttpGet("{id}")]
+        [Authorize(Roles = "Admin, Manager")]
+
+
         public async Task<ActionResult<EmployeeResponse>> GetEmployees(int id)
         {
             if (id <= 0) {
@@ -47,6 +51,8 @@ namespace UngDungQuanLiNhaHang.Controllers
         // PUT: api/Employees/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin, Manager")]
+
         public async Task<IActionResult> PutEmployees(int id, EmployeeDTO item)
         {
             if (id != item.employeeId || !ModelState.IsValid)
@@ -65,6 +71,7 @@ namespace UngDungQuanLiNhaHang.Controllers
 
         // POST: api/Employees
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [Authorize(Roles = "Admin, Manager")]
         [HttpPost]
         public async Task<ActionResult<Employees>> PostEmployees(EmployeeDTO employees)
         {
@@ -81,6 +88,7 @@ namespace UngDungQuanLiNhaHang.Controllers
         }
 
         // DELETE: api/Employees/5
+        [Authorize(Roles = "Admin, Manager")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteEmployees(int id)
         {

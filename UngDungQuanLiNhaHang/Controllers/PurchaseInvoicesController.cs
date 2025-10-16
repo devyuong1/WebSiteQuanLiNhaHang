@@ -1,10 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using UngDungQuanLiNhaHang.Data;
 using UngDungQuanLiNhaHang.Models;
 using UngDungQuanLiNhaHang.RequestDTO;
@@ -19,6 +20,8 @@ namespace UngDungQuanLiNhaHang.Controllers
     {
         // GET: api/PurchaseInvoices
         [HttpGet]
+        [Authorize(Roles = "Admin, Manager, Employee")]
+
         public async Task<ActionResult<IEnumerable<ApiResponse<PurchaseInvoiceResponse>>>> GetpurchaseInvoice(int page = 1)
         {
             var result = await purchaseInvoiceServices.GetAllPurchaseInvoices(page);
@@ -31,6 +34,8 @@ namespace UngDungQuanLiNhaHang.Controllers
 
         // GET: api/PurchaseInvoices/5
         [HttpGet("{id}")]
+        [Authorize(Roles = "Admin, Manager, Employee")]
+
         public async Task<ActionResult<ApiResponse<PurchaseInvoiceResponse>>> GetPurchaseInvoice(int id)
         {
             var result = await purchaseInvoiceServices.GetPurchaseInvoiceById(id);
@@ -41,9 +46,10 @@ namespace UngDungQuanLiNhaHang.Controllers
             return Ok(result);
         }
 
-        // PUT: api/PurchaseInvoices/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
+       
+        [HttpPut]
+        [Authorize(Roles = "Admin, Manager, Employee")]
+
         public async Task<ActionResult<ApiResponse<bool>>> PutPurchaseInvoice([FromBody] PurchaseInvoiceDTO purchaseInvoice)
         {
             if ( purchaseInvoice == null || !ModelState.IsValid ) {
@@ -57,9 +63,9 @@ namespace UngDungQuanLiNhaHang.Controllers
               return Ok(result);
         }
 
-        // POST: api/PurchaseInvoices
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+        [Authorize(Roles = "Admin, Manager, Employee")]
+
         public async Task<ActionResult<PurchaseInvoice>> PostPurchaseInvoice(PurchaseInvoiceDTO purchaseInvoice)
         {
             if ( purchaseInvoice == null || !ModelState.IsValid ) {
@@ -74,6 +80,8 @@ namespace UngDungQuanLiNhaHang.Controllers
 
         // DELETE: api/PurchaseInvoices/
         [HttpPut("PaymentPurchaseInvoice/{id}")]
+        [Authorize(Roles = "Admin, Manager, Employee")]
+
         public async Task<ActionResult<ApiResponse<bool>>> PaymentPurchaseInvoice(int id)
         {
             var result = await purchaseInvoiceServices.PaymentPurchaseInvoice(id);

@@ -1,10 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using UngDungQuanLiNhaHang.Data;
 using UngDungQuanLiNhaHang.Models;
 using UngDungQuanLiNhaHang.RequestDTO;
@@ -21,6 +22,8 @@ namespace UngDungQuanLiNhaHang.Controllers
 
         // GET: api/Ingredients
         [HttpGet]
+        [Authorize(Roles = "Admin, Manager, Employee")]
+
         public async Task<ActionResult<ApiResponse<IEnumerable<IngredientResponse>>>> Getingredients(int page = 1)
         {
             var result = await services.GetAllIngredients(page);
@@ -32,6 +35,8 @@ namespace UngDungQuanLiNhaHang.Controllers
 
         // GET: api/Ingredients/5
         [HttpGet("{id}")]
+        [Authorize(Roles = "Admin, Manager, Employee")]
+
         public async Task<ActionResult<ApiResponse<IngredientResponse>>> GetIngredient(int id)
         {
             var result = await services.GetIngredientById(id);
@@ -45,6 +50,8 @@ namespace UngDungQuanLiNhaHang.Controllers
         // PUT: api/Ingredients/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin, Manager, Employee")]
+
         public async Task<IActionResult> PutIngredient(int id, IngredientDTO ingredient)
         {
             if (id != ingredient.ingredientId || !ModelState.IsValid)
@@ -62,6 +69,8 @@ namespace UngDungQuanLiNhaHang.Controllers
         // POST: api/Ingredients
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+        [Authorize(Roles = "Admin, Manager, Employee")]
+
         public async Task<ActionResult<Ingredient>> PostIngredient([FromBody]IngredientDTO ingredient)
         {
             if (!ModelState.IsValid)
@@ -77,6 +86,8 @@ namespace UngDungQuanLiNhaHang.Controllers
 
         // DELETE: api/Ingredients/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin, Manager, Employee")]
+
         public async Task<IActionResult> ActiveIngredient(int id)
         {
             if (id <= 0)

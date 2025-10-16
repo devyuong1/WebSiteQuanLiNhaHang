@@ -10,14 +10,29 @@ using UngDungQuanLiNhaHang.Repository;
 using UngDungQuanLiNhaHang.Security;
 using UngDungQuanLiNhaHang.Services.Implementations;
 using UngDungQuanLiNhaHang.Services.Interfaces;
-
+using Hangfire;
+using Hangfire.SqlServer;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<DataDbConText>(options => 
 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+builder.Services.AddHangfire(configuration => configuration
+    .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+    .UseSimpleAssemblyNameTypeSerializer()
+    .UseRecommendedSerializerSettings()
+    .UseSqlServerStorage(builder.Configuration.GetConnectionString("DefaultConnection"), new SqlServerStorageOptions
+    {
+        CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
+        SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),
+        QueuePollInterval = TimeSpan.Zero,
+        UseRecommendedIsolationLevel = true,
+        DisableGlobalLocks = true
+    }));
+builder.Services.AddHangfireServer();
 // Add services to the container.
+
 
 builder.Services.AddControllers();
 builder.Services.AddSwaggerGen(c =>
@@ -106,6 +121,18 @@ builder.Services.AddScoped<HandlerFiles>();
 builder.Services.AddScoped<Logger<ProductServices>>();
 builder.Services.AddScoped<SupplierRepo>();
 builder.Services.AddScoped<ISupplierServices, SupplierServices>();
+
+builder.Services.AddScoped<ProductOptionRepo>();
+builder.Services.AddScoped<BookTableRepo>();
+builder.Services.AddScoped<IBookTableServices, BookTableServices>();
+builder.Services.AddScoped<InvoiceRepo>();
+builder.Services.AddScoped<IInvoiceServices, InvoiceService>();
+
+builder.Services.AddScoped<ProductReviewRepo>();
+builder.Services.AddScoped<IProductReviewService, ProductReviewService>();
+
+
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAllOrigins",
@@ -136,5 +163,5 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-
+app.UseHangfireDashboard("/hangfire");
 app.Run();

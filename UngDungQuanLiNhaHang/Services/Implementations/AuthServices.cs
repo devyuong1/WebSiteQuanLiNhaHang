@@ -5,7 +5,7 @@ using UngDungQuanLiNhaHang.Services.Interfaces;
 using UngDungQuanLiNhaHang.Security;
 using UngDungQuanLiNhaHang.Models;
 namespace UngDungQuanLiNhaHang.Services.Implementations {
-    public class AuthServices(CustomerRepo customerRepo,JWT jwt,TransactionRepo transactionRepo,CartRepo cartRepo) : IAuthServices {
+    public class AuthServices(CustomerRepo customerRepo,JWT jwt,TransactionRepo transactionRepo,CartRepo cartRepo, EmployeeRepo employeeRepo) : IAuthServices {
         public async Task<ApiResponse<CustomerResponse>> Login(LoginDTO customer) {
             var user = await customerRepo.GetCustomerByEmail(customer.Email);
             if (user == null ) {
@@ -165,6 +165,108 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
                 await transactionRepo.RollbackAsync();
                 return ApiResponse<CustomerResponse>.FailResponse(ex.Message);
             }
+        }
+
+        public async Task<ApiResponse<UserDetails>> RefreshTokenEmployee(TokenRequestDTO item) {
+            var principal = jwt.GetPrincipalFromExpiredToken(item.Token);
+            if ( principal == null ) {
+                return ApiResponse<UserDetails>.FailResponse("Token không hợp lệ.");
+            }
+            var userId = int.Parse(principal.Claims.FirstOrDefault(c => c.Type == "UserID")!.Value);
+            var user = await employeeRepo.GetEmployeeById(userId);
+            if ( user == null ) {
+                return ApiResponse<UserDetails>.FailResponse("Người dùng không tồn tại.");
+            }
+            var storedRefreshToken = user.RefreshTokens!.FirstOrDefault(t => t.Token == item.RefreshToken);
+            if ( storedRefreshToken == null ) {
+                return ApiResponse<UserDetails>.FailResponse("Refresh token không tồn tại.");
+            }
+            if ( storedRefreshToken.IsUsed ) {
+                return ApiResponse<UserDetails>.FailResponse("Refresh token đã được sử dụng.");
+            }
+            if ( storedRefreshToken.IsRevoked ) {
+                return ApiResponse<UserDetails>.FailResponse("Refresh token đã bị thu hồi.");
+            }
+            if ( storedRefreshToken.ExpiresAt < DateTime.UtcNow ) {
+                return ApiResponse<UserDetails>.FailResponse("Refresh token đã hết hạn.");
+            }
+            try {
+                await transactionRepo.BeginTransactionAsync();
+
+
+
+                var newJwtToken = jwt.GenerateJWT(user.Fullname, user.EmployeeId, user.Role!.RoleName);
+                var newRefreshToken = jwt.GenerateRefreshToken(user.Fullname);
+                RefreshTokens rfToken = new RefreshTokens {
+                   employeeId = user.EmployeeId,
+                    Token = newRefreshToken,
+                    JwtId = "1234567890",
+                    CreatedAt = DateTime.Now,
+                    ExpiresAt = DateTime.Now.AddDays(7),
+                    IsUsed = false,
+                    IsRevoked = false,
+                    ReplacedByToken = item.RefreshToken
+                };
+                storedRefreshToken.IsUsed = true;
+
+                user.RefreshTokens!.Add(rfToken);
+                employeeRepo.UpdateEmployee(user);
+                await transactionRepo.CompleteAsync();
+                await transactionRepo.CommitAsync();
+                var response = new UserDetails {
+                    userId = user.EmployeeId,
+                    fullName = user.Fullname,
+                    email = user.Email,
+                    access_token = newJwtToken,
+                    refresh_token = newRefreshToken
+                };
+                return ApiResponse<UserDetails>.SuccessResponse(response);
+            }
+            catch ( Exception ex ) {
+                await transactionRepo.RollbackAsync();
+                return ApiResponse<UserDetails>.FailResponse(ex.Message);
+            }
+        }
+
+        public async Task<ApiResponse<UserDetails>> LoginEmployee(LoginDTO employee) {
+            var user = await employeeRepo.GetEmployeeByEmail(employee.Email);
+            if ( user == null ) {
+                return ApiResponse<UserDetails>.FailResponse("Sai tài khoản hoặc mật khẩu!!!");
+            }
+            if ( !BCrypt.Net.BCrypt.Verify(employee.Password,user.Password )) {
+                return ApiResponse<UserDetails>.FailResponse("Sai tài khoản hoặc mật khẩu!!!");
+            }
+
+            var token = jwt.GenerateJWT(user.Fullname, user.EmployeeId, user.Role!.RoleName);
+
+            var response = new UserDetails {
+                userId = user.EmployeeId,
+                fullName = user.Fullname,
+                email = user.Email,
+                access_token = token,
+                refresh_token = user.RefreshTokens.Any() ? user.RefreshTokens.Last().Token : null
+            };
+
+            if ( !user.RefreshTokens.Any() ) {
+                var refreshToken = jwt.GenerateRefreshToken(user.Fullname);
+                RefreshTokens rfToken = new RefreshTokens {
+                    Token = refreshToken,
+                    JwtId = "1234567890",
+                    CreatedAt = DateTime.Now,
+                    ExpiresAt = DateTime.Now.AddDays(7),
+                    IsUsed = false,
+                    IsRevoked = false,
+                    employeeId = user.EmployeeId
+                };
+                user.RefreshTokens!.Add(rfToken);
+
+                employeeRepo.UpdateEmployee(user);
+                await transactionRepo.CompleteAsync();
+                await transactionRepo.CommitAsync();
+                response.refresh_token = refreshToken;
+            }
+
+            return ApiResponse<UserDetails>.SuccessResponse(response);
         }
     }
 }

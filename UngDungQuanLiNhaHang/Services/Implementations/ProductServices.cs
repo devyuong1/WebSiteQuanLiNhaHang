@@ -72,8 +72,8 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
                             OptionName = ingredient.optionName,
                             IngredientId = ingredient.IngredientId,
                             OptionValue = ingredient.optionValue,
-                            Unit = ingredient.Unit,
-                            Price = ingredient.Price,
+                            Unit = ingredient.unit,
+                            Price = ingredient.price,
                             ProductId = products.ProductId
                         };
                         await productRepo.ProductAddOption(productOptions);
@@ -251,8 +251,8 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
                             OptionName = ingredient.optionName,
                             IngredientId = ingredient.IngredientId,
                             OptionValue = ingredient.optionValue,
-                            Unit = ingredient.Unit,
-                            Price = ingredient.Price,
+                            Unit = ingredient.unit,
+                            Price = ingredient.price,
                             ProductId = product.ProductId
                         };
                         product.productOptions.Add(productOptions);

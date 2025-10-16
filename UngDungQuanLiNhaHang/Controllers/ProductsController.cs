@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -40,9 +41,15 @@ namespace UngDungQuanLiNhaHang.Controllers
             return BadRequest(products);
         }
 
-        // PUT: api/Products/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        
+
+
+
+
+
+
         [HttpPut("PutProducts")]
+        [Authorize(Roles = "Admin, Manager, Employee")]
         public async Task<IActionResult> PutProducts([FromBody] UpdateProductDTO updateProductDTO)
         {
             if (updateProductDTO == null || !ModelState.IsValid)
@@ -58,6 +65,8 @@ namespace UngDungQuanLiNhaHang.Controllers
         }
         [HttpPut("UpdateImgProduct")]
         [Consumes("multipart/form-data")]
+        [Authorize(Roles = "Admin, Manager, Employee")]
+
         public async Task<IActionResult> UpdateImgProduct(int productId, [FromForm] List<ImgProductDTO> imgProductDTO)
         {
             var result = await productService.UpdateImgProduct(productId, imgProductDTO);
@@ -67,10 +76,11 @@ namespace UngDungQuanLiNhaHang.Controllers
             }
             return BadRequest(result);
         }
-        // POST: api/Products
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+       
         [HttpPost("PostProducts")]
-        
+        [Authorize(Roles = "Admin, Manager, Employee")]
+
+
         public async Task<ActionResult<Products>> PostProducts([FromBody] ProductDTO productDTO)
         {
             var result = await productService.AddProduct(productDTO);
@@ -82,6 +92,8 @@ namespace UngDungQuanLiNhaHang.Controllers
         }
         [HttpPost("AddImgProduct")]
         [Consumes("multipart/form-data")]
+        [Authorize(Roles = "Admin, Manager, Employee")]
+
         public async Task<ActionResult> AddImgProduct(int productId, [FromForm] List<ImgProductDTO> imgProductDTO)
         {
             var result = await productService.AddImgProduct(productId,imgProductDTO);
@@ -93,6 +105,8 @@ namespace UngDungQuanLiNhaHang.Controllers
         }
         // DELETE: api/Products/5
         [HttpPut("ActiveProducts")]
+        [Authorize(Roles = "Admin, Manager, Employee")]
+
         public async Task<IActionResult> ActiveProducts(int id)
         {
             var result = await productService.ActiveProduct(id);
