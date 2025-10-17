@@ -8,12 +8,15 @@ namespace UngDungQuanLiNhaHang.Repository {
             return await _context.carts
                 .Include(c => c.CartItems)
                     .ThenInclude(ci => ci.Products)
-                        .ThenInclude(p => p.images)   
+                        .ThenInclude(p => p.images)
+                .Include(c => c.CartItems)
+                    .ThenInclude(ci => ci.CartItemOptions)
                 .FirstOrDefaultAsync(c => c.CustomerId == customerId);
         }
         public async Task<Carts?> GetCart(int customerId) {
             return await _context.carts
                 .Include(c => c.CartItems)
+                    .ThenInclude( s => s.CartItemOptions)
                 .Include(c => c.Customers)
                 .FirstOrDefaultAsync(c => c.CustomerId == customerId);
         }

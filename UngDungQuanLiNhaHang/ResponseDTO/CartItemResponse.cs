@@ -6,5 +6,6 @@
         public string? productImage { get; set; }
         public int quantity { get; set; }
         public double price { get; set; }
+        public List<CartItemOptionResponse> options { get; set; } = new List<CartItemOptionResponse>();
     }
 }

@@ -25,7 +25,10 @@ namespace UngDungQuanLiNhaHang.Repository {
         }
         
         public async Task<Employees?> GetEmployeeByEmail(string email) {
-            return await _context.employees.Include(e => e.Role).Include(s => s.RefreshTokens).FirstOrDefaultAsync(e => e.Email == email);
+            return await _context.employees
+                .Include(e => e.Role)
+                .Include(s => s.RefreshTokens)
+                .FirstOrDefaultAsync(e => e.Email == email);
         }
         public async Task<Employees?> GetEmployeeByPhone(string phone) {
             return await _context.employees.FirstOrDefaultAsync(e => e.Phone == phone);

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,7 +26,7 @@ namespace UngDungQuanLiNhaHang.Controllers
             var userIdClaim = User.FindFirst("UserID");
             if (userIdClaim == null)
                 return Unauthorized("Token không hợp lệ ");
-            var customerId = int.Parse(userIdClaim.ToString());
+            var customerId = int.Parse(userIdClaim.Value);
             if (!ModelState.IsValid)
             {
                 return BadRequest("Dữ liệu không hợp lệ ");
@@ -44,7 +45,7 @@ namespace UngDungQuanLiNhaHang.Controllers
             var userIdClaim = User.FindFirst("UserID");
             if ( userIdClaim == null )
                 return Unauthorized("Token không hợp lệ ");
-            var customerId = int.Parse(userIdClaim.ToString());
+            var customerId = int.Parse(userIdClaim.Value);
             var result = await productReviewService.DeleteProductReview(customerId,productReviewId);
 
             if ( result.Success ) {
@@ -59,7 +60,7 @@ namespace UngDungQuanLiNhaHang.Controllers
             var userIdClaim = User.FindFirst("UserID");
             if ( userIdClaim == null )
                 return Unauthorized("Token không hợp lệ ");
-            var customerId = int.Parse(userIdClaim.ToString());
+            var customerId = int.Parse(userIdClaim.Value);
             if ( !ModelState.IsValid ) {
                 return BadRequest("Dữ liệu không hợp lệ ");
             }

@@ -30,7 +30,7 @@ namespace UngDungQuanLiNhaHang.Controllers
                 return BadRequest("Dữ liệu không hợp lệ");
             }
 
-            var response = await invoiceServices.CreateInvoiceForOnline(int.Parse(userIdClaim.ToString()), invoiceDTO);
+            var response = await invoiceServices.CreateInvoiceForOnline(int.Parse(userIdClaim.Value), invoiceDTO);
             if (!response.Success) {
                 return BadRequest(response);
             }
@@ -46,7 +46,7 @@ namespace UngDungQuanLiNhaHang.Controllers
             if ( !ModelState.IsValid || invoiceDTO == null ) {
                 return BadRequest("Dữ liệu không hợp lệ");
             }
-            var response = await invoiceServices.CreateInvoiceCustomer(int.Parse(userIdClaim.ToString()), invoiceDTO);
+            var response = await invoiceServices.CreateInvoiceCustomer(int.Parse(userIdClaim.Value), invoiceDTO);
             if ( !response.Success ) {
                 return BadRequest(response);
             }
@@ -59,7 +59,7 @@ namespace UngDungQuanLiNhaHang.Controllers
 
             if ( userIdClaim == null )
                 return Unauthorized("Token không hợp lệ ");
-            var response = await invoiceServices.GetInvoicesByCustomerId(int.Parse(userIdClaim.ToString()));
+            var response = await invoiceServices.GetInvoicesByCustomerId(int.Parse(userIdClaim.Value));
             if ( !response.Success ) {
                 return BadRequest(response);
             }
@@ -71,7 +71,7 @@ namespace UngDungQuanLiNhaHang.Controllers
             var userIdClaim = User.FindFirst("UserID");
             if ( userIdClaim == null )
                 return Unauthorized("Token không hợp lệ ");
-            var response = await invoiceServices.CancellInvoiceForCustomer(int.Parse(userIdClaim.ToString()), invoiceId);
+            var response = await invoiceServices.CancellInvoiceForCustomer(int.Parse(userIdClaim.Value), invoiceId);
             if ( !response.Success ) {
                 return BadRequest(response);
             }
@@ -87,7 +87,7 @@ namespace UngDungQuanLiNhaHang.Controllers
             if ( !ModelState.IsValid || invoice == null ) {
                 return BadRequest("Dữ liệu không hợp lệ");
             }
-            var response = await invoiceServices.CreateInvoiceForOffLine(int.Parse(userIdClaim.ToString()), invoice);
+            var response = await invoiceServices.CreateInvoiceForOffLine(int.Parse(userIdClaim.Value), invoice);
             if ( !response.Success ) {
                 return BadRequest(response);
             }
@@ -102,7 +102,7 @@ namespace UngDungQuanLiNhaHang.Controllers
             if ( !ModelState.IsValid || invoice == null ) {
                 return BadRequest("Dữ liệu không hợp lệ");
             }
-            var response = await invoiceServices.CreateInvoiceForBookTable(int.Parse(userIdClaim.ToString()), invoice);
+            var response = await invoiceServices.CreateInvoiceForBookTable(int.Parse(userIdClaim.Value), invoice);
             if ( !response.Success ) {
                 return BadRequest(response);
             }
@@ -117,7 +117,7 @@ namespace UngDungQuanLiNhaHang.Controllers
             if ( !ModelState.IsValid || invoiceItemDTO == null ) {
                 return BadRequest("Dữ liệu không hợp lệ");
             }
-            var response = await invoiceServices.AddInvoiceItem(int.Parse(userIdClaim.ToString()), invoiceItemDTO);
+            var response = await invoiceServices.AddInvoiceItem(int.Parse(userIdClaim.Value), invoiceItemDTO);
             if ( !response.Success ) {
                 return BadRequest(response);
             }

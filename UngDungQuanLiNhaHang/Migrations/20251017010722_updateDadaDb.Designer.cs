@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using UngDungQuanLiNhaHang.Data;
 
@@ -11,9 +12,11 @@ using UngDungQuanLiNhaHang.Data;
 namespace UngDungQuanLiNhaHang.Migrations
 {
     [DbContext(typeof(DataDbConText))]
-    partial class DataDbConTextModelSnapshot : ModelSnapshot
+    [Migration("20251017010722_updateDadaDb")]
+    partial class updateDadaDb
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -283,37 +286,6 @@ namespace UngDungQuanLiNhaHang.Migrations
                         });
                 });
 
-            modelBuilder.Entity("UngDungQuanLiNhaHang.Models.CartItemOption", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CartItemId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("OptionName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<double>("price")
-                        .HasColumnType("float");
-
-                    b.Property<int>("productOptionId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("quantity")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CartItemId");
-
-                    b.ToTable("cartItemOptions");
-                });
-
             modelBuilder.Entity("UngDungQuanLiNhaHang.Models.CartItems", b =>
                 {
                     b.Property<int>("CartItemId")
@@ -497,56 +469,6 @@ namespace UngDungQuanLiNhaHang.Migrations
                             IsActive = true,
                             Password = "$2a$11$VNeE3dx3kAH4jlMywC81duZnXD.jDTIHPmNkxIeYSHJovscjL7FJa",
                             Phone = "0909092389",
-                            RoleId = 4
-                        },
-                        new
-                        {
-                            CustomerId = 3,
-                            Email = "c@gmail.com",
-                            FullName = "Nguyễn Văn C",
-                            IsActive = true,
-                            Password = "$2a$11$VNeE3dx3kAH4jlMywC81duZnXD.jDTIHPmNkxIeYSHJovscjL7FJa",
-                            Phone = "0909092381",
-                            RoleId = 4
-                        },
-                        new
-                        {
-                            CustomerId = 4,
-                            Email = "b@gmail.com",
-                            FullName = "Nguyễn Văn D",
-                            IsActive = true,
-                            Password = "$2a$11$VNeE3dx3kAH4jlMywC81duZnXD.jDTIHPmNkxIeYSHJovscjL7FJa",
-                            Phone = "0909092339",
-                            RoleId = 4
-                        },
-                        new
-                        {
-                            CustomerId = 5,
-                            Email = "e@gmail.com",
-                            FullName = "Nguyễn Văn E",
-                            IsActive = true,
-                            Password = "$2a$11$VNeE3dx3kAH4jlMywC81duZnXD.jDTIHPmNkxIeYSHJovscjL7FJa",
-                            Phone = "0909022389",
-                            RoleId = 4
-                        },
-                        new
-                        {
-                            CustomerId = 6,
-                            Email = "f@gmail.com",
-                            FullName = "Nguyễn Văn F",
-                            IsActive = true,
-                            Password = "$2a$11$VNeE3dx3kAH4jlMywC81duZnXD.jDTIHPmNkxIeYSHJovscjL7FJa",
-                            Phone = "0909092389",
-                            RoleId = 4
-                        },
-                        new
-                        {
-                            CustomerId = 7,
-                            Email = "q@gmail.com",
-                            FullName = "Nguyễn Văn Q",
-                            IsActive = true,
-                            Password = "$2a$11$VNeE3dx3kAH4jlMywC81duZnXD.jDTIHPmNkxIeYSHJovscjL7FJa",
-                            Phone = "0909099389",
                             RoleId = 4
                         });
                 });
@@ -1223,62 +1145,6 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Price = 150000.0,
                             ProductId = 19,
                             Quantity = 1
-                        },
-                        new
-                        {
-                            InvoiceItemId = 5,
-                            InvoiceId = 3,
-                            Price = 50000.0,
-                            ProductId = 1,
-                            Quantity = 1
-                        },
-                        new
-                        {
-                            InvoiceItemId = 6,
-                            InvoiceId = 4,
-                            Price = 50000.0,
-                            ProductId = 1,
-                            Quantity = 1
-                        },
-                        new
-                        {
-                            InvoiceItemId = 7,
-                            InvoiceId = 5,
-                            Price = 50000.0,
-                            ProductId = 1,
-                            Quantity = 1
-                        },
-                        new
-                        {
-                            InvoiceItemId = 8,
-                            InvoiceId = 6,
-                            Price = 50000.0,
-                            ProductId = 1,
-                            Quantity = 1
-                        },
-                        new
-                        {
-                            InvoiceItemId = 9,
-                            InvoiceId = 7,
-                            Price = 50000.0,
-                            ProductId = 1,
-                            Quantity = 1
-                        },
-                        new
-                        {
-                            InvoiceItemId = 10,
-                            InvoiceId = 8,
-                            Price = 50000.0,
-                            ProductId = 1,
-                            Quantity = 1
-                        },
-                        new
-                        {
-                            InvoiceItemId = 11,
-                            InvoiceId = 9,
-                            Price = 50000.0,
-                            ProductId = 1,
-                            Quantity = 1
                         });
                 });
 
@@ -1410,7 +1276,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                         {
                             InvoiceId = 1,
                             AddressId = 1,
-                            Create_At = new DateTime(2025, 10, 17, 14, 27, 56, 891, DateTimeKind.Utc).AddTicks(3634),
+                            Create_At = new DateTime(2025, 10, 17, 1, 7, 22, 341, DateTimeKind.Utc).AddTicks(4366),
                             InvoiceStatusId = 4,
                             InvoiceType = false,
                             IsPayment = true,
@@ -1424,7 +1290,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                         {
                             InvoiceId = 2,
                             AddressId = 1,
-                            Create_At = new DateTime(2025, 10, 17, 14, 27, 56, 891, DateTimeKind.Utc).AddTicks(3637),
+                            Create_At = new DateTime(2025, 10, 17, 1, 7, 22, 341, DateTimeKind.Utc).AddTicks(4369),
                             InvoiceStatusId = 4,
                             InvoiceType = false,
                             IsPayment = false,
@@ -1432,104 +1298,6 @@ namespace UngDungQuanLiNhaHang.Migrations
                             TotalAmount = 270000.0,
                             TotalQuantity = 2,
                             customerId = 1,
-                            employeeId = 0
-                        },
-                        new
-                        {
-                            InvoiceId = 3,
-                            AddressId = 1,
-                            Create_At = new DateTime(2025, 10, 17, 14, 27, 56, 891, DateTimeKind.Utc).AddTicks(3639),
-                            InvoiceStatusId = 4,
-                            InvoiceType = false,
-                            IsPayment = true,
-                            PaymentMethodId = 3,
-                            TotalAmount = 50000.0,
-                            TotalQuantity = 1,
-                            customerId = 1,
-                            employeeId = 0
-                        },
-                        new
-                        {
-                            InvoiceId = 4,
-                            AddressId = 1,
-                            Create_At = new DateTime(2025, 10, 17, 14, 27, 56, 891, DateTimeKind.Utc).AddTicks(3641),
-                            InvoiceStatusId = 4,
-                            InvoiceType = false,
-                            IsPayment = true,
-                            PaymentMethodId = 3,
-                            TotalAmount = 50000.0,
-                            TotalQuantity = 1,
-                            customerId = 2,
-                            employeeId = 0
-                        },
-                        new
-                        {
-                            InvoiceId = 5,
-                            AddressId = 1,
-                            Create_At = new DateTime(2025, 10, 17, 14, 27, 56, 891, DateTimeKind.Utc).AddTicks(3642),
-                            InvoiceStatusId = 4,
-                            InvoiceType = false,
-                            IsPayment = true,
-                            PaymentMethodId = 3,
-                            TotalAmount = 50000.0,
-                            TotalQuantity = 1,
-                            customerId = 3,
-                            employeeId = 0
-                        },
-                        new
-                        {
-                            InvoiceId = 6,
-                            AddressId = 1,
-                            Create_At = new DateTime(2025, 10, 17, 14, 27, 56, 891, DateTimeKind.Utc).AddTicks(3644),
-                            InvoiceStatusId = 4,
-                            InvoiceType = false,
-                            IsPayment = true,
-                            PaymentMethodId = 3,
-                            TotalAmount = 50000.0,
-                            TotalQuantity = 1,
-                            customerId = 4,
-                            employeeId = 0
-                        },
-                        new
-                        {
-                            InvoiceId = 7,
-                            AddressId = 1,
-                            Create_At = new DateTime(2025, 10, 17, 14, 27, 56, 891, DateTimeKind.Utc).AddTicks(3645),
-                            InvoiceStatusId = 4,
-                            InvoiceType = false,
-                            IsPayment = true,
-                            PaymentMethodId = 3,
-                            TotalAmount = 50000.0,
-                            TotalQuantity = 1,
-                            customerId = 5,
-                            employeeId = 0
-                        },
-                        new
-                        {
-                            InvoiceId = 8,
-                            AddressId = 1,
-                            Create_At = new DateTime(2025, 10, 17, 14, 27, 56, 891, DateTimeKind.Utc).AddTicks(3647),
-                            InvoiceStatusId = 4,
-                            InvoiceType = false,
-                            IsPayment = true,
-                            PaymentMethodId = 3,
-                            TotalAmount = 50000.0,
-                            TotalQuantity = 1,
-                            customerId = 6,
-                            employeeId = 0
-                        },
-                        new
-                        {
-                            InvoiceId = 9,
-                            AddressId = 1,
-                            Create_At = new DateTime(2025, 10, 17, 14, 27, 56, 891, DateTimeKind.Utc).AddTicks(3649),
-                            InvoiceStatusId = 4,
-                            InvoiceType = false,
-                            IsPayment = true,
-                            PaymentMethodId = 3,
-                            TotalAmount = 50000.0,
-                            TotalQuantity = 1,
-                            customerId = 7,
                             employeeId = 0
                         });
                 });
@@ -1640,7 +1408,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                         {
                             ProductOptionId = 1,
                             IngredientId = 1,
-                            OptionName = "1 phần thịt bò ",
+                            OptionName = " Thịt bò ",
                             OptionValue = 100.0,
                             Price = 30000.0,
                             ProductId = 1,
@@ -1650,7 +1418,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                         {
                             ProductOptionId = 2,
                             IngredientId = 1,
-                            OptionName = "1 phần thịt bò ",
+                            OptionName = " Thịt bò ",
                             OptionValue = 100.0,
                             Price = 30000.0,
                             ProductId = 2,
@@ -1660,7 +1428,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                         {
                             ProductOptionId = 3,
                             IngredientId = 10,
-                            OptionName = "1 phần thịt mọc ",
+                            OptionName = " Mọc ",
                             OptionValue = 100.0,
                             Price = 30000.0,
                             ProductId = 3,
@@ -1670,7 +1438,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                         {
                             ProductOptionId = 4,
                             IngredientId = 18,
-                            OptionName = "1 phần cá đuối",
+                            OptionName = " Cá đuối  ",
                             OptionValue = 150.0,
                             Price = 20000.0,
                             ProductId = 10,
@@ -1680,7 +1448,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                         {
                             ProductOptionId = 5,
                             IngredientId = 11,
-                            OptionName = "1 phần tôm sú",
+                            OptionName = " Tôm Sú  ",
                             OptionValue = 100.0,
                             Price = 150000.0,
                             ProductId = 9,
@@ -1690,29 +1458,9 @@ namespace UngDungQuanLiNhaHang.Migrations
                         {
                             ProductOptionId = 6,
                             IngredientId = 12,
-                            OptionName = "1 phần mực",
+                            OptionName = " Mực  ",
                             OptionValue = 100.0,
                             Price = 150000.0,
-                            ProductId = 9,
-                            Unit = "g"
-                        },
-                        new
-                        {
-                            ProductOptionId = 7,
-                            IngredientId = 7,
-                            OptionName = "1 phần bún ",
-                            OptionValue = 300.0,
-                            Price = 10000.0,
-                            ProductId = 1,
-                            Unit = "g"
-                        },
-                        new
-                        {
-                            ProductOptionId = 8,
-                            IngredientId = 7,
-                            OptionName = "1 phần bún",
-                            OptionValue = 300.0,
-                            Price = 100000.0,
                             ProductId = 9,
                             Unit = "g"
                         });
@@ -1754,78 +1502,6 @@ namespace UngDungQuanLiNhaHang.Migrations
                     b.HasIndex("ProductId");
 
                     b.ToTable("productReviews");
-
-                    b.HasData(
-                        new
-                        {
-                            ProductReviewId = 1,
-                            Comment = "Good",
-                            Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CustomerId = 1,
-                            InvoiceId = 3,
-                            ProductId = 1,
-                            Rating = 5
-                        },
-                        new
-                        {
-                            ProductReviewId = 2,
-                            Comment = "Sản phẩm tốt",
-                            Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CustomerId = 2,
-                            InvoiceId = 4,
-                            ProductId = 1,
-                            Rating = 5
-                        },
-                        new
-                        {
-                            ProductReviewId = 3,
-                            Comment = "5 sao",
-                            Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CustomerId = 3,
-                            InvoiceId = 5,
-                            ProductId = 1,
-                            Rating = 5
-                        },
-                        new
-                        {
-                            ProductReviewId = 4,
-                            Comment = "Tạm ổn ",
-                            Create_At = new DateTime(2025, 8, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CustomerId = 4,
-                            InvoiceId = 6,
-                            ProductId = 1,
-                            Rating = 4
-                        },
-                        new
-                        {
-                            ProductReviewId = 5,
-                            Comment = "Hợp khẩu vị",
-                            Create_At = new DateTime(2025, 10, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CustomerId = 5,
-                            InvoiceId = 7,
-                            ProductId = 1,
-                            Rating = 4
-                        },
-                        new
-                        {
-                            ProductReviewId = 6,
-                            Comment = "Dở ",
-                            Create_At = new DateTime(2025, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CustomerId = 6,
-                            InvoiceId = 8,
-                            ProductId = 1,
-                            Rating = 1
-                        },
-                        new
-                        {
-                            ProductReviewId = 7,
-                            Comment = "Không ngon",
-                            Create_At = new DateTime(2025, 10, 13, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CustomerId = 7,
-                            InvoiceId = 9,
-                            ProductId = 1,
-                            Rating = 2
-                        });
                 });
 
             modelBuilder.Entity("UngDungQuanLiNhaHang.Models.Products", b =>
@@ -1884,7 +1560,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                         new
                         {
                             ProductId = 1,
-                            AverageRating = 3.7000000000000002,
+                            AverageRating = 5.0,
                             CategoryId = 5,
                             Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "",
@@ -1894,7 +1570,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                             ProductName = "Phở Bò",
                             Quantity = 40,
                             SoldCount = 2000,
-                            TotalReviews = 7,
+                            TotalReviews = 1,
                             Update_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
@@ -2269,7 +1945,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                         {
                             ProductId = 25,
                             AverageRating = 5.0,
-                            CategoryId = 6,
+                            CategoryId = 5,
                             Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "",
                             IsActive = true,
@@ -2285,7 +1961,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                         {
                             ProductId = 26,
                             AverageRating = 5.0,
-                            CategoryId = 6,
+                            CategoryId = 5,
                             Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "",
                             IsActive = true,
@@ -2301,7 +1977,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                         {
                             ProductId = 27,
                             AverageRating = 5.0,
-                            CategoryId = 6,
+                            CategoryId = 5,
                             Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "",
                             IsActive = true,
@@ -2317,7 +1993,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                         {
                             ProductId = 28,
                             AverageRating = 5.0,
-                            CategoryId = 6,
+                            CategoryId = 5,
                             Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "",
                             IsActive = true,
@@ -3226,17 +2902,6 @@ namespace UngDungQuanLiNhaHang.Migrations
                     b.Navigation("Tables");
                 });
 
-            modelBuilder.Entity("UngDungQuanLiNhaHang.Models.CartItemOption", b =>
-                {
-                    b.HasOne("UngDungQuanLiNhaHang.Models.CartItems", "CartItems")
-                        .WithMany("CartItemOptions")
-                        .HasForeignKey("CartItemId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("CartItems");
-                });
-
             modelBuilder.Entity("UngDungQuanLiNhaHang.Models.CartItems", b =>
                 {
                     b.HasOne("UngDungQuanLiNhaHang.Models.Carts", "Carts")
@@ -3551,11 +3216,6 @@ namespace UngDungQuanLiNhaHang.Migrations
             modelBuilder.Entity("UngDungQuanLiNhaHang.Models.BookTableStatus", b =>
                 {
                     b.Navigation("BookTables");
-                });
-
-            modelBuilder.Entity("UngDungQuanLiNhaHang.Models.CartItems", b =>
-                {
-                    b.Navigation("CartItemOptions");
                 });
 
             modelBuilder.Entity("UngDungQuanLiNhaHang.Models.Carts", b =>

@@ -25,7 +25,7 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
                 return ApiResponse<bool>.FailResponse("Không có hóa đơn");
             }
             if ( invoice.InvoiceStatusId != 2 ) {
-                return ApiResponse<bool>.FailResponse("Chỉ có thể thêm sản phẩm vào hóa đơn đang đã xác nhận.");
+                return ApiResponse<bool>.FailResponse("Chỉ có thể thêm sản phẩm vào hóa đơn đã xác nhận.");
             }
             try {
                 await transactionRepo.BeginTransactionAsync();

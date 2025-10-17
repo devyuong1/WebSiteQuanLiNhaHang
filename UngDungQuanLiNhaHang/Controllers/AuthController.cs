@@ -9,17 +9,23 @@ namespace UngDungQuanLiNhaHang.Controllers {
     [Route("api/[controller]")]
     [ApiController]
     public class AuthController(IAuthServices authServices) : ControllerBase {
+
+
+
         [HttpPost("login")]
-        public async Task<ActionResult<ApiResponse<CustomerResponse>>> Login([FromBody]LoginDTO customer) {
+        public async Task<ActionResult<ApiResponse<UserDetails>>> Login([FromBody]LoginDTO customer) {
             if (!ModelState.IsValid) {
                 return BadRequest("Dữ liệu không hợp lệ");
             }
             var result = await authServices.Login(customer);
+            
             if ( result.Success ) {
                 return Ok(result);
             }
             return BadRequest(result);
         }
+
+
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] CustomerDTO customer) {
             if (!ModelState.IsValid) {

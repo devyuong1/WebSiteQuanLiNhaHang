@@ -23,13 +23,13 @@ namespace UngDungQuanLiNhaHang.Repository {
                 .Include(p => p.images)
                 .FirstOrDefaultAsync(p => p.ProductId == productId);
         }
-        
+
         public async Task<Products?> GetProductById2(int productId) {
             return await _context.products
                 .Include(p => p.Category)
                 .Include(p => p.images)
                 .Include(p => p.recipes)
-                    .ThenInclude( s => s.Ingredient)
+                    .ThenInclude(s => s.Ingredient)
                 .Include(p => p.productOptions)
                 .Include(p => p.productReviews)
                     .ThenInclude(pr => pr.Customers)
@@ -43,20 +43,50 @@ namespace UngDungQuanLiNhaHang.Repository {
                 .Where(s => s.IsActive == true)
                 .ToListAsync();
         }
-        public async Task<Products?> IsProductExistsByNameAndId(string productName,int id) {
+        public async Task<Products?> IsProductExistsByNameAndId(string productName, int id) {
             return await _context.products.FirstOrDefaultAsync(p => p.ProductName == productName && p.ProductId != id);
         }
         public async Task ProductAddOption(ProductOptions productOption) {
             await _context.productOptions.AddAsync(productOption);
-            
+
         }
         public async Task ProductAddRecipe(Recipes recipe) {
             await _context.recipes.AddAsync(recipe);
-            
+
 
         }
         public async Task ProductAddImage(Images image) {
             await _context.images.AddAsync(image);
+        }
+        public async Task<List<Products>> GetListProductTopSelling() {
+            return await _context.products
+                .Include(p => p.images)
+                .Where(p => p.IsActive == true)
+                .OrderByDescending(p => p.SoldCount)
+                .Take(12)
+                .ToListAsync();
+        }
+        public async Task<List<Products>> GetListProductNews() {
+            return await _context.products
+                .Where(p => p.IsActive == true)
+                .Include(p => p.images)
+                .OrderByDescending(p => p.Create_At)
+                .Take(12)
+                .ToListAsync();
+        }
+        public async Task<List<Products>> GetProductByCategoryIdAndProductId(int categoryId,int productid) {
+            return await _context.products
+                .Include(p => p.images)
+                .Where(s => s.CategoryId == categoryId && s.IsActive == true && s.ProductId != productid)
+                .Take(12)
+                .ToListAsync();
+        }
+        public async Task<List<Products>> GetProductByCategoryId(int categoryId) {
+            return await _context.products
+                .Include(p => p.images)
+                .Where(s => s.CategoryId == categoryId && s.IsActive == true )
+                .Take(12)
+                .ToListAsync();
         }
     }
 }

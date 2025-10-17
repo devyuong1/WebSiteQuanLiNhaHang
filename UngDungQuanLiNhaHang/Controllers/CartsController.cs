@@ -21,7 +21,7 @@ namespace UngDungQuanLiNhaHang.Controllers
 
         // GET: api/Carts/5
         [Authorize]
-        [HttpGet]
+        [HttpGet("GetCarts")]
         public async Task<ActionResult<ApiResponse<CartResponse>>> GetCarts()
         {
             var userIdClaim = User.FindFirst("UserID");
@@ -57,14 +57,14 @@ namespace UngDungQuanLiNhaHang.Controllers
         }
         // POST: api/Carts
         [Authorize]
-        [HttpPost]
-        public async Task<ActionResult<Carts>> PostCarts([FromBody] AddItemCartDTO addItemCartDTO)
+        [HttpPost("AddCartItem")]
+        public async Task<ActionResult<ApiResponse<bool>>> AddCartItem([FromBody] AddItemCartDTO addItemCartDTO)
             
         {
             var userIdClaim = User.FindFirst("UserID");
 
             if ( userIdClaim == null )
-                return Unauthorized("Token không hợp lệ hoặc thiếu thông tin UserID.");
+                return Unauthorized(ApiResponse<bool>.FailResponse("Token không hợp lệ hoặc thiếu thông tin UserID."));
 
             int customerId = int.Parse(userIdClaim.Value);
             var result = await cartServices.UpdateCartItem(customerId, addItemCartDTO);
@@ -72,8 +72,5 @@ namespace UngDungQuanLiNhaHang.Controllers
                 return Ok(result);
             return BadRequest(result);
         }
-
-     
-      
     }
 }

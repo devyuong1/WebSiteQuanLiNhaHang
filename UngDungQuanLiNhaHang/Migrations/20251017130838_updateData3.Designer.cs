@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using UngDungQuanLiNhaHang.Data;
 
@@ -11,9 +12,11 @@ using UngDungQuanLiNhaHang.Data;
 namespace UngDungQuanLiNhaHang.Migrations
 {
     [DbContext(typeof(DataDbConText))]
-    partial class DataDbConTextModelSnapshot : ModelSnapshot
+    [Migration("20251017130838_updateData3")]
+    partial class updateData3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -281,37 +284,6 @@ namespace UngDungQuanLiNhaHang.Migrations
                             bookTableStatusId = 4,
                             status = "Đã Hủy"
                         });
-                });
-
-            modelBuilder.Entity("UngDungQuanLiNhaHang.Models.CartItemOption", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CartItemId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("OptionName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<double>("price")
-                        .HasColumnType("float");
-
-                    b.Property<int>("productOptionId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("quantity")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CartItemId");
-
-                    b.ToTable("cartItemOptions");
                 });
 
             modelBuilder.Entity("UngDungQuanLiNhaHang.Models.CartItems", b =>
@@ -1410,7 +1382,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                         {
                             InvoiceId = 1,
                             AddressId = 1,
-                            Create_At = new DateTime(2025, 10, 17, 14, 27, 56, 891, DateTimeKind.Utc).AddTicks(3634),
+                            Create_At = new DateTime(2025, 10, 17, 13, 8, 37, 338, DateTimeKind.Utc).AddTicks(9352),
                             InvoiceStatusId = 4,
                             InvoiceType = false,
                             IsPayment = true,
@@ -1424,7 +1396,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                         {
                             InvoiceId = 2,
                             AddressId = 1,
-                            Create_At = new DateTime(2025, 10, 17, 14, 27, 56, 891, DateTimeKind.Utc).AddTicks(3637),
+                            Create_At = new DateTime(2025, 10, 17, 13, 8, 37, 338, DateTimeKind.Utc).AddTicks(9355),
                             InvoiceStatusId = 4,
                             InvoiceType = false,
                             IsPayment = false,
@@ -1438,7 +1410,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                         {
                             InvoiceId = 3,
                             AddressId = 1,
-                            Create_At = new DateTime(2025, 10, 17, 14, 27, 56, 891, DateTimeKind.Utc).AddTicks(3639),
+                            Create_At = new DateTime(2025, 10, 17, 13, 8, 37, 338, DateTimeKind.Utc).AddTicks(9357),
                             InvoiceStatusId = 4,
                             InvoiceType = false,
                             IsPayment = true,
@@ -1452,7 +1424,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                         {
                             InvoiceId = 4,
                             AddressId = 1,
-                            Create_At = new DateTime(2025, 10, 17, 14, 27, 56, 891, DateTimeKind.Utc).AddTicks(3641),
+                            Create_At = new DateTime(2025, 10, 17, 13, 8, 37, 338, DateTimeKind.Utc).AddTicks(9359),
                             InvoiceStatusId = 4,
                             InvoiceType = false,
                             IsPayment = true,
@@ -1466,7 +1438,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                         {
                             InvoiceId = 5,
                             AddressId = 1,
-                            Create_At = new DateTime(2025, 10, 17, 14, 27, 56, 891, DateTimeKind.Utc).AddTicks(3642),
+                            Create_At = new DateTime(2025, 10, 17, 13, 8, 37, 338, DateTimeKind.Utc).AddTicks(9361),
                             InvoiceStatusId = 4,
                             InvoiceType = false,
                             IsPayment = true,
@@ -1480,7 +1452,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                         {
                             InvoiceId = 6,
                             AddressId = 1,
-                            Create_At = new DateTime(2025, 10, 17, 14, 27, 56, 891, DateTimeKind.Utc).AddTicks(3644),
+                            Create_At = new DateTime(2025, 10, 17, 13, 8, 37, 338, DateTimeKind.Utc).AddTicks(9362),
                             InvoiceStatusId = 4,
                             InvoiceType = false,
                             IsPayment = true,
@@ -1494,7 +1466,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                         {
                             InvoiceId = 7,
                             AddressId = 1,
-                            Create_At = new DateTime(2025, 10, 17, 14, 27, 56, 891, DateTimeKind.Utc).AddTicks(3645),
+                            Create_At = new DateTime(2025, 10, 17, 13, 8, 37, 338, DateTimeKind.Utc).AddTicks(9364),
                             InvoiceStatusId = 4,
                             InvoiceType = false,
                             IsPayment = true,
@@ -1508,7 +1480,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                         {
                             InvoiceId = 8,
                             AddressId = 1,
-                            Create_At = new DateTime(2025, 10, 17, 14, 27, 56, 891, DateTimeKind.Utc).AddTicks(3647),
+                            Create_At = new DateTime(2025, 10, 17, 13, 8, 37, 338, DateTimeKind.Utc).AddTicks(9366),
                             InvoiceStatusId = 4,
                             InvoiceType = false,
                             IsPayment = true,
@@ -1522,7 +1494,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                         {
                             InvoiceId = 9,
                             AddressId = 1,
-                            Create_At = new DateTime(2025, 10, 17, 14, 27, 56, 891, DateTimeKind.Utc).AddTicks(3649),
+                            Create_At = new DateTime(2025, 10, 17, 13, 8, 37, 338, DateTimeKind.Utc).AddTicks(9367),
                             InvoiceStatusId = 4,
                             InvoiceType = false,
                             IsPayment = true,
@@ -3226,17 +3198,6 @@ namespace UngDungQuanLiNhaHang.Migrations
                     b.Navigation("Tables");
                 });
 
-            modelBuilder.Entity("UngDungQuanLiNhaHang.Models.CartItemOption", b =>
-                {
-                    b.HasOne("UngDungQuanLiNhaHang.Models.CartItems", "CartItems")
-                        .WithMany("CartItemOptions")
-                        .HasForeignKey("CartItemId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("CartItems");
-                });
-
             modelBuilder.Entity("UngDungQuanLiNhaHang.Models.CartItems", b =>
                 {
                     b.HasOne("UngDungQuanLiNhaHang.Models.Carts", "Carts")
@@ -3551,11 +3512,6 @@ namespace UngDungQuanLiNhaHang.Migrations
             modelBuilder.Entity("UngDungQuanLiNhaHang.Models.BookTableStatus", b =>
                 {
                     b.Navigation("BookTables");
-                });
-
-            modelBuilder.Entity("UngDungQuanLiNhaHang.Models.CartItems", b =>
-                {
-                    b.Navigation("CartItemOptions");
                 });
 
             modelBuilder.Entity("UngDungQuanLiNhaHang.Models.Carts", b =>

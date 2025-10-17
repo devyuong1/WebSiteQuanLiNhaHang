@@ -6,22 +6,23 @@ using UngDungQuanLiNhaHang.Security;
 using UngDungQuanLiNhaHang.Models;
 namespace UngDungQuanLiNhaHang.Services.Implementations {
     public class AuthServices(CustomerRepo customerRepo,JWT jwt,TransactionRepo transactionRepo,CartRepo cartRepo, EmployeeRepo employeeRepo) : IAuthServices {
-        public async Task<ApiResponse<CustomerResponse>> Login(LoginDTO customer) {
+        public async Task<ApiResponse<UserDetails>> Login(LoginDTO customer) {
             var user = await customerRepo.GetCustomerByEmail(customer.Email);
             if (user == null ) {
-                return ApiResponse<CustomerResponse>.FailResponse("Sai tài khoản hoặc mật khẩu!!!");
+                return ApiResponse<UserDetails>.FailResponse("Sai tài khoản hoặc mật khẩu!!!");
             }
             if (!BCrypt.Net.BCrypt.Verify(customer.Password,user.Password) ){
-                return ApiResponse<CustomerResponse>.FailResponse("Sai tài khoản hoặc mật khẩu!!!");
+                return ApiResponse<UserDetails>.FailResponse("Sai tài khoản hoặc mật khẩu!!!");
             }
 
             var token = jwt.GenerateJWT(user.FullName, user.CustomerId, user.Role!.RoleName);
             
-            var response = new CustomerResponse {
-                customerId = user.CustomerId,
+            var response = new UserDetails {
+                userId = user.CustomerId,
                 fullName = user.FullName,
                 email = user.Email,
                 access_token = token,
+                role = user.Role?.RoleName ?? "Customer",
                 refresh_token = user.refreshTokens!.Last().Token
             };
             
@@ -44,7 +45,7 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
                 response.refresh_token = refreshToken;
             }
             
-            return ApiResponse<CustomerResponse>.SuccessResponse(response);
+            return ApiResponse<UserDetails>.SuccessResponse(response);
         }
 
         public async Task<ApiResponse<bool>> Register(CustomerDTO customer) {
@@ -244,6 +245,7 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
                 fullName = user.Fullname,
                 email = user.Email,
                 access_token = token,
+                role = user.Role?.RoleName ?? "Employee",
                 refresh_token = user.RefreshTokens.Any() ? user.RefreshTokens.Last().Token : null
             };
 

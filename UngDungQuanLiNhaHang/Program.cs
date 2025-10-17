@@ -94,7 +94,16 @@ builder.Services.AddAuthentication(
         }
 );
 
-
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend",
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:5173") // origin của React
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
+        });
+});
 
 builder.Services.AddScoped<IAuthServices, AuthServices>();
 builder.Services.AddScoped<IEmployeeServices, EmployeeService>();
@@ -130,9 +139,6 @@ builder.Services.AddScoped<IInvoiceServices, InvoiceService>();
 
 builder.Services.AddScoped<ProductReviewRepo>();
 builder.Services.AddScoped<IProductReviewService, ProductReviewService>();
-
-
-
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAllOrigins",
@@ -143,8 +149,21 @@ builder.Services.AddCors(options =>
                   .AllowAnyMethod(); // Cho phép mọi phương thức GET, POST, PUT...
         });
 });
+
+
+//builder.Services.AddCors(options =>
+//{
+//    options.AddPolicy("AllowAllOrigins",
+//        policy =>
+//        {
+//            policy.AllowAnyOrigin()  // Cho phép mọi domain
+//                  .AllowAnyHeader()  // Cho phép mọi header
+//                  .AllowAnyMethod(); // Cho phép mọi phương thức GET, POST, PUT...
+//        });
+//});
 var app = builder.Build();
 
+//app.UseCors("AllowFrontend");
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -156,8 +175,11 @@ if (app.Environment.IsDevelopment())
 
 
 
+app.UseCors("AllowAllOrigins"); // Đặt trước UseAuthorization()
 
-app.UseHttpsRedirection();
+app.UseStaticFiles();
+
+//app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();

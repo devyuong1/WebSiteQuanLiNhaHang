@@ -5,14 +5,14 @@
         public int totalItems { get; set; }
         public int totalPages { get; set; }
 
-        public IEnumerable<T> list { get; set; } = [];
+        public List<T> list { get; set; } = [];
 
 
         public PageResponse() {
 
         }
 
-        public PageResponse(int page, int pageSize, int totalItems, int totalPages, IEnumerable<T> item) {
+        public PageResponse(int page, int pageSize, int totalItems, int totalPages, List<T> item) {
             this.page = page;
             this.pageSize = pageSize;
             this.totalItems = totalItems;

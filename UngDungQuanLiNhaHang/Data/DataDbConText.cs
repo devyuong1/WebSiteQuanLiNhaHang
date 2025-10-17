@@ -37,19 +37,21 @@ namespace UngDungQuanLiNhaHang.Data {
         public DbSet<AddressCustomer> addressCustomers { get; set; }
         public DbSet<ProductOptions> productOptions { get; set; }
         public DbSet<OrderItemOption> orderItemOptions { get; set; }
+        public DbSet<BookTableStatus> bookTableStatuses { get; set; }
+        public DbSet<CartItemOption> cartItemOptions { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
             base.OnModelCreating(modelBuilder);
-            
+
             modelBuilder.Entity<AddressCustomer>()
             .HasOne(ac => ac.Customer)
             .WithMany(c => c.AddressCustomers)
             .HasForeignKey(ac => ac.CustomerId);
 
-                modelBuilder.Entity<AddressCustomer>()
-                    .HasOne(ac => ac.Address)
-                    .WithMany(a => a.AddressCustomers)
-                    .HasForeignKey(ac => ac.AddressId);
-            
+            modelBuilder.Entity<AddressCustomer>()
+                .HasOne(ac => ac.Address)
+                .WithMany(a => a.AddressCustomers)
+                .HasForeignKey(ac => ac.AddressId);
+
 
             modelBuilder.Entity<PurchaseInvoice>()
                    .HasOne(pi => pi.Suppliers)
@@ -246,7 +248,7 @@ namespace UngDungQuanLiNhaHang.Data {
                     new PaymentMethod { PaymentMethodId = 2, PaymentMethodName = "MoMo" },
                     new PaymentMethod { PaymentMethodId = 3, PaymentMethodName = "Thahh Toán Khi Nhận Hàng" }
                 );
-            
+
             modelBuilder.Entity<Customers>().HasData(
                 new Customers {
                     CustomerId = 1,
@@ -255,7 +257,7 @@ namespace UngDungQuanLiNhaHang.Data {
                     Phone = "0909092321",
                     Password = "$2a$11$VNeE3dx3kAH4jlMywC81duZnXD.jDTIHPmNkxIeYSHJovscjL7FJa",
                     RoleId = 4,
-                    
+
                 },
                 new Customers {
                     CustomerId = 2,
@@ -264,12 +266,57 @@ namespace UngDungQuanLiNhaHang.Data {
                     Phone = "0909092389",
                     Password = "$2a$11$VNeE3dx3kAH4jlMywC81duZnXD.jDTIHPmNkxIeYSHJovscjL7FJa",
                     RoleId = 4,
-                    
+
+                },
+                new Customers {
+                    CustomerId = 3,
+                    FullName = "Nguyễn Văn C",
+                    Email = "c@gmail.com",
+                    Phone = "0909092381",
+                    Password = "$2a$11$VNeE3dx3kAH4jlMywC81duZnXD.jDTIHPmNkxIeYSHJovscjL7FJa",
+                    RoleId = 4,
+
+                },
+                new Customers {
+                    CustomerId = 4,
+                    FullName = "Nguyễn Văn D",
+                    Email = "b@gmail.com",
+                    Phone = "0909092339",
+                    Password = "$2a$11$VNeE3dx3kAH4jlMywC81duZnXD.jDTIHPmNkxIeYSHJovscjL7FJa",
+                    RoleId = 4,
+
+                },
+                new Customers {
+                    CustomerId = 5,
+                    FullName = "Nguyễn Văn E",
+                    Email = "e@gmail.com",
+                    Phone = "0909022389",
+                    Password = "$2a$11$VNeE3dx3kAH4jlMywC81duZnXD.jDTIHPmNkxIeYSHJovscjL7FJa",
+                    RoleId = 4,
+
+                },
+                new Customers {
+                    CustomerId = 6,
+                    FullName = "Nguyễn Văn F",
+                    Email = "f@gmail.com",
+                    Phone = "0909092389",
+                    Password = "$2a$11$VNeE3dx3kAH4jlMywC81duZnXD.jDTIHPmNkxIeYSHJovscjL7FJa",
+                    RoleId = 4,
+
+                },
+                new Customers {
+                    CustomerId = 7,
+                    FullName = "Nguyễn Văn Q",
+                    Email = "q@gmail.com",
+                    Phone = "0909099389",
+                    Password = "$2a$11$VNeE3dx3kAH4jlMywC81duZnXD.jDTIHPmNkxIeYSHJovscjL7FJa",
+                    RoleId = 4,
+
                 }
             );
             modelBuilder.Entity<AddressCustomer>().HasData(
-                    new AddressCustomer {Id = 1, AddressId = 9, CustomerId = 1 },
-                    new AddressCustomer {Id =2 , AddressId = 10, CustomerId = 2 }
+                    new AddressCustomer { Id = 1, AddressId = 9, CustomerId = 1 },
+                    new AddressCustomer { Id = 2, AddressId = 10, CustomerId = 2 }
                 );
             modelBuilder.Entity<Carts>().HasData(
                 new Carts {
@@ -306,18 +353,18 @@ namespace UngDungQuanLiNhaHang.Data {
                 new Ingredient {
                     IngredientId = 1,
                     IngredientName = "Thịt Bò",
-                    Quantity = 10.0,
+                    Quantity = 10000,
                     MinQuantity = 1.0,
                     Price = 200000.0,
-                    Unit = "kg"
+                    Unit = "g"
                 },
                 new Ingredient {
-                    IngredientId =2,
+                    IngredientId = 2,
                     IngredientName = "Bánh Phở",
-                    Quantity = 4,
+                    Quantity = 40000,
                     MinQuantity = 1.0,
                     Price = 30000.0,
-                    Unit = "kg"
+                    Unit = "g"
                 },
                 new Ingredient {
                     IngredientId = 3,
@@ -338,146 +385,146 @@ namespace UngDungQuanLiNhaHang.Data {
                 new Ingredient {
                     IngredientId = 5,
                     IngredientName = "Giò Heo ",
-                    Quantity = 3,
+                    Quantity = 30000,
                     MinQuantity = 1.0,
                     Price = 120000,
-                    Unit = "kg"
+                    Unit = "g"
                 },
                 new Ingredient {
-                    IngredientId =6,
+                    IngredientId = 6,
                     IngredientName = "Huyết Heo",
-                    Quantity = 2,
+                    Quantity = 20000,
                     MinQuantity = 1.0,
                     Price = 100000,
-                    Unit = "kg"
+                    Unit = "g"
                 },
                 new Ingredient {
                     IngredientId = 7,
                     IngredientName = "Bún",
-                    Quantity = 2,
+                    Quantity = 20000,
                     MinQuantity = 1.0,
                     Price = 15000,
-                    Unit = "kg"
+                    Unit = "g"
                 },
                 new Ingredient {
                     IngredientId = 8,
                     IngredientName = "Chả Lụa",
-                    Quantity = 2,
+                    Quantity = 2000,
                     MinQuantity = 1.0,
                     Price = 100000,
-                    Unit = "kg"
+                    Unit = "g"
                 },
                 new Ingredient {
                     IngredientId = 9,
                     IngredientName = "Thịt Heo",
-                    Quantity = 5,
+                    Quantity = 50000,
                     MinQuantity = 1.0,
                     Price = 200000,
-                    Unit = "kg"
+                    Unit = "g"
                 },
                 new Ingredient {
                     IngredientId = 10,
                     IngredientName = "Mọc",
-                    Quantity = 2,
+                    Quantity = 20000,
                     MinQuantity = 1.0,
                     Price = 150000,
-                    Unit = "kg"
+                    Unit = "g"
                 },
                 new Ingredient {
                     IngredientId = 11,
                     IngredientName = "Mực",
-                    Quantity = 2,
+                    Quantity = 20000,
                     MinQuantity = 1.0,
                     Price = 250000,
-                    Unit = "kg"
+                    Unit = "g"
                 },
                 new Ingredient {
                     IngredientId = 12,
                     IngredientName = "Tôm sú",
-                    Quantity = 4,
+                    Quantity = 40000,
                     MinQuantity = 1.0,
                     Price = 250000,
-                    Unit = "kg"
+                    Unit = "g"
                 },
                 new Ingredient {
                     IngredientId = 13,
                     IngredientName = "Tôm Hùm",
-                    Quantity = 3,
+                    Quantity = 30000,
                     MinQuantity = 1.0,
                     Price = 450000,
-                    Unit = "kg"
+                    Unit = "g"
                 },
                 new Ingredient {
                     IngredientId = 14,
                     IngredientName = "Cua",
-                    Quantity = 3,
+                    Quantity = 300000,
                     MinQuantity = 1.0,
                     Price = 350000,
-                    Unit = "kg"
+                    Unit = "g"
                 },
                 new Ingredient {
                     IngredientId = 15,
                     IngredientName = "Ghẹ",
-                    Quantity = 3,
+                    Quantity = 30000,
                     MinQuantity = 1.0,
                     Price = 300000,
-                    Unit = "kg"
+                    Unit = "g"
                 },
                 new Ingredient {
                     IngredientId = 16,
                     IngredientName = "Bơ",
-                    Quantity = 3,
+                    Quantity = 30000,
                     MinQuantity = 1.0,
                     Price = 100000,
-                    Unit = "kg"
+                    Unit = "g"
                 },
                 new Ingredient {
                     IngredientId = 17,
                     IngredientName = "Phô mai",
-                    Quantity = 3,
+                    Quantity = 3000,
                     MinQuantity = 1.0,
                     Price = 100000,
-                    Unit = "kg"
+                    Unit = "g"
                 },
                 new Ingredient {
                     IngredientId = 18,
                     IngredientName = "Cá Đuối",
-                    Quantity = 3,
+                    Quantity = 30000,
                     MinQuantity = 1.0,
                     Price = 100000,
-                    Unit = "kg"
+                    Unit = "g"
                 },
                 new Ingredient {
                     IngredientId = 19,
                     IngredientName = "Măng Chua",
-                    Quantity = 3,
+                    Quantity = 30000,
                     MinQuantity = 1.0,
                     Price = 100000,
-                    Unit = "kg"
+                    Unit = "g"
                 },
                 new Ingredient {
                     IngredientId = 20,
                     IngredientName = "Hàu",
-                    Quantity = 20,
+                    Quantity = 200000,
                     MinQuantity = 5,
                     Price = 800000,
-                    Unit = "kg"
+                    Unit = "g"
                 },
                 new Ingredient {
                     IngredientId = 21,
                     IngredientName = "Óc móng tay",
-                    Quantity = 20,
+                    Quantity = 200000,
                     MinQuantity = 5,
                     Price = 100000,
-                    Unit = "kg"
+                    Unit = "g"
                 },
                 new Ingredient {
                     IngredientId = 22,
                     IngredientName = "Miến",
-                    Quantity = 20,
+                    Quantity = 200000,
                     MinQuantity = 5,
                     Price = 50000,
-                    Unit = "kg"
+                    Unit = "g"
                 },
                 new Ingredient {
                     IngredientId = 23,
@@ -490,18 +537,18 @@ namespace UngDungQuanLiNhaHang.Data {
                 new Ingredient {
                     IngredientId = 24,
                     IngredientName = "Ốc Hương",
-                    Quantity = 20,
+                    Quantity = 20000,
                     MinQuantity = 2,
                     Price = 200000,
-                    Unit = "kg"
+                    Unit = "g"
                 },
                 new Ingredient {
                     IngredientId = 25,
                     IngredientName = "Gạo",
-                    Quantity = 20,
+                    Quantity = 20000,
                     MinQuantity = 2,
                     Price = 20000,
-                    Unit = "kg"
+                    Unit = "g"
                 },
                 new Ingredient {
                     IngredientId = 26,
@@ -514,18 +561,18 @@ namespace UngDungQuanLiNhaHang.Data {
                 new Ingredient {
                     IngredientId = 27,
                     IngredientName = "Sò Huyết",
-                    Quantity = 20,
+                    Quantity = 20000,
                     MinQuantity = 2,
                     Price = 200000,
-                    Unit = "kg"
+                    Unit = "g"
                 },
                 new Ingredient {
                     IngredientId = 28,
                     IngredientName = "Cá Mú",
-                    Quantity = 20,
+                    Quantity = 20000,
                     MinQuantity = 2,
                     Price = 250000,
-                    Unit = "kg"
+                    Unit = "g"
                 }
 
             );
@@ -536,6 +583,8 @@ namespace UngDungQuanLiNhaHang.Data {
                         Description = "",
                         Price = 50000.0,
                         PriceSale = 45000.0,
+                        AverageRating = 3.7,
+                        TotalReviews = 7,
                         Quantity = 40,
                         SoldCount = 2000,
                         CategoryId = 5,
@@ -826,7 +875,7 @@ namespace UngDungQuanLiNhaHang.Data {
                         PriceSale = 18000.0,
                         Quantity = 50,
                         SoldCount = 200,
-                        CategoryId = 5,
+                        CategoryId = 6,
                         Create_At = new DateTime(2025, 7, 12),
                         Update_At = new DateTime(2025, 7, 12)
                     },
@@ -838,7 +887,7 @@ namespace UngDungQuanLiNhaHang.Data {
                         PriceSale = 18000.0,
                         Quantity = 50,
                         SoldCount = 200,
-                        CategoryId = 5,
+                        CategoryId = 6,
                         Create_At = new DateTime(2025, 7, 12),
                         Update_At = new DateTime(2025, 7, 12)
                     },
@@ -850,7 +899,7 @@ namespace UngDungQuanLiNhaHang.Data {
                         PriceSale = 22000.0,
                         Quantity = 50,
                         SoldCount = 200,
-                        CategoryId = 5,
+                        CategoryId = 6,
                         Create_At = new DateTime(2025, 7, 12),
                         Update_At = new DateTime(2025, 7, 12)
                     },
@@ -862,7 +911,7 @@ namespace UngDungQuanLiNhaHang.Data {
                         PriceSale = 25000.0,
                         Quantity = 50,
                         SoldCount = 200,
-                        CategoryId = 5,
+                        CategoryId = 6,
                         Create_At = new DateTime(2025, 7, 12),
                         Update_At = new DateTime(2025, 7, 12)
                     }
@@ -899,16 +948,16 @@ namespace UngDungQuanLiNhaHang.Data {
                     new Images { ImagesId = 28, ImagesUrl = "/ImageProducts/product28.png", ProductId = 28 }
                 );
             modelBuilder.Entity<Recipes>().HasData(
-                // cong thuc mon pho 
-                    new Recipes { RecipeId = 1, Quantity = 100, Unit = "g", IngredientId = 1, ProductId = 1},
-                    new Recipes { RecipeId = 2, Quantity = 200, Unit = "g", IngredientId = 2, ProductId = 1},
-                    new Recipes { RecipeId = 3, Quantity = 300, Unit = "ml", IngredientId = 3, ProductId = 1},
+                    // cong thuc mon pho 
+                    new Recipes { RecipeId = 1, Quantity = 100, Unit = "g", IngredientId = 1, ProductId = 1 },
+                    new Recipes { RecipeId = 2, Quantity = 200, Unit = "g", IngredientId = 2, ProductId = 1 },
+                    new Recipes { RecipeId = 3, Quantity = 300, Unit = "ml", IngredientId = 3, ProductId = 1 },
                     // cong thuc mon bun bo
                     new Recipes { RecipeId = 4, Quantity = 100, Unit = "g", IngredientId = 1, ProductId = 2 },
                     new Recipes { RecipeId = 5, Quantity = 300, Unit = "ml", IngredientId = 4, ProductId = 2 },
                     new Recipes { RecipeId = 6, Quantity = 50, Unit = "g", IngredientId = 5, ProductId = 2 },
                     new Recipes { RecipeId = 7, Quantity = 50, Unit = "g", IngredientId = 6, ProductId = 2 },
-                    new Recipes { RecipeId = 8, Quantity = 200, Unit = "g", IngredientId =7, ProductId = 2 },
+                    new Recipes { RecipeId = 8, Quantity = 200, Unit = "g", IngredientId = 7, ProductId = 2 },
                     // cong thuc mon bun moc
                     new Recipes { RecipeId = 9, Quantity = 100, Unit = "g", IngredientId = 9, ProductId = 3 },
                     new Recipes { RecipeId = 10, Quantity = 50, Unit = "g", IngredientId = 8, ProductId = 3 },
@@ -959,7 +1008,7 @@ namespace UngDungQuanLiNhaHang.Data {
                     , new Recipes { RecipeId = 41, Quantity = 100, Unit = "g", IngredientId = 23, ProductId = 17 }
                     // cong thuc mon com chien hai san
                     , new Recipes { RecipeId = 42, Quantity = 200, Unit = "g", IngredientId = 12, ProductId = 18 }
-                    , new Recipes { RecipeId = 43, Quantity = 200, Unit = "g", IngredientId = 11,   ProductId = 18 }
+                    , new Recipes { RecipeId = 43, Quantity = 200, Unit = "g", IngredientId = 11, ProductId = 18 }
                     , new Recipes { RecipeId = 44, Quantity = 200, Unit = "g", IngredientId = 25, ProductId = 18 }
                     // cong thuc mon mi xao bo
                     , new Recipes { RecipeId = 45, Quantity = 300, Unit = "g", IngredientId = 26, ProductId = 19 }
@@ -974,7 +1023,7 @@ namespace UngDungQuanLiNhaHang.Data {
                     , new Recipes { RecipeId = 50, Quantity = 500, Unit = "g", IngredientId = 28, ProductId = 23 }
                 );
             modelBuilder.Entity<InvoiceStatus>().HasData(
-                new InvoiceStatus { InvoiceStatusId = 1,InvoiceStatusName = "Pending", Description = "Chờ Xác Nhận" },
+                new InvoiceStatus { InvoiceStatusId = 1, InvoiceStatusName = "Pending", Description = "Chờ Xác Nhận" },
                 new InvoiceStatus { InvoiceStatusId = 2, InvoiceStatusName = "Confirmed", Description = "Đã Xác Nhận" },
                 new InvoiceStatus { InvoiceStatusId = 3, InvoiceStatusName = "Shipping", Description = "Đang Giao Hàng" },
                 new InvoiceStatus { InvoiceStatusId = 4, InvoiceStatusName = "Delivered", Description = "Đã Giao" },
@@ -992,7 +1041,7 @@ namespace UngDungQuanLiNhaHang.Data {
                     customerId = 1,
                     InvoiceStatusId = 4,
                     PaymentMethodId = 1,
-                   AddressId = 1
+                    AddressId = 1
                 },
                 new Invoices {
                     InvoiceId = 2,
@@ -1005,14 +1054,154 @@ namespace UngDungQuanLiNhaHang.Data {
                     InvoiceStatusId = 4,
                     PaymentMethodId = 3,
                     AddressId = 1
+                }, new Invoices {
+                    InvoiceId = 3,
+                    TotalQuantity = 1,
+                    TotalAmount = 50000.0,
+                    Create_At = DateTime.UtcNow,
+                    IsPayment = true,
+                    InvoiceType = false,
+                    customerId = 1,
+                    InvoiceStatusId = 4,
+                    PaymentMethodId = 3,
+                    AddressId = 1
+                }, new Invoices {
+                    InvoiceId = 4,
+                    TotalQuantity = 1,
+                    TotalAmount = 50000.0,
+                    Create_At = DateTime.UtcNow,
+                    IsPayment = true,
+                    InvoiceType = false,
+                    customerId = 2,
+                    InvoiceStatusId = 4,
+                    PaymentMethodId = 3,
+                    AddressId = 1
+                }, new Invoices {
+                    InvoiceId = 5,
+                    TotalQuantity = 1,
+                    TotalAmount = 50000.0,
+                    Create_At = DateTime.UtcNow,
+                    IsPayment = true,
+                    InvoiceType = false,
+                    customerId = 3,
+                    InvoiceStatusId = 4,
+                    PaymentMethodId = 3,
+                    AddressId = 1
+                }, new Invoices {
+                    InvoiceId = 6,
+                    TotalQuantity = 1,
+                    TotalAmount = 50000.0,
+                    Create_At = DateTime.UtcNow,
+                    IsPayment = true,
+                    InvoiceType = false,
+                    customerId = 4,
+                    InvoiceStatusId = 4,
+                    PaymentMethodId = 3,
+                    AddressId = 1
+                }, new Invoices {
+                    InvoiceId = 7,
+                    TotalQuantity = 1,
+                    TotalAmount = 50000.0,
+                    Create_At = DateTime.UtcNow,
+                    IsPayment = true,
+                    InvoiceType = false,
+                    customerId = 5,
+                    InvoiceStatusId = 4,
+                    PaymentMethodId = 3,
+                    AddressId = 1
+                }, new Invoices {
+                    InvoiceId = 8,
+                    TotalQuantity = 1,
+                    TotalAmount = 50000.0,
+                    Create_At = DateTime.UtcNow,
+                    IsPayment = true,
+                    InvoiceType = false,
+                    customerId = 6,
+                    InvoiceStatusId = 4,
+                    PaymentMethodId = 3,
+                    AddressId = 1
+                }, new Invoices {
+                    InvoiceId = 9,
+                    TotalQuantity = 1,
+                    TotalAmount = 50000.0,
+                    Create_At = DateTime.UtcNow,
+                    IsPayment = true,
+                    InvoiceType = false,
+                    customerId = 7,
+                    InvoiceStatusId = 4,
+                    PaymentMethodId = 3,
+                    AddressId = 1
                 }
             );
+
             modelBuilder.Entity<InvoiceItems>().HasData(
                 new InvoiceItems { InvoiceItemId = 1, Quantity = 2, Price = 75000.0, ProductId = 4, InvoiceId = 1 },
                 new InvoiceItems { InvoiceItemId = 2, Quantity = 1, Price = 250000.0, ProductId = 8, InvoiceId = 1 },
                 new InvoiceItems { InvoiceItemId = 3, Quantity = 1, Price = 120000.0, ProductId = 22, InvoiceId = 2 },
-                new InvoiceItems { InvoiceItemId = 4, Quantity = 1, Price = 150000.0, ProductId = 19, InvoiceId = 2 }
+                new InvoiceItems { InvoiceItemId = 4, Quantity = 1, Price = 150000.0, ProductId = 19, InvoiceId = 2 },
+                new InvoiceItems { InvoiceItemId = 5, Quantity = 1, Price = 50000.0, ProductId = 1, InvoiceId = 3 },
+                new InvoiceItems { InvoiceItemId = 6, Quantity = 1, Price = 50000.0, ProductId = 1, InvoiceId = 4 },
+                new InvoiceItems { InvoiceItemId = 7, Quantity = 1, Price = 50000.0, ProductId = 1, InvoiceId = 5 },
+                new InvoiceItems { InvoiceItemId = 8, Quantity = 1, Price = 50000.0, ProductId = 1, InvoiceId = 6 },
+                new InvoiceItems { InvoiceItemId = 9, Quantity = 1, Price = 50000.0, ProductId = 1, InvoiceId = 7 },
+                new InvoiceItems { InvoiceItemId = 10, Quantity = 1, Price = 50000.0, ProductId = 1, InvoiceId = 8 },
+                new InvoiceItems { InvoiceItemId = 11, Quantity = 1, Price = 50000.0, ProductId = 1, InvoiceId = 9 }
             );
+
+            modelBuilder.Entity<ProductReviews>().HasData(
+                    new ProductReviews { ProductReviewId = 1, Comment ="Good", Rating = 5, Create_At = new DateTime(2025, 7, 12),  ProductId = 1, InvoiceId = 3,CustomerId = 1 },
+                    new ProductReviews { ProductReviewId = 2, Comment ="Sản phẩm tốt", Rating = 5, Create_At = new DateTime(2025, 7, 12),  ProductId = 1, InvoiceId = 4,CustomerId = 2 },
+                    new ProductReviews { ProductReviewId = 3, Comment = "5 sao", Rating = 5, Create_At = new DateTime(2025, 7, 12), ProductId = 1, InvoiceId = 5, CustomerId = 3 },
+                    new ProductReviews { ProductReviewId = 4, Comment = "Tạm ổn ", Rating = 4, Create_At = new DateTime(2025, 8, 12), ProductId = 1, InvoiceId = 6, CustomerId = 4 },
+                    new ProductReviews { ProductReviewId = 5, Comment = "Hợp khẩu vị", Rating = 4, Create_At = new DateTime(2025, 10, 12), ProductId = 1, InvoiceId = 7, CustomerId = 5 },
+                    new ProductReviews { ProductReviewId = 6, Comment = "Dở ", Rating = 1, Create_At = new DateTime(2025, 9, 12), ProductId = 1, InvoiceId = 8, CustomerId = 6 },
+                    new ProductReviews { ProductReviewId = 7, Comment = "Không ngon", Rating = 2, Create_At = new DateTime(2025, 10, 13), ProductId = 1, InvoiceId = 9, CustomerId = 7 }
+                );
+
+            modelBuilder.Entity<Tables>().HasData(
+                new Tables { TableId = 1, Capacity = 4, Status = false },
+                new Tables { TableId = 2, Capacity = 4, Status = false },
+                new Tables { TableId = 3, Capacity = 6, Status = false },
+                new Tables { TableId = 4, Capacity = 6, Status = false },
+                new Tables { TableId = 5, Capacity = 8, Status = false },
+                new Tables { TableId = 6, Capacity = 8, Status = false },
+                new Tables { TableId = 7, Capacity = 6, Status = false },
+                new Tables { TableId = 8, Capacity = 6, Status = false },
+                new Tables { TableId = 9, Capacity = 8, Status = false },
+                new Tables { TableId = 10, Capacity = 8, Status = false },
+                new Tables { TableId = 11, Capacity = 8, Status = false },
+                new Tables { TableId = 12, Capacity = 8, Status = false },
+                new Tables { TableId = 13, Capacity = 8, Status = false },
+                new Tables { TableId = 14, Capacity = 8, Status = false },
+                new Tables { TableId = 15, Capacity = 8, Status = false },
+                new Tables { TableId = 16, Capacity = 8, Status = false },
+                new Tables { TableId = 17, Capacity = 8, Status = false },
+                new Tables { TableId = 18, Capacity = 8, Status = false },
+                new Tables { TableId = 19, Capacity = 8, Status = false },
+                new Tables { TableId = 20, Capacity = 10, Status = false },
+                new Tables { TableId = 21, Capacity = 10, Status = false },
+                new Tables { TableId = 22, Capacity = 10, Status = false }
+            );
+
+            modelBuilder.Entity<BookTableStatus>().HasData(
+                new BookTableStatus { bookTableStatusId = 1, status = "Chờ Xác Nhận" },
+                new BookTableStatus { bookTableStatusId = 2, status = "Đã Xác Nhận" },
+                new BookTableStatus { bookTableStatusId = 3, status = "Hoàn Thành" },
+                new BookTableStatus { bookTableStatusId = 4, status = "Đã Hủy" }
+            );
+            modelBuilder.Entity<ProductOptions>().HasData(
+                new ProductOptions { ProductOptionId = 1, OptionName = "1 phần thịt bò ", Unit = "g", Price = 30000, OptionValue = 100, ProductId = 1,IngredientId = 1 },
+                new ProductOptions { ProductOptionId = 2, OptionName = "1 phần thịt bò ", Unit = "g", Price = 30000, OptionValue = 100, ProductId = 2, IngredientId = 1 } ,
+                new ProductOptions { ProductOptionId = 3, OptionName = "1 phần thịt mọc ", Unit = "g", Price = 30000, OptionValue = 100, ProductId = 3, IngredientId = 10 },
+                new ProductOptions { ProductOptionId = 4, OptionName = "1 phần cá đuối", Unit = "g", Price = 20000, OptionValue = 150, ProductId = 10, IngredientId = 18 },
+                new ProductOptions { ProductOptionId = 5, OptionName = "1 phần tôm sú", Unit = "g", Price = 150000, OptionValue = 100, ProductId = 9, IngredientId = 11 },
+                new ProductOptions { ProductOptionId = 6, OptionName = "1 phần mực", Unit = "g", Price = 150000, OptionValue = 100, ProductId = 9, IngredientId = 12 },
+                new ProductOptions { ProductOptionId = 7, OptionName = "1 phần bún ", Unit = "g", Price = 10000, OptionValue = 300, ProductId = 1, IngredientId = 7 },
+                new ProductOptions { ProductOptionId = 8, OptionName = "1 phần bún", Unit = "g", Price = 100000, OptionValue = 300, ProductId = 9, IngredientId = 7 }
+
+
+
+                );
         }
     }
 }

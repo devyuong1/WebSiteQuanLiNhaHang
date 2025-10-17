@@ -155,8 +155,7 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
                 priceSale = p.PriceSale,
                 sold = p.SoldCount,
                 averageRating = p.AverageRating,
-                TotalReviews = p.TotalReviews,
-                images = p.images.Select(i => i.ImagesUrl).ToList()
+                image = p.images?.FirstOrDefault()?.ImagesUrl?.ToString() ?? "/no-image.png"
             }).ToList();
             var pageResponse = new PageResponse<ProductResponse> {
                 page = productPageDTO.page,
@@ -169,12 +168,12 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
         }
 
 
-        public async Task<ApiResponse<ProductResponse>> GetProductById(int id) {
+        public async Task<ApiResponse<ProductDetailResponse>> GetProductById(int id) {
             var product = await productRepo.GetProductById2(id);
             if ( product == null ) {
-                return ApiResponse<ProductResponse>.FailResponse("Product does not exist");
+                return ApiResponse<ProductDetailResponse>.FailResponse("Product does not exist");
             }
-            ProductResponse productResponse = new ProductResponse() {
+            ProductDetailResponse productResponse = new ProductDetailResponse() {
                 productId = product.ProductId,
                 productName = product.ProductName,
                 description = product.Description,
@@ -188,7 +187,8 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
                 images = product.images.Select(i => i.ImagesUrl).ToList(),
                 recipes = product.recipes != null ? string.Join(", ", product.recipes.Select(r => $" {r.Quantity}{r.Unit} - {r.Ingredient?.IngredientName}")) : null,
                 productOptions = new List<ProductOptionResponse>(),
-                productReviews = new List<ProductReviewResponse>()
+                productReviews = new List<ProductReviewResponse>(),
+                products = new List<ProductResponse>()
             };
             foreach ( var item in product.productOptions ) {
                 if ( item != null ) {
@@ -211,7 +211,19 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
                 }
 
             }
-            return ApiResponse<ProductResponse>.SuccessResponse(productResponse, "Product retrieved successfully");
+            var productByCategoryId = await productRepo.GetProductByCategoryIdAndProductId(product.CategoryId,product.ProductId);
+            if (productByCategoryId.Count > 0) {
+                productResponse.products = productByCategoryId.Select(p => new ProductResponse {
+                    productId = p.ProductId,
+                    productName = p.ProductName,
+                    price = p.Price,
+                    priceSale = p.PriceSale,
+                    sold = p.SoldCount,
+                    averageRating = p.AverageRating,
+                    image = p.images.FirstOrDefault()?.ImagesUrl ?? "/no-image.png"
+                }).ToList();
+            }
+            return ApiResponse<ProductDetailResponse>.SuccessResponse(productResponse, "Product retrieved successfully");
         }
 
         public async Task<ApiResponse<int>> UpdateProduct(UpdateProductDTO productDTO) {
@@ -393,6 +405,57 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
                 }
                 return ApiResponse<bool>.FailResponse($"Sản phẩm đã cập nhật nhưng lỗi khi cập nhật ảnh.: {ex.Message}");
             }
+        }
+
+        public async Task<ApiResponse<List<ProductResponse>>> GetListProductTopSelling() {
+            var products = await productRepo.GetListProductTopSelling();
+            if (products.Count == 0) {
+                return ApiResponse<List<ProductResponse>>.FailResponse("Không có dữ liệu ");
+            }
+            List<ProductResponse> productResponses = products.Select(p => new ProductResponse {
+                productId = p.ProductId,
+                productName = p.ProductName,
+                price = p.Price,
+                priceSale = p.PriceSale,
+                sold = p.SoldCount,
+                averageRating = p.AverageRating,
+                image = p.images.FirstOrDefault()?.ImagesUrl ?? "/no-image.png"
+            }).ToList();
+            return ApiResponse<List<ProductResponse>>.SuccessResponse(productResponses, "Lấy thông tin thành công.");
+        }
+
+        public async  Task<ApiResponse<List<ProductResponse>>> GetListProductNews() {
+            var products = await productRepo.GetListProductNews();
+            if (products.Count == 0) {
+                return ApiResponse<List<ProductResponse>>.FailResponse("Không có dữ liệu ");
+            }
+            List<ProductResponse> productResponses = products.Select(p => new ProductResponse {
+                productId = p.ProductId,
+                productName = p.ProductName,
+                price = p.Price,
+                priceSale = p.PriceSale,
+                sold = p.SoldCount,
+                averageRating = p.AverageRating,
+                image = p.images.FirstOrDefault()?.ImagesUrl ?? "/no-image.png"
+            }).ToList();
+            return ApiResponse<List<ProductResponse>>.SuccessResponse(productResponses, "Lấy thông tin thành công.");
+        }
+
+        public async Task<ApiResponse<List<ProductResponse>>> GetProductByCategoryid(int categoryId) {
+            var products = await productRepo.GetProductByCategoryId(categoryId);
+            if ( products.Count == 0 ) {
+                return ApiResponse<List<ProductResponse>>.FailResponse("Không có dữ liệu ");
+            }
+            List<ProductResponse> productResponses = products.Select(p => new ProductResponse {
+                productId = p.ProductId,
+                productName = p.ProductName,
+                price = p.Price,
+                priceSale = p.PriceSale,
+                sold = p.SoldCount,
+                averageRating = p.AverageRating,
+                image = p.images.FirstOrDefault()?.ImagesUrl ?? "/no-image.png"
+            }).ToList();
+            return ApiResponse<List<ProductResponse>>.SuccessResponse(productResponses, "Lấy thông tin thành công.");
         }
     }
 }

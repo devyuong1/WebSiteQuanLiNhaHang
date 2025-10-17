@@ -16,6 +16,6 @@ namespace UngDungQuanLiNhaHang.Models {
         [ForeignKey("ProductId")]
 
         public Products? Products { get; set; }
-        public ICollection<CartItemOption> CartItemOptions = new List<CartItemOption>();
+        public ICollection<CartItemOption> CartItemOptions { get; set; } = new List<CartItemOption>();
     }
 }

@@ -3,18 +3,20 @@ using UngDungQuanLiNhaHang.Repository;
 using UngDungQuanLiNhaHang.RequestDTO;
 using UngDungQuanLiNhaHang.ResponseDTO;
 using UngDungQuanLiNhaHang.Services.Interfaces;
+using CartItemOption = UngDungQuanLiNhaHang.Models.CartItemOption;
 
 namespace UngDungQuanLiNhaHang.Services.Implementations {
     public class CartServices(CartRepo cartRepo,
         TransactionRepo transactionRepo,
-        ProductRepo productRepo
+        ProductRepo productRepo,
+        ProductOptionRepo productOptionRepo
         ) : ICartServices {
        
        
 
         public async Task<ApiResponse<CartResponse>> GetCartItems(int customerId) {
             var cart = await cartRepo.GetCartByCustomerId(customerId);
-            if ( cart == null || cart.TotalQuantity <= 0 ) {
+            if ( cart == null ) {
                 return ApiResponse<CartResponse>.FailResponse("Cart not found");
             }
             var cartResponse = new CartResponse {
@@ -58,7 +60,7 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
             }}
 
         public async Task<ApiResponse<bool>> UpdateCartItem(int customerId, AddItemCartDTO addItemCartDTO) {
-            var cart = await cartRepo.GetCartByCustomerId(customerId);
+            var cart = await cartRepo.GetCart(customerId);
             if ( cart == null ) {
                 return ApiResponse<bool>.FailResponse("Cart not found");
             }
@@ -71,9 +73,33 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
             try {
                 await transactionRepo.BeginTransactionAsync();
                 if ( cartItem != null ) {
-                    cartItem.Quantity = addItemCartDTO.quantity;
+                   
+                    cart.TotalAmount = cart.TotalAmount + addItemCartDTO.quantity * addItemCartDTO.price;
+                    cartItem.Quantity += addItemCartDTO.quantity;
                     cartItem.Price = addItemCartDTO.price;
-                    cart.TotalAmount = cart.TotalAmount - ( cartItem.Quantity * cartItem.Price ) + addItemCartDTO.quantity * addItemCartDTO.price;
+                    foreach ( var item in addItemCartDTO.cartItemOptions ) {
+                        var productOption = await productOptionRepo.GetById(item.productOptionId);
+                        if (productOption == null) {
+                            return ApiResponse<bool>.FailResponse("ProductOption not found");
+                        }
+                        var option = cartItem.CartItemOptions.Where(s => s.productOptionId == item.productOptionId).FirstOrDefault();
+                        if ( option != null ) {
+                            option.quantity += item.quantity;
+                            option.price = item.price;
+                        }
+
+                        else {
+                            CartItemOption cartItemOption = new() {
+                                OptionName = productOption.OptionName,
+                                price = productOption.Price,
+                                quantity = item.quantity,
+                                productOptionId = item.productOptionId,
+                                CartItemId = cartItem.CartItemId,
+                            };
+                            cartItem.CartItemOptions.Add(cartItemOption);
+                        }
+                        cart.TotalAmount += item.quantity * item.price;
+                    }
                 }
                 // neu chua co san pham trong gio hang thi them moi
                 else {
@@ -81,15 +107,33 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
                         Price = addItemCartDTO.price,
                         ProductId = addItemCartDTO.productid,
                         Quantity = addItemCartDTO.quantity,
+                        CartId = cart.CartId,
                     };
+                    foreach ( var item in addItemCartDTO.cartItemOptions ) {
+                        var productOption = await productOptionRepo.GetById(item.productOptionId);
+                        if ( productOption == null ) {
+                            return ApiResponse<bool>.FailResponse("ProductOption not found");
+                        }
+                        
+
+                        CartItemOption cartItemOption = new() {
+                            OptionName = productOption.OptionName,
+                            price = productOption.Price,
+                            quantity = item.quantity,
+                            productOptionId = item.productOptionId,
+                            CartItems = items
+                        };
+                        items.CartItemOptions.Add(cartItemOption);
+                        cart.TotalAmount += item.quantity * item.price;
+                    }
                     cart.TotalQuantity += 1;
                     cart.TotalAmount += addItemCartDTO.quantity * addItemCartDTO.price;
                     cart.CartItems.Add(items);
                 }
-                cartRepo.UpdateCart(cart);
+                
                 await transactionRepo.CompleteAsync();
                 await transactionRepo.CommitAsync();
-                return ApiResponse<bool>.SuccessResponse(true,"Update Thành Công.");
+                return ApiResponse<bool>.SuccessResponse(true,"Update Thành Công." );
             }
             catch ( Exception ex ) {
                 await transactionRepo.RollbackAsync();

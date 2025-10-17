@@ -70,7 +70,7 @@ namespace UngDungQuanLiNhaHang.Controllers
             if (!ModelState.IsValid) {
                 return BadRequest("Dữ liệu không hợp lệ ");
             }
-            var bookings = await bookTableServices.CreateBookingAsync(int.Parse(userIdClaim.ToString()), dto);
+            var bookings = await bookTableServices.CreateBookingAsync(int.Parse(userIdClaim.Value), dto);
             if (!bookings.Success) {
                 return BadRequest(bookings);
             }
@@ -82,7 +82,7 @@ namespace UngDungQuanLiNhaHang.Controllers
             var userIdClaim = User.FindFirst("UserID");
             if ( userIdClaim == null )
                 return Unauthorized("Token không hợp lệ ");
-            var bookings = await bookTableServices.CancelBookingAsync(int.Parse(userIdClaim.ToString()), bookTableId);
+            var bookings = await bookTableServices.CancelBookingAsync(int.Parse(userIdClaim.Value), bookTableId);
             if (!bookings.Success) {
                 return NotFound(bookings);
             }
@@ -94,7 +94,7 @@ namespace UngDungQuanLiNhaHang.Controllers
             var userIdClaim = User.FindFirst("UserID");
             if ( userIdClaim == null )
                 return Unauthorized("Token không hợp lệ ");
-            var bookings = await bookTableServices.GetBookingsByCustomerAsync(int.Parse(userIdClaim.ToString()));
+            var bookings = await bookTableServices.GetBookingsByCustomerAsync(int.Parse(userIdClaim.Value));
             if (!bookings.Success) {
                 return NotFound(bookings);
             }
