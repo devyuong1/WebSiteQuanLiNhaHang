@@ -49,14 +49,11 @@ namespace UngDungQuanLiNhaHang.Repository {
                        .ThenInclude(pp => pp.orderItemOptions)          
                 .ToListAsync();
         }
-
         public async Task<Invoices?> GetInvoicesByInvoicesId(int InvoicesId) {
             return await _context.invoices
                 .Include(i => i.InvoiceStatus)
-                .Include(i => i.PaymentMethod)
                 .Include(i => i.customers)
                 .Include(i => i.invoiceItems)
-               
                     .ThenInclude(ii => ii.Products)
                         .ThenInclude(ii => ii.images)
                  .Include(i => i.invoiceItems)
@@ -113,6 +110,10 @@ namespace UngDungQuanLiNhaHang.Repository {
                 .ToDictionary(d => d, d => data.FirstOrDefault(x => x.Day == d)?.Total ?? 0);
 
             return result;
+        }
+
+        public async Task<Invoices?> GetInvoiceForCart(int invoiceId) {
+            return await _context.invoices.Include(x => x.invoiceItems).FirstOrDefaultAsync(s => s.InvoiceId == invoiceId);
         }
     }
 }

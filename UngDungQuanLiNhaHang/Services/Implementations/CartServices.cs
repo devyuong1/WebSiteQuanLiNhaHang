@@ -11,8 +11,33 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
         ProductRepo productRepo,
         ProductOptionRepo productOptionRepo
         ) : ICartServices {
-       
-       
+        public async Task<ApiResponse<bool>> DeleteCartItemOption(int customerId, int cartItemId, int cartOptionId) {
+            var cart = await cartRepo.GetCartByCustomerId(customerId);
+            if ( cart == null || !cart.CartItems.Any() ) {
+                return ApiResponse<bool>.FailResponse("Giỏ hàng không tồn tại.");
+            }
+            var cartItem = cart.CartItems.FirstOrDefault(s => s.CartItemId == cartItemId);
+            if ( cartItem == null ) { 
+                return ApiResponse<bool>.FailResponse("Chi tiết giỏ hàng không tồn tại");
+            }
+            var cartOption = cartItem.CartItemOptions.FirstOrDefault( s=> s.Id == cartOptionId);
+            if ( cartOption == null ) { 
+                return ApiResponse<bool>.FailResponse("Option không tồn tại.");
+
+            }
+            try {
+                await transactionRepo.BeginTransactionAsync();
+                cart.TotalAmount -= cartOption.price * cartOption.quantity;
+                cartItem.CartItemOptions.Remove(cartOption);
+                await transactionRepo.CompleteAsync();
+                await transactionRepo.CommitAsync();
+                return ApiResponse<bool>.SuccessResponse(true,"Xóa option thành công");
+            }
+            catch ( Exception ex ) { 
+                await transactionRepo.RollbackAsync();
+                return ApiResponse<bool>.FailResponse(ex.ToString());
+            }
+        }
 
         public async Task<ApiResponse<CartResponse>> GetCartItems(int customerId) {
             var cart = await cartRepo.GetCartByCustomerId(customerId);
@@ -23,13 +48,19 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
                 cartId = cart.CartId,
                 totalAmount = cart.TotalAmount,
                 totalQuantity = cart.TotalQuantity,
-                cartItems= cart.CartItems.Select(ci => new CartItemResponse {
-                     cartItemId = ci.CartItemId,
-                     productId = ci.ProductId,
-                     productName = ci.Products!.ProductName,
-                     quantity = ci.Quantity,
-                     price = ci.Price,
-                     productImage = ci.Products.images.First().ImagesUrl
+                cartItems = cart.CartItems.Select(ci => new CartItemResponse {
+                    cartItemId = ci.CartItemId,
+                    productId = ci.ProductId,
+                    productName = ci.Products!.ProductName,
+                    quantity = ci.Quantity,
+                    price = ci.Price,
+                    productImage = ci.Products.images.First().ImagesUrl,
+                    options = ci.CartItemOptions.Select(cii => new CartItemOptionResponse {
+                        optionName = cii.OptionName,
+                        id = cii.productOptionId,
+                        price = cii.price,
+                        quantity = cii.quantity,
+                    }).ToList()
                 }).ToList()
             };
             return ApiResponse<CartResponse>.SuccessResponse(cartResponse);
@@ -126,7 +157,7 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
                         items.CartItemOptions.Add(cartItemOption);
                         cart.TotalAmount += item.quantity * item.price;
                     }
-                    cart.TotalQuantity += 1;
+                    
                     cart.TotalAmount += addItemCartDTO.quantity * addItemCartDTO.price;
                     cart.CartItems.Add(items);
                 }
@@ -139,6 +170,58 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
                 await transactionRepo.RollbackAsync();
                 return ApiResponse<bool>.FailResponse(ex.Message);
             }
+        }
+
+        public async Task<ApiResponse<bool>> UpdateQuantityCartItem(int customerId, int cartItemId, int quantity) {
+            var cart = await cartRepo.GetCart(customerId);
+            if ( cart == null || !cart.CartItems.Any()) { 
+                return ApiResponse<bool>.FailResponse("Lỗi dữ liệu.");
+            }
+            var cartItem = cart.CartItems.FirstOrDefault(s => s.CartItemId == cartItemId);
+            if ( cartItem == null ) {
+                return ApiResponse<bool>.FailResponse("Không có sản phẩm trong giỏ hàng");
+            }
+            try {
+
+                cart.TotalAmount = cart.TotalAmount - cartItem.Quantity * cartItem.Price + cartItem.Price * quantity;
+                cartItem.Quantity = quantity;
+                await transactionRepo.BeginTransactionAsync();
+                await transactionRepo.CompleteAsync();
+                await transactionRepo.CommitAsync();
+                return ApiResponse<bool>.SuccessResponse(true, "Cập nhật số lượng thành công.");
+            }
+            catch ( Exception ex ) {
+                await transactionRepo.RollbackAsync();
+                return ApiResponse<bool>.FailResponse(ex.ToString());
+            }
+        }
+
+        public async Task<ApiResponse<bool>> UpdateQuantityCartOption(int customerId, int cartItemId, int cartOptionId, int quantity) {
+
+            var cart = await cartRepo.GetCart(customerId);
+            if ( cart == null || !cart.CartItems.Any() )
+                return ApiResponse<bool>.FailResponse(" Cart không tồn tại.");
+            var cartItem = cart.CartItems.FirstOrDefault( s => s.CartItemId == cartItemId);
+            if ( cartItem == null ) 
+                return ApiResponse<bool>.FailResponse("CartItem không tồn tại."); 
+
+            var cartOption = await cartRepo.GetCartItemOption(cartItemId,cartOptionId);
+            if ( cartOption == null )
+                return ApiResponse<bool>.FailResponse("Option không tồn tại.");
+            try {
+                await transactionRepo.BeginTransactionAsync();
+                cart.TotalAmount += ( quantity - cartOption.quantity ) * cartOption.price;
+                cartOption.quantity = quantity;
+                await transactionRepo.CompleteAsync();
+                await transactionRepo.CommitAsync();
+
+                return ApiResponse<bool>.SuccessResponse(true,"Cập nhật thành công.");
+            }
+            catch ( Exception ex ) { 
+                await transactionRepo.RollbackAsync();
+                return ApiResponse<bool>.FailResponse("Cập nhật thất bại.");
+            }
+
         }
     }
 }

@@ -4,10 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Linq;
+
 using System.Threading.Tasks;
-using UngDungQuanLiNhaHang.Data;
-using UngDungQuanLiNhaHang.Models;
 using UngDungQuanLiNhaHang.RequestDTO;
 using UngDungQuanLiNhaHang.ResponseDTO;
 using UngDungQuanLiNhaHang.Services.Interfaces;
@@ -30,7 +28,7 @@ namespace UngDungQuanLiNhaHang.Controllers
                 return BadRequest("Dữ liệu không hợp lệ");
             }
 
-            var response = await invoiceServices.CreateInvoiceForOnline(int.Parse(userIdClaim.Value), invoiceDTO);
+            var response = await invoiceServices.CreateInvoiceForOnline(int.Parse(userIdClaim.Value), invoiceDTO,HttpContext);
             if (!response.Success) {
                 return BadRequest(response);
             }
@@ -54,6 +52,7 @@ namespace UngDungQuanLiNhaHang.Controllers
         }
         [HttpGet("GetInvoicesByCustomerId")]
         [Authorize(Roles = "Customer")]
+
         public async Task<ActionResult<ApiResponse<List<InvoiceForCustomerResponse>>>> GetInvoicesByCustomerId() {
             var userIdClaim = User.FindFirst("UserID");
 

@@ -14,6 +14,7 @@ namespace UngDungQuanLiNhaHang.Repository {
             await _context.customers.AddAsync(customer);
 
         }
+        
         public async Task<Customers?> GetCustomerByEmail(string email) {
             return await _context.customers
                 .Include(c => c.Role)
@@ -43,6 +44,10 @@ namespace UngDungQuanLiNhaHang.Repository {
         }
         public void  UpdateCustomer(Customers customer) {
               _context.customers.Update(customer);
+        }
+
+        public async Task<AddressCustomer?> GetAddressById(int customerid,int addressId) {
+            return await _context.addressCustomers.Include(s => s.Address).FirstOrDefaultAsync(s => s.CustomerId == customerid && s.AddressId == addressId);
         }
     }
 }

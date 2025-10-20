@@ -6,5 +6,8 @@ namespace UngDungQuanLiNhaHang.Repository {
         public async Task<ProductOptions?> GetById(int id) {
             return await _context.productOptions.FindAsync(id);
         }
+        public void Update(ProductOptions options) {
+            _context.productOptions.Update(options);
+        }
     }
 }

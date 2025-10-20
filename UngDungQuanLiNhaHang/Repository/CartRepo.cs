@@ -28,6 +28,23 @@ namespace UngDungQuanLiNhaHang.Repository {
             await _context.carts.AddAsync(cart);
         }
 
-        
+        public async Task<CartItemOption?> GetCartItemOption(int cartItemId,int cartOptionId) {
+            return await _context.cartItemOptions.FirstOrDefaultAsync(s => s.Id == cartOptionId && s.CartItemId == cartItemId);
+        }
+        public void deleteItem(CartItems item) {
+            _context.cartItems.Remove(item);
+        }
+        public async Task<CartItems?> GetCartItemById(int id) {
+            return await _context.cartItems.FirstOrDefaultAsync(s => s.CartItemId == id);
+        }
+        public async Task<CartItems?> GetCartItemByProductIdAndCartId(int cartID, int productId) {
+            return await _context.cartItems.FirstOrDefaultAsync(s => s.CartId == cartID && s.ProductId == productId);
+        }
+        public void DeleteCartItems(List<CartItems> cartItems) {
+            _context.cartItems.RemoveRange(cartItems);
+        }
+        public async Task<Carts?> getCartByCustomerId(int customerId) {
+            return await _context.carts.Include(c => c.CartItems).FirstOrDefaultAsync(s => s.CustomerId == customerId);
+        }
     }
 }

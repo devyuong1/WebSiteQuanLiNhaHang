@@ -7,6 +7,6 @@ namespace UngDungQuanLiNhaHang.ResponseDTO {
         public double price { get; set; }
         public int productId { get; set; }
 
-        public List<ProductOptionsDTO> productOptions { get; set; } = new List<ProductOptionsDTO>();
+        public List<OrderItemOptionDTO> orderOptions { get; set; } = new List<OrderItemOptionDTO>();
     }
 }

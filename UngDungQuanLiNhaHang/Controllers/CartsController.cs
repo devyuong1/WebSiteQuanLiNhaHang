@@ -40,9 +40,9 @@ namespace UngDungQuanLiNhaHang.Controllers
             return Ok(cart);
         }
         // PUT: api/Carts/5
-        [HttpPut]
+        [HttpDelete("DeleteCartItem")]
         [Authorize]
-        public async Task<IActionResult> DeleteProduct(int cartItemId)
+        public async Task<ActionResult<ApiResponse<bool>>> DeleteCartItem(int cartItemId)
         {
             var userIdClaim = User.FindFirst("UserID");
 
@@ -69,6 +69,57 @@ namespace UngDungQuanLiNhaHang.Controllers
             int customerId = int.Parse(userIdClaim.Value);
             var result = await cartServices.UpdateCartItem(customerId, addItemCartDTO);
             if (result.Success)
+                return Ok(result);
+            return BadRequest(result);
+        }
+        [HttpPut("UpdateQuantityCartItem")]
+        [Authorize]
+        public async Task<ActionResult<ApiResponse<bool>>> UpdateQuantityCartItem(int cartItemId, int quantity) {
+            if ( cartItemId <= 0  || quantity <=0) {
+                return BadRequest(ApiResponse<bool>.FailResponse("Dữ liệu không hợp lệ."));
+            }
+            var userIdClaim = User.FindFirst("UserID");
+
+            if ( userIdClaim == null )
+                return Unauthorized(ApiResponse<bool>.FailResponse("Token không hợp lệ hoặc thiếu thông tin UserID."));
+
+            int customerId = int.Parse(userIdClaim.Value);
+            var result = await cartServices.UpdateQuantityCartItem(customerId, cartItemId, quantity);
+            if ( result.Success )
+                return Ok(result);
+            return BadRequest(result);
+        }
+        [HttpPut("UpdateQuantityCartOption")]
+        [Authorize]
+        public async Task<ActionResult<ApiResponse<bool>>> UpdateQuantityCartOption( int cartItemId, int cartOptionId, int quantity) {
+            if ( cartItemId <= 0 || quantity <= 0 || cartOptionId  <=0) {
+                return BadRequest(ApiResponse<bool>.FailResponse("Dữ liệu không hợp lệ."));
+            }
+            var userIdClaim = User.FindFirst("UserID");
+
+            if ( userIdClaim == null )
+                return Unauthorized(ApiResponse<bool>.FailResponse("Token không hợp lệ hoặc thiếu thông tin UserID."));
+
+            int customerId = int.Parse(userIdClaim.Value);
+            var result = await cartServices.UpdateQuantityCartOption(customerId, cartItemId, cartOptionId, quantity);
+            if ( result.Success )
+                return Ok(result);
+            return BadRequest(result);
+        }
+        [HttpDelete("DeleteCartItemOption")]
+        [Authorize]
+        public async Task<ActionResult<ApiResponse<bool>>> DeleteCartItemOption( int cartItemId, int cartOptionId) {
+            if ( cartItemId <= 0 || cartOptionId <= 0 ) {
+                return BadRequest(ApiResponse<bool>.FailResponse("Dữ liệu không hợp lệ."));
+            }
+            var userIdClaim = User.FindFirst("UserID");
+
+            if ( userIdClaim == null )
+                return Unauthorized(ApiResponse<bool>.FailResponse("Token không hợp lệ hoặc thiếu thông tin UserID."));
+
+            int customerId = int.Parse(userIdClaim.Value);
+            var result = await cartServices.DeleteCartItemOption(customerId, cartItemId, cartOptionId);
+            if ( result.Success )
                 return Ok(result);
             return BadRequest(result);
         }

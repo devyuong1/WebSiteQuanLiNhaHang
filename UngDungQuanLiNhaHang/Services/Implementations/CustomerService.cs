@@ -112,12 +112,12 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
             return ApiResponse<bool>.FailResponse("Address is exist");
         }
 
-        public async Task<ApiResponse<bool>> UpdateCustomer(int customerID, CustomerDTO customer) {
+        public async Task<ApiResponse<bool>> UpdateCustomer(int customerID, UpdateUserDTO customer) {
             var existingCustomer = await customerRepo.GetCustomerById(customerID);
             if ( existingCustomer == null )
                 return ApiResponse<bool>.FailResponse("Customer not found");
-            existingCustomer.FullName = customer.FullName;
-            existingCustomer.Phone = customer.Phone;
+            existingCustomer.FullName = customer.fullName;
+            existingCustomer.Phone = customer.phone;
 
             try {
                 await transactionRepo.BeginTransactionAsync();
@@ -227,6 +227,42 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
                 await transactionRepo.RollbackAsync();
                 return ApiResponse<bool>.FailResponse("Change password failed. Error: " + ex.ToString());
             }
+        }
+
+        public async Task<ApiResponse<AddressResponse>> GetAddressDefault(int customerId) {
+            var customer = await customerRepo.GetCustomerForAddress(customerId);
+            if ( customer == null || !customer.AddressCustomers.Any() ) { return ApiResponse<AddressResponse>.FailResponse("Error1"); }
+            var address = customer.AddressCustomers.Where( s => s.Address != null && s.Address.IsDefault == true ).FirstOrDefault();
+            if ( address == null || address.Address == null )
+                return ApiResponse<AddressResponse>.FailResponse("Error2");
+
+            AddressResponse addressResponse = new() {
+                addressId = address.AddressId,
+                province = address.Address.Province,
+                district = address.Address.District,
+                hamlet = address.Address.Hamlet,
+                street = address.Address.Street,
+                houseNumber = address.Address.HouseNumber,
+                isDefault = address.Address.IsDefault,
+            };
+            return ApiResponse<AddressResponse>.SuccessResponse(addressResponse);
+        }
+
+        public async Task<ApiResponse<AddressResponse>> GetAddressByIdt(int customerId, int addressId) {
+            var result = await customerRepo.GetAddressById(customerId, addressId);
+            if ( result == null || result.Address == null ) {
+                return ApiResponse<AddressResponse>.FailResponse("Address not found.");
+            }
+            AddressResponse addressResponse = new AddressResponse() {
+                addressId = addressId,
+                province = result.Address.Province,
+                district= result.Address.District,
+                hamlet= result.Address.Hamlet,
+                street = result.Address.Street,
+                houseNumber = result.Address.HouseNumber,
+                isDefault = result.Address.IsDefault,
+            };
+            return ApiResponse<AddressResponse> .SuccessResponse(addressResponse);
         }
     }
 }

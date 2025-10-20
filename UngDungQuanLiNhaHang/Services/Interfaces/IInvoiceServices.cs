@@ -4,7 +4,7 @@ using UngDungQuanLiNhaHang.ResponseDTO;
 namespace UngDungQuanLiNhaHang.Services.Interfaces {
     public interface IInvoiceServices {
         // khach hàng tạo hóa đơn online để thanh toán
-        Task<ApiResponse<InvoideForPaymentResponse>> CreateInvoiceForOnline(int customerId, InvoiceDTO InvoiceDTO);
+        Task<ApiResponse<InvoideForPaymentResponse>> CreateInvoiceForOnline(int customerId, InvoiceDTO InvoiceDTO, HttpContext httpContext);
         Task<ApiResponse<bool>> CreateInvoiceCustomer(int customerId, InvoiceDTO InvoiceDTO);
 
         // trả về danh sách hóa đơn của người dùng 
@@ -29,6 +29,10 @@ namespace UngDungQuanLiNhaHang.Services.Interfaces {
         Task<ApiResponse<InvoiceForAdminResponse>> GetInvoiceById(int invoiceId);
         Task<ApiResponse<RevenueDayResponse>> GetRevenueByDay(DateTime date);
         Task<ApiResponse<RevenueMonth>> GetRevenueByMonth( int year);
+
+        // he thong
+        Task<ApiResponse<bool>> UpdatePayMent(int invoiceId);
+        Task<ApiResponse<bool>> DeleteCartByInvoiceId(int invoiceId);
         
     }
 }

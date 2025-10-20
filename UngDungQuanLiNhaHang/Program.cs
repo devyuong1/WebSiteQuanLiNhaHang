@@ -12,6 +12,7 @@ using UngDungQuanLiNhaHang.Services.Implementations;
 using UngDungQuanLiNhaHang.Services.Interfaces;
 using Hangfire;
 using Hangfire.SqlServer;
+using UngDungQuanLiNhaHang.Controllers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -128,6 +129,8 @@ builder.Services.AddScoped<PurchaseInvoiceRepo>();
 builder.Services.AddScoped<IPurchaseInvoiceServices, PurchaseInvoiceServices>();
 builder.Services.AddScoped<HandlerFiles>();
 builder.Services.AddScoped<Logger<ProductServices>>();
+builder.Services.AddScoped<Logger<VnPayController>>();
+
 builder.Services.AddScoped<SupplierRepo>();
 builder.Services.AddScoped<ISupplierServices, SupplierServices>();
 
@@ -139,6 +142,8 @@ builder.Services.AddScoped<IInvoiceServices, InvoiceService>();
 
 builder.Services.AddScoped<ProductReviewRepo>();
 builder.Services.AddScoped<IProductReviewService, ProductReviewService>();
+builder.Services.AddScoped<IVnPayService, VpPayService>();
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAllOrigins",

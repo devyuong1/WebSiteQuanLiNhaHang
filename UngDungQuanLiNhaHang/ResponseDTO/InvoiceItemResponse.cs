@@ -5,6 +5,6 @@
         public int quantity { get; set; }
         public double price { get; set; }
         
-        public List<ProductOptionResponse> productOptions { get; set; } = new List<ProductOptionResponse>();
+        public List<InvoiceItemOptionRespon> options { get; set; } = new List<InvoiceItemOptionRespon>();
     }
 }

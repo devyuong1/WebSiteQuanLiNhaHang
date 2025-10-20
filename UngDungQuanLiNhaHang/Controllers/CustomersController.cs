@@ -22,7 +22,7 @@ namespace UngDungQuanLiNhaHang.Controllers
         
 
         // GET: api/Customers/5
-        [HttpGet]
+        [HttpGet("GetCustomers")]
         [Authorize( Roles = "Customer")]
         public async Task<ActionResult<ApiResponse<CustomerResponse>>> GetCustomers()
         {
@@ -36,7 +36,7 @@ namespace UngDungQuanLiNhaHang.Controllers
 
             if (!customers.Success)
             {
-                return NotFound(customers);
+                return NotFound(customerId);
             }
 
             return Ok(customers);
@@ -44,13 +44,13 @@ namespace UngDungQuanLiNhaHang.Controllers
         [HttpPut("PutCustomers")]
         [Authorize(Roles = "Customer")]
 
-        public async Task<IActionResult> PutCustomers([FromBody] CustomerDTO customer)
+        public async Task<ActionResult<ApiResponse<bool>>> PutCustomers([FromBody] UpdateUserDTO customer)
         {
 
             var userIdClaim = User.FindFirst("UserID");
 
             if ( userIdClaim == null )
-                return Unauthorized("Token không hợp lệ hoặc thiếu thông tin UserID.");
+                return Unauthorized(ApiResponse<bool>.FailResponse("Token không hợp lệ hoặc thiếu thông tin UserID."));
 
             int customerId = int.Parse(userIdClaim.Value);
             var result = await customerServices.UpdateCustomer(customerId,customer);
@@ -63,11 +63,11 @@ namespace UngDungQuanLiNhaHang.Controllers
         [HttpPut("UpdateAddress")]
         [Authorize(Roles = "Customer")]
 
-        public async Task<IActionResult> PutAddress([FromBody]  AddressDTO address)
+        public async Task<ActionResult<ApiResponse<bool>>> PutAddress([FromBody]  AddressDTO address)
         {
             var userIdClaim = User.FindFirst("UserID");
             if ( userIdClaim == null )
-                return Unauthorized("Token không hợp lệ hoặc thiếu thông tin UserID.");
+                return Unauthorized(ApiResponse<bool>.FailResponse("Token không hợp lệ hoặc thiếu thông tin UserID."));
 
             int customerId = int.Parse(userIdClaim.Value);
             var result = await customerServices.UpdateAddress(customerId, address);
@@ -80,12 +80,12 @@ namespace UngDungQuanLiNhaHang.Controllers
         [HttpPost("AddAddress")]
         [Authorize(Roles = "Customer")]
 
-        public async Task<IActionResult> AddAddress([FromBody] AddressDTO address)
+        public async Task<ActionResult<ApiResponse<bool>>> AddAddress([FromBody] AddressDTO address)
         {
             var userIdClaim = User.FindFirst("UserID");
 
             if ( userIdClaim == null )
-                return Unauthorized("Token không hợp lệ hoặc thiếu thông tin UserID.");
+                return Unauthorized(ApiResponse<bool>.FailResponse("Token không hợp lệ hoặc thiếu thông tin UserID."));
 
             int customerId = int.Parse(userIdClaim.Value);
             var result = await customerServices.AddAddress(customerId,address);
@@ -99,13 +99,13 @@ namespace UngDungQuanLiNhaHang.Controllers
         [Authorize(Roles = "Customer")]
 
 
-        public async Task<IActionResult> ChangePassword([FromBody] ChangePassword changePasswordDTO)
+        public async Task<ActionResult<ApiResponse<bool>>> ChangePassword([FromBody] ChangePassword changePasswordDTO)
 
         {
             var userIdClaim = User.FindFirst("UserID");
 
             if ( userIdClaim == null )
-                return Unauthorized("Token không hợp lệ hoặc thiếu thông tin UserID.");
+                return Unauthorized(ApiResponse<bool>.FailResponse("Token không hợp lệ hoặc thiếu thông tin UserID."));
 
             int customerId = int.Parse(userIdClaim.Value);
             var result = await customerServices.ChangePassword(customerId, changePasswordDTO.OldPassword, changePasswordDTO.NewPassword);
@@ -118,12 +118,12 @@ namespace UngDungQuanLiNhaHang.Controllers
         [HttpPost("DeleteAddress")]
         [Authorize(Roles = "Customer")]
 
-        public async Task<IActionResult> DeleteAddress([FromBody] AddressCustomerDTO addressCustomerDTO)
+        public async Task<ActionResult<ApiResponse<bool>>> DeleteAddress([FromBody] AddressCustomerDTO addressCustomerDTO)
         {
             var userIdClaim = User.FindFirst("UserID");
 
             if ( userIdClaim == null )
-                return Unauthorized("Token không hợp lệ hoặc thiếu thông tin UserID.");
+                return Unauthorized(ApiResponse<bool>.FailResponse("Token không hợp lệ hoặc thiếu thông tin UserID."));
 
             int customerId = int.Parse(userIdClaim.Value);
             var result = await customerServices.DeleteAddress(customerId, addressCustomerDTO.addressId);
@@ -136,12 +136,12 @@ namespace UngDungQuanLiNhaHang.Controllers
         [HttpPost("SetDefaultAddress")]
         [Authorize(Roles = "Customer")]
 
-        public async Task<IActionResult> SetDefaultAddress([FromBody] AddressCustomerDTO addressCustomerDTO)
+        public async Task<ActionResult<ApiResponse<bool>>> SetDefaultAddress([FromBody] AddressCustomerDTO addressCustomerDTO)
         {
             var userIdClaim = User.FindFirst("UserID");
 
             if ( userIdClaim == null )
-                return Unauthorized("Token không hợp lệ hoặc thiếu thông tin UserID.");
+                return Unauthorized(ApiResponse<bool>.FailResponse("Token không hợp lệ hoặc thiếu thông tin UserID."));
 
             int customerId = int.Parse(userIdClaim.Value);
             var result = await customerServices.SetDefaultAddress(customerId, addressCustomerDTO.addressId);
@@ -151,7 +151,35 @@ namespace UngDungQuanLiNhaHang.Controllers
             }
             return Ok(result);
         }
+        [HttpGet("GetAddressDefault")]
+        [Authorize(Roles = "Customer")]
+        public async Task <ActionResult<ApiResponse<AddressResponse>>> GetAddressDefault() {
+            var userIdClaim = User.FindFirst("UserID");
 
+            if ( userIdClaim == null )
+                return Unauthorized(ApiResponse<bool>.FailResponse("Token không hợp lệ hoặc thiếu thông tin UserID."));
 
+            int customerId = int.Parse(userIdClaim.Value);
+            var result = await customerServices.GetAddressDefault(customerId);
+            if ( !result.Success ) {
+                return BadRequest(result);
+            }
+            return Ok(result);
+        }
+        [HttpGet("GetAddressById")]
+        [Authorize(Roles = "Customer")]
+        public async Task<ActionResult<ApiResponse<AddressResponse>>> GetAddressById(int addressId) {
+            var userIdClaim = User.FindFirst("UserID");
+
+            if ( userIdClaim == null )
+                return Unauthorized(ApiResponse<bool>.FailResponse("Token không hợp lệ hoặc thiếu thông tin UserID."));
+
+            int customerId = int.Parse(userIdClaim.Value);
+            var result = await customerServices.GetAddressByIdt(customerId, addressId);
+            if ( !result.Success ) {
+                return BadRequest(result);
+            }
+            return Ok(result);
+        }
     }
 }

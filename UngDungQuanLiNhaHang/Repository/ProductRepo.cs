@@ -88,5 +88,8 @@ namespace UngDungQuanLiNhaHang.Repository {
                 .Take(12)
                 .ToListAsync();
         }
+        public void UpdateProduct(Products products) {
+            _context.products.Update(products);
+        }
     }
 }

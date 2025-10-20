@@ -22,8 +22,8 @@ namespace UngDungQuanLiNhaHang.Repository {
             }
         }
 
-        public async Task<int> CompleteAsync() {
-            return await _context.SaveChangesAsync();
+        public async Task CompleteAsync() {
+            await _context.SaveChangesAsync();
         }
 
     }
