@@ -18,6 +18,10 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
                 return ApiResponse<bool>.FailResponse("Dữ liệu không hợp lệ");
 
             }
+            var productReview = await repo.GetProductReviewByProductIdAndInvoiceId(productReviewDTO.invoiceId, productReviewDTO.productId);
+            if (productReview != null) {
+                return ApiResponse<bool>.FailResponse("Sản phẩm đã được đánh giá rồi.");
+            }
             var productInInvoice = invoice.invoiceItems.FirstOrDefault(ii => ii.ProductId == productReviewDTO.productId);
             if ( productInInvoice == null ) {
                 return ApiResponse<bool>.FailResponse("Dữ liệu không hợp lệ");
@@ -26,6 +30,7 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
             if ( product == null ) {
                 return ApiResponse<bool>.FailResponse("Sản phẩm không tồn tại");
             }
+
 
             ProductReviews productReviews = new ProductReviews {
                 Rating = productReviewDTO.rating,
@@ -80,6 +85,22 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
                 await transactionRepo.RollbackAsync();
                 return ApiResponse<bool>.FailResponse("Xóa đánh giá thất bại" + ex.ToString());
             }
+        }
+
+        public async Task<ApiResponse<ProductReviewResponse>> GetProductReviewByInvoiIdAndProductId(int invoiceId, int productId) {
+            var result = await repo.GetProductReviewByProductIdAndInvoiceId(invoiceId, productId);
+            if (result == null ) {
+                return ApiResponse<ProductReviewResponse>.FailResponse("Chưa có đánh giá.");
+            }
+            ProductReviewResponse respon = new() {
+                rating = result.Rating,
+                productReviewId = result.ProductReviewId,
+                comment = result.Comment,
+                create_At = result.Create_At,
+                userName = "",
+            };
+            return ApiResponse<ProductReviewResponse>.SuccessResponse(respon);
+           
         }
 
         public async Task<ApiResponse<bool>> UpdateProductReview(int customerId, ProductReviewDTO productReviewDTO) {

@@ -246,7 +246,7 @@ namespace UngDungQuanLiNhaHang.Data {
             modelBuilder.Entity<PaymentMethod>().HasData(
                     new PaymentMethod { PaymentMethodId = 1, PaymentMethodName = "VNPay" },
                     new PaymentMethod { PaymentMethodId = 2, PaymentMethodName = "MoMo" },
-                    new PaymentMethod { PaymentMethodId = 3, PaymentMethodName = "Thahh Toán Khi Nhận Hàng" }
+                    new PaymentMethod { PaymentMethodId = 3, PaymentMethodName = "Thanh toán khi nhận hàng" }
                 );
 
             modelBuilder.Entity<Customers>().HasData(
@@ -353,18 +353,22 @@ namespace UngDungQuanLiNhaHang.Data {
                 new Ingredient {
                     IngredientId = 1,
                     IngredientName = "Thịt Bò",
-                    Quantity = 10000,
+                    Quantity = 10,
                     MinQuantity = 1.0,
                     Price = 200000.0,
-                    Unit = "g"
+                    Unit = "kg",
+                    UsageUnit = "g",
+                    ConversionRate = 1000
                 },
                 new Ingredient {
                     IngredientId = 2,
                     IngredientName = "Bánh Phở",
-                    Quantity = 40000,
+                    Quantity = 40,
                     MinQuantity = 1.0,
                     Price = 30000.0,
-                    Unit = "g"
+                    Unit = "kg",
+                    UsageUnit = "g",
+                    ConversionRate = 1000
                 },
                 new Ingredient {
                     IngredientId = 3,
@@ -372,7 +376,9 @@ namespace UngDungQuanLiNhaHang.Data {
                     Quantity = 10,
                     MinQuantity = 1.0,
                     Price = 10000,
-                    Unit = "lít"
+                    Unit = "lít",
+                    UsageUnit = "ml",
+                    ConversionRate = 10
                 },
                 new Ingredient {
                     IngredientId = 4,
@@ -380,151 +386,189 @@ namespace UngDungQuanLiNhaHang.Data {
                     Quantity = 10,
                     MinQuantity = 1.0,
                     Price = 10000,
-                    Unit = "lít"
+                    Unit = "lít",
+                    UsageUnit = "ml",
+                    ConversionRate = 10
                 },
                 new Ingredient {
                     IngredientId = 5,
                     IngredientName = "Giò Heo ",
-                    Quantity = 30000,
+                    Quantity = 30,
                     MinQuantity = 1.0,
                     Price = 120000,
-                    Unit = "g"
+                    Unit = "kg",
+                    UsageUnit = "g",
+                    ConversionRate = 1000
                 },
                 new Ingredient {
                     IngredientId = 6,
                     IngredientName = "Huyết Heo",
-                    Quantity = 20000,
+                    Quantity = 20,
                     MinQuantity = 1.0,
                     Price = 100000,
-                    Unit = "g"
+                    Unit = "kg",
+                    UsageUnit = "g",
+                    ConversionRate = 1000
                 },
                 new Ingredient {
                     IngredientId = 7,
                     IngredientName = "Bún",
-                    Quantity = 20000,
+                    Quantity = 20,
                     MinQuantity = 1.0,
                     Price = 15000,
-                    Unit = "g"
+                    Unit = "kg",
+                    UsageUnit = "g",
+                    ConversionRate = 1000
                 },
                 new Ingredient {
                     IngredientId = 8,
                     IngredientName = "Chả Lụa",
-                    Quantity = 2000,
+                    Quantity = 20,
                     MinQuantity = 1.0,
                     Price = 100000,
-                    Unit = "g"
+                    Unit = "kg",
+                    UsageUnit = "g",
+                    ConversionRate = 1000
                 },
                 new Ingredient {
                     IngredientId = 9,
                     IngredientName = "Thịt Heo",
-                    Quantity = 50000,
+                    Quantity = 50,
                     MinQuantity = 1.0,
                     Price = 200000,
-                    Unit = "g"
+                    Unit = "kg",
+                    UsageUnit = "g",
+                    ConversionRate = 1000
                 },
                 new Ingredient {
                     IngredientId = 10,
                     IngredientName = "Mọc",
-                    Quantity = 20000,
+                    Quantity = 5,
                     MinQuantity = 1.0,
                     Price = 150000,
-                    Unit = "g"
+                    Unit = "kg",
+                    UsageUnit = "g",
+                    ConversionRate = 1000
                 },
                 new Ingredient {
                     IngredientId = 11,
                     IngredientName = "Mực",
-                    Quantity = 20000,
+                    Quantity = 5,
                     MinQuantity = 1.0,
                     Price = 250000,
-                    Unit = "g"
+                    Unit = "kg",
+                    UsageUnit = "g",
+                    ConversionRate = 1000
                 },
                 new Ingredient {
                     IngredientId = 12,
                     IngredientName = "Tôm sú",
-                    Quantity = 40000,
+                    Quantity = 40,
                     MinQuantity = 1.0,
                     Price = 250000,
-                    Unit = "g"
+                    Unit = "kg",
+                    UsageUnit = "g",
+                    ConversionRate = 1000
                 },
                 new Ingredient {
                     IngredientId = 13,
                     IngredientName = "Tôm Hùm",
-                    Quantity = 30000,
+                    Quantity = 30,
                     MinQuantity = 1.0,
                     Price = 450000,
-                    Unit = "g"
+                    Unit = "kg",
+                    UsageUnit = "g",
+                    ConversionRate = 1000
                 },
                 new Ingredient {
                     IngredientId = 14,
                     IngredientName = "Cua",
-                    Quantity = 300000,
+                    Quantity = 30,
                     MinQuantity = 1.0,
                     Price = 350000,
-                    Unit = "g"
+                    Unit = "kg",
+                    UsageUnit = "g",
+                    ConversionRate = 1000
                 },
                 new Ingredient {
                     IngredientId = 15,
                     IngredientName = "Ghẹ",
-                    Quantity = 30000,
+                    Quantity = 30,
                     MinQuantity = 1.0,
                     Price = 300000,
-                    Unit = "g"
+                    Unit = "kg",
+                    UsageUnit = "g",
+                    ConversionRate = 1000
                 },
                 new Ingredient {
                     IngredientId = 16,
                     IngredientName = "Bơ",
-                    Quantity = 30000,
+                    Quantity = 3,
                     MinQuantity = 1.0,
                     Price = 100000,
-                    Unit = "g"
+                    Unit = "kg",
+                    UsageUnit = "g",
+                    ConversionRate = 1000
                 },
                 new Ingredient {
                     IngredientId = 17,
                     IngredientName = "Phô mai",
-                    Quantity = 3000,
+                    Quantity = 3,
                     MinQuantity = 1.0,
                     Price = 100000,
-                    Unit = "g"
+                    Unit = "kg",
+                    UsageUnit = "g",
+                    ConversionRate = 1000
                 },
                 new Ingredient {
                     IngredientId = 18,
                     IngredientName = "Cá Đuối",
-                    Quantity = 30000,
+                    Quantity = 30,
                     MinQuantity = 1.0,
                     Price = 100000,
-                    Unit = "g"
+                    Unit = "kg",
+                    UsageUnit = "g",
+                    ConversionRate = 1000
                 },
                 new Ingredient {
                     IngredientId = 19,
                     IngredientName = "Măng Chua",
-                    Quantity = 30000,
+                    Quantity = 3,
                     MinQuantity = 1.0,
                     Price = 100000,
-                    Unit = "g"
+                    Unit = "kg",
+                    UsageUnit = "g",
+                    ConversionRate = 1000
                 },
                 new Ingredient {
                     IngredientId = 20,
                     IngredientName = "Hàu",
-                    Quantity = 200000,
+                    Quantity = 20,
                     MinQuantity = 5,
-                    Price = 800000,
-                    Unit = "g"
+                    Price = 80000,
+                    Unit = "kg",
+                    UsageUnit = "g",
+                    ConversionRate = 1000
                 },
                 new Ingredient {
                     IngredientId = 21,
                     IngredientName = "Óc móng tay",
-                    Quantity = 200000,
+                    Quantity = 2,
                     MinQuantity = 5,
                     Price = 100000,
-                    Unit = "g"
+                    Unit = "kg",
+                    UsageUnit = "g",
+                    ConversionRate = 1000
                 },
                 new Ingredient {
                     IngredientId = 22,
                     IngredientName = "Miến",
-                    Quantity = 200000,
+                    Quantity = 20,
                     MinQuantity = 5,
                     Price = 50000,
-                    Unit = "g"
+                    Unit = "kg",
+                    UsageUnit = "g",
+                    ConversionRate = 1000
                 },
                 new Ingredient {
                     IngredientId = 23,
@@ -532,23 +576,29 @@ namespace UngDungQuanLiNhaHang.Data {
                     Quantity = 20,
                     MinQuantity = 2,
                     Price = 100000,
-                    Unit = "trứng"
+                    Unit = "khay",
+                    UsageUnit = "quả",
+                    ConversionRate = 30 
                 },
                 new Ingredient {
                     IngredientId = 24,
                     IngredientName = "Ốc Hương",
-                    Quantity = 20000,
+                    Quantity = 20,
                     MinQuantity = 2,
                     Price = 200000,
-                    Unit = "g"
+                    Unit = "kg",
+                    UsageUnit = "g",
+                    ConversionRate = 1000
                 },
                 new Ingredient {
                     IngredientId = 25,
                     IngredientName = "Gạo",
-                    Quantity = 20000,
+                    Quantity = 200,
                     MinQuantity = 2,
                     Price = 20000,
-                    Unit = "g"
+                    Unit = "kg",
+                    UsageUnit = "g",
+                    ConversionRate = 1000
                 },
                 new Ingredient {
                     IngredientId = 26,
@@ -556,23 +606,29 @@ namespace UngDungQuanLiNhaHang.Data {
                     Quantity = 200,
                     MinQuantity = 20,
                     Price = 5000,
-                    Unit = "gói"
+                    Unit = "Thùng",
+                    UsageUnit = "gói",
+                    ConversionRate = 30
                 },
                 new Ingredient {
                     IngredientId = 27,
                     IngredientName = "Sò Huyết",
-                    Quantity = 20000,
+                    Quantity = 20,
                     MinQuantity = 2,
                     Price = 200000,
-                    Unit = "g"
+                    Unit = "kg",
+                    UsageUnit = "g",
+                    ConversionRate = 1000
                 },
                 new Ingredient {
                     IngredientId = 28,
                     IngredientName = "Cá Mú",
-                    Quantity = 20000,
+                    Quantity = 20,
                     MinQuantity = 2,
                     Price = 250000,
-                    Unit = "g"
+                    Unit = "kg",
+                    UsageUnit = "g",
+                    ConversionRate = 1000
                 }
 
             );
@@ -918,34 +974,34 @@ namespace UngDungQuanLiNhaHang.Data {
 
                 );
             modelBuilder.Entity<Images>().HasData(
-                    new Images { ImagesId = 1, ImagesUrl = "/ImageProducts/product1.png", ProductId = 1 },
-                    new Images { ImagesId = 2, ImagesUrl = "/ImageProducts/product2.png", ProductId = 2 },
-                    new Images { ImagesId = 3, ImagesUrl = "/ImageProducts/product3.png", ProductId = 3 },
-                    new Images { ImagesId = 4, ImagesUrl = "/ImageProducts/product4.png", ProductId = 4 },
-                    new Images { ImagesId = 5, ImagesUrl = "/ImageProducts/product5.png", ProductId = 5 },
-                    new Images { ImagesId = 6, ImagesUrl = "/ImageProducts/product6.png", ProductId = 6 },
-                    new Images { ImagesId = 7, ImagesUrl = "/ImageProducts/product7.png", ProductId = 7 },
-                    new Images { ImagesId = 8, ImagesUrl = "/ImageProducts/product8.png", ProductId = 8 },
-                    new Images { ImagesId = 9, ImagesUrl = "/ImageProducts/product9.png", ProductId = 9 },
-                    new Images { ImagesId = 10, ImagesUrl = "/ImageProducts/product10.png", ProductId = 10 },
-                    new Images { ImagesId = 11, ImagesUrl = "/ImageProducts/product11.png", ProductId = 11 },
-                    new Images { ImagesId = 12, ImagesUrl = "/ImageProducts/product12.png", ProductId = 12 },
-                    new Images { ImagesId = 13, ImagesUrl = "/ImageProducts/product13.png", ProductId = 13 },
-                    new Images { ImagesId = 14, ImagesUrl = "/ImageProducts/product14.png", ProductId = 14 },
-                    new Images { ImagesId = 15, ImagesUrl = "/ImageProducts/product15.png", ProductId = 15 },
-                    new Images { ImagesId = 16, ImagesUrl = "/ImageProducts/product16.png", ProductId = 16 },
-                    new Images { ImagesId = 17, ImagesUrl = "/ImageProducts/product17.png", ProductId = 17 },
-                    new Images { ImagesId = 18, ImagesUrl = "/ImageProducts/product18.png", ProductId = 18 },
-                    new Images { ImagesId = 19, ImagesUrl = "/ImageProducts/product19.png", ProductId = 19 },
-                    new Images { ImagesId = 20, ImagesUrl = "/ImageProducts/product20.png", ProductId = 20 },
-                    new Images { ImagesId = 21, ImagesUrl = "/ImageProducts/product21.png", ProductId = 21 },
-                    new Images { ImagesId = 22, ImagesUrl = "/ImageProducts/product22.png", ProductId = 22 },
-                    new Images { ImagesId = 23, ImagesUrl = "/ImageProducts/product23.png", ProductId = 23 },
-                    new Images { ImagesId = 24, ImagesUrl = "/ImageProducts/product24.png", ProductId = 24 },
-                    new Images { ImagesId = 25, ImagesUrl = "/ImageProducts/product25.png", ProductId = 25 },
-                    new Images { ImagesId = 26, ImagesUrl = "/ImageProducts/product26.png", ProductId = 26 },
-                    new Images { ImagesId = 27, ImagesUrl = "/ImageProducts/product27.png", ProductId = 27 },
-                    new Images { ImagesId = 28, ImagesUrl = "/ImageProducts/product28.png", ProductId = 28 }
+                    new Images { ImagesId = 1, ImagesUrl = "ImageProducts/product1.png", ProductId = 1 },
+                    new Images { ImagesId = 2, ImagesUrl = "ImageProducts/product2.png", ProductId = 2 },
+                    new Images { ImagesId = 3, ImagesUrl = "ImageProducts/product3.png", ProductId = 3 },
+                    new Images { ImagesId = 4, ImagesUrl = "ImageProducts/product4.png", ProductId = 4 },
+                    new Images { ImagesId = 5, ImagesUrl = "ImageProducts/product5.png", ProductId = 5 },
+                    new Images { ImagesId = 6, ImagesUrl = "ImageProducts/product6.png", ProductId = 6 },
+                    new Images { ImagesId = 7, ImagesUrl = "ImageProducts/product7.png", ProductId = 7 },
+                    new Images { ImagesId = 8, ImagesUrl = "ImageProducts/product8.png", ProductId = 8 },
+                    new Images { ImagesId = 9, ImagesUrl = "ImageProducts/product9.png", ProductId = 9 },
+                    new Images { ImagesId = 10, ImagesUrl = "ImageProducts/product10.png", ProductId = 10 },
+                    new Images { ImagesId = 11, ImagesUrl = "ImageProducts/product11.png", ProductId = 11 },
+                    new Images { ImagesId = 12, ImagesUrl = "ImageProducts/product12.png", ProductId = 12 },
+                    new Images { ImagesId = 13, ImagesUrl = "ImageProducts/product13.png", ProductId = 13 },
+                    new Images { ImagesId = 14, ImagesUrl = "ImageProducts/product14.png", ProductId = 14 },
+                    new Images { ImagesId = 15, ImagesUrl = "ImageProducts/product15.png", ProductId = 15 },
+                    new Images { ImagesId = 16, ImagesUrl = "ImageProducts/product16.png", ProductId = 16 },
+                    new Images { ImagesId = 17, ImagesUrl = "ImageProducts/product17.png", ProductId = 17 },
+                    new Images { ImagesId = 18, ImagesUrl = "ImageProducts/product18.png", ProductId = 18 },
+                    new Images { ImagesId = 19, ImagesUrl = "ImageProducts/product19.png", ProductId = 19 },
+                    new Images { ImagesId = 20, ImagesUrl = "ImageProducts/product20.png", ProductId = 20 },
+                    new Images { ImagesId = 21, ImagesUrl = "ImageProducts/product21.png", ProductId = 21 },
+                    new Images { ImagesId = 22, ImagesUrl = "ImageProducts/product22.png", ProductId = 22 },
+                    new Images { ImagesId = 23, ImagesUrl = "ImageProducts/product23.png", ProductId = 23 },
+                    new Images { ImagesId = 24, ImagesUrl = "ImageProducts/product24.png", ProductId = 24 },
+                    new Images { ImagesId = 25, ImagesUrl = "ImageProducts/product25.png", ProductId = 25 },
+                    new Images { ImagesId = 26, ImagesUrl = "ImageProducts/product26.png", ProductId = 26 },
+                    new Images { ImagesId = 27, ImagesUrl = "ImageProducts/product27.png", ProductId = 27 },
+                    new Images { ImagesId = 28, ImagesUrl = "ImageProducts/product28.png", ProductId = 28 }
                 );
             modelBuilder.Entity<Recipes>().HasData(
                     // cong thuc mon pho 
@@ -970,16 +1026,16 @@ namespace UngDungQuanLiNhaHang.Data {
                     new Recipes { RecipeId = 16, Quantity = 50, Unit = "g", IngredientId = 15, ProductId = 4 },
                     new Recipes { RecipeId = 17, Quantity = 150, Unit = "g", IngredientId = 7, ProductId = 4 },
                     // cong thuc mon cua sot bo toi
-                    new Recipes { RecipeId = 18, Quantity = 2, Unit = "con", IngredientId = 14, ProductId = 5 },
+                    new Recipes { RecipeId = 18, Quantity = 500, Unit = "g", IngredientId = 14, ProductId = 5 },
                     new Recipes { RecipeId = 19, Quantity = 100, Unit = "g", IngredientId = 16, ProductId = 5 },
                     // cong thuc mon cua sot pho mai
-                    new Recipes { RecipeId = 20, Quantity = 2, Unit = "con", IngredientId = 14, ProductId = 6 },
+                    new Recipes { RecipeId = 20, Quantity = 500, Unit = "g", IngredientId = 14, ProductId = 6 },
                     new Recipes { RecipeId = 21, Quantity = 100, Unit = "g", IngredientId = 17, ProductId = 6 },
                     // cong thuc mon tom hum sot bo toi
-                    new Recipes { RecipeId = 22, Quantity = 1, Unit = "con", IngredientId = 13, ProductId = 7 },
+                    new Recipes { RecipeId = 22, Quantity = 500, Unit = "g", IngredientId = 13, ProductId = 7 },
                     new Recipes { RecipeId = 23, Quantity = 100, Unit = "g", IngredientId = 16, ProductId = 7 },
                     // cong thuc mon tom hum sot pho mai
-                    new Recipes { RecipeId = 24, Quantity = 1, Unit = "con", IngredientId = 13, ProductId = 8 },
+                    new Recipes { RecipeId = 24, Quantity = 500, Unit = "g", IngredientId = 13, ProductId = 8 },
                     new Recipes { RecipeId = 25, Quantity = 100, Unit = "g", IngredientId = 17, ProductId = 8 },
                     // cong thuc mon lau hai san
                     new Recipes { RecipeId = 26, Quantity = 200, Unit = "g", IngredientId = 11, ProductId = 9 },
@@ -995,9 +1051,9 @@ namespace UngDungQuanLiNhaHang.Data {
                     // cong thuc mon bo nuong ngoi
                     new Recipes { RecipeId = 34, Quantity = 200, Unit = "g", IngredientId = 1, ProductId = 12 }
                     // cong thuc mon hau nuong mo hanh  
-                    , new Recipes { RecipeId = 35, Quantity = 1, Unit = "kg", IngredientId = 20, ProductId = 13 }
+                    , new Recipes { RecipeId = 35, Quantity = 1000, Unit = "g", IngredientId = 20, ProductId = 13 }
                     // cong thuc mon hau nuong pho mai
-                    , new Recipes { RecipeId = 36, Quantity = 1, Unit = "kg", IngredientId = 20, ProductId = 14 }
+                    , new Recipes { RecipeId = 36, Quantity = 1000, Unit = "g", IngredientId = 20, ProductId = 14 }
                     // cong thuc mon oc mong tay chay toi
                     , new Recipes { RecipeId = 37, Quantity = 300, Unit = "g", IngredientId = 21, ProductId = 15 }
                     // cong thuc mon mien xao thit cua

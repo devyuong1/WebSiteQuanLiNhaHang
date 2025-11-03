@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace UngDungQuanLiNhaHang.Models {
     public class Images {
@@ -10,6 +11,7 @@ namespace UngDungQuanLiNhaHang.Models {
        
         public int ProductId { get; set; }
         [ForeignKey("ProductId")]
+        [JsonIgnore]
         public Products? Products { get; set; }
     }
 }

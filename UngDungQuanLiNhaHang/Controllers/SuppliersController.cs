@@ -21,10 +21,10 @@ namespace UngDungQuanLiNhaHang.Controllers
         
 
         // GET: api/Suppliers
-        [HttpGet]
-        [Authorize(Roles = "Admin, Manager, Employee")]
+        [HttpGet("Getsuppliers")]
+        [Authorize(Roles = "Admin, Manager,Employee")]
 
-        public async Task<ActionResult<ApiResponse<IEnumerable<Suppliers>>>> Getsuppliers(int page = 1)
+        public async Task<ActionResult<ApiResponse<PageResponse<SupplierResponse>>>> Getsuppliers([FromQuery]int page = 1)
         {
             var result = await supplierServices.GetAllSuppliers(page);
             if (!result.Success)
@@ -35,10 +35,10 @@ namespace UngDungQuanLiNhaHang.Controllers
         }
 
         // GET: api/Suppliers/5
-        [HttpGet("{id}")]
+        [HttpGet("GetSupplier")]
         [Authorize(Roles = "Admin, Manager, Employee")]
 
-        public async Task<ActionResult<ApiResponse<SupplierResponse>>> GetSuppliers(int id)
+        public async Task<ActionResult<ApiResponse<SupplierResponse>>> GetSupplier(int id)
         {
             var result = await supplierServices.GetSupplierById(id);
             if (!result.Success)
@@ -49,11 +49,11 @@ namespace UngDungQuanLiNhaHang.Controllers
         }
 
         // PUT: api/Suppliers/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut]
-        [Authorize(Roles = "Admin, Manager, Employee")]
+      
+        [HttpPut("PutSuppliers")]
+        [Authorize(Roles = "Admin,Manager,Employee")]
 
-        public async Task<ActionResult<ApiResponse<bool>>> PutSuppliers( SupplierDTO suppliers)
+        public async Task<ActionResult<ApiResponse<bool>>> PutSuppliers([FromBody] SupplierDTO suppliers)
         {
             if ( suppliers == null || suppliers.address == null || !ModelState.IsValid ) {
                 return BadRequest( ApiResponse<bool>.FailResponse("Supplier data is null"));
@@ -67,11 +67,11 @@ namespace UngDungQuanLiNhaHang.Controllers
         }
 
         // POST: api/Suppliers
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
+        
+        [HttpPost("PostSuppliers")]
         [Authorize(Roles = "Admin, Manager, Employee")]
 
-        public async Task<ActionResult<Suppliers>> PostSuppliers(SupplierDTO suppliers)
+        public async Task<ActionResult<ApiResponse<bool>>> PostSuppliers([FromBody]SupplierDTO suppliers)
         {
             if (suppliers == null || suppliers.address == null || !ModelState.IsValid)
             {
@@ -84,7 +84,15 @@ namespace UngDungQuanLiNhaHang.Controllers
             }
             return Ok(result);
         }
+        [HttpGet("GetListSupplier")]
+        [Authorize(Roles = "Admin, Manager, Employee")]
 
-       
+        public async Task<ActionResult<ApiResponse<List<ListSupplierResponse>>>> GetListSupplier() {
+            var result = await supplierServices.GetListSuppliers();
+            if ( !result.Success ) {
+                return BadRequest(result);
+            }
+            return Ok(result);
+        }
     }
 }

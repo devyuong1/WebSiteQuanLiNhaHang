@@ -209,11 +209,11 @@ namespace UngDungQuanLiNhaHang.Migrations
                     b.Property<DateTime>("Create_At")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("CustomersCustomerId")
-                        .HasColumnType("int");
-
                     b.Property<double>("DepositAmount")
                         .HasColumnType("float");
+
+                    b.Property<string>("HangfireJobId")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDepositPaid")
                         .HasColumnType("bit");
@@ -235,11 +235,11 @@ namespace UngDungQuanLiNhaHang.Migrations
 
                     b.HasKey("BookTableId");
 
-                    b.HasIndex("CustomersCustomerId");
-
                     b.HasIndex("TablesTableId");
 
                     b.HasIndex("bookTableStatusId");
+
+                    b.HasIndex("customerId");
 
                     b.ToTable("bookTables");
                 });
@@ -681,169 +681,169 @@ namespace UngDungQuanLiNhaHang.Migrations
                         new
                         {
                             ImagesId = 1,
-                            ImagesUrl = "/ImageProducts/product1.png",
+                            ImagesUrl = "ImageProducts/product1.png",
                             ProductId = 1
                         },
                         new
                         {
                             ImagesId = 2,
-                            ImagesUrl = "/ImageProducts/product2.png",
+                            ImagesUrl = "ImageProducts/product2.png",
                             ProductId = 2
                         },
                         new
                         {
                             ImagesId = 3,
-                            ImagesUrl = "/ImageProducts/product3.png",
+                            ImagesUrl = "ImageProducts/product3.png",
                             ProductId = 3
                         },
                         new
                         {
                             ImagesId = 4,
-                            ImagesUrl = "/ImageProducts/product4.png",
+                            ImagesUrl = "ImageProducts/product4.png",
                             ProductId = 4
                         },
                         new
                         {
                             ImagesId = 5,
-                            ImagesUrl = "/ImageProducts/product5.png",
+                            ImagesUrl = "ImageProducts/product5.png",
                             ProductId = 5
                         },
                         new
                         {
                             ImagesId = 6,
-                            ImagesUrl = "/ImageProducts/product6.png",
+                            ImagesUrl = "ImageProducts/product6.png",
                             ProductId = 6
                         },
                         new
                         {
                             ImagesId = 7,
-                            ImagesUrl = "/ImageProducts/product7.png",
+                            ImagesUrl = "ImageProducts/product7.png",
                             ProductId = 7
                         },
                         new
                         {
                             ImagesId = 8,
-                            ImagesUrl = "/ImageProducts/product8.png",
+                            ImagesUrl = "ImageProducts/product8.png",
                             ProductId = 8
                         },
                         new
                         {
                             ImagesId = 9,
-                            ImagesUrl = "/ImageProducts/product9.png",
+                            ImagesUrl = "ImageProducts/product9.png",
                             ProductId = 9
                         },
                         new
                         {
                             ImagesId = 10,
-                            ImagesUrl = "/ImageProducts/product10.png",
+                            ImagesUrl = "ImageProducts/product10.png",
                             ProductId = 10
                         },
                         new
                         {
                             ImagesId = 11,
-                            ImagesUrl = "/ImageProducts/product11.png",
+                            ImagesUrl = "ImageProducts/product11.png",
                             ProductId = 11
                         },
                         new
                         {
                             ImagesId = 12,
-                            ImagesUrl = "/ImageProducts/product12.png",
+                            ImagesUrl = "ImageProducts/product12.png",
                             ProductId = 12
                         },
                         new
                         {
                             ImagesId = 13,
-                            ImagesUrl = "/ImageProducts/product13.png",
+                            ImagesUrl = "ImageProducts/product13.png",
                             ProductId = 13
                         },
                         new
                         {
                             ImagesId = 14,
-                            ImagesUrl = "/ImageProducts/product14.png",
+                            ImagesUrl = "ImageProducts/product14.png",
                             ProductId = 14
                         },
                         new
                         {
                             ImagesId = 15,
-                            ImagesUrl = "/ImageProducts/product15.png",
+                            ImagesUrl = "ImageProducts/product15.png",
                             ProductId = 15
                         },
                         new
                         {
                             ImagesId = 16,
-                            ImagesUrl = "/ImageProducts/product16.png",
+                            ImagesUrl = "ImageProducts/product16.png",
                             ProductId = 16
                         },
                         new
                         {
                             ImagesId = 17,
-                            ImagesUrl = "/ImageProducts/product17.png",
+                            ImagesUrl = "ImageProducts/product17.png",
                             ProductId = 17
                         },
                         new
                         {
                             ImagesId = 18,
-                            ImagesUrl = "/ImageProducts/product18.png",
+                            ImagesUrl = "ImageProducts/product18.png",
                             ProductId = 18
                         },
                         new
                         {
                             ImagesId = 19,
-                            ImagesUrl = "/ImageProducts/product19.png",
+                            ImagesUrl = "ImageProducts/product19.png",
                             ProductId = 19
                         },
                         new
                         {
                             ImagesId = 20,
-                            ImagesUrl = "/ImageProducts/product20.png",
+                            ImagesUrl = "ImageProducts/product20.png",
                             ProductId = 20
                         },
                         new
                         {
                             ImagesId = 21,
-                            ImagesUrl = "/ImageProducts/product21.png",
+                            ImagesUrl = "ImageProducts/product21.png",
                             ProductId = 21
                         },
                         new
                         {
                             ImagesId = 22,
-                            ImagesUrl = "/ImageProducts/product22.png",
+                            ImagesUrl = "ImageProducts/product22.png",
                             ProductId = 22
                         },
                         new
                         {
                             ImagesId = 23,
-                            ImagesUrl = "/ImageProducts/product23.png",
+                            ImagesUrl = "ImageProducts/product23.png",
                             ProductId = 23
                         },
                         new
                         {
                             ImagesId = 24,
-                            ImagesUrl = "/ImageProducts/product24.png",
+                            ImagesUrl = "ImageProducts/product24.png",
                             ProductId = 24
                         },
                         new
                         {
                             ImagesId = 25,
-                            ImagesUrl = "/ImageProducts/product25.png",
+                            ImagesUrl = "ImageProducts/product25.png",
                             ProductId = 25
                         },
                         new
                         {
                             ImagesId = 26,
-                            ImagesUrl = "/ImageProducts/product26.png",
+                            ImagesUrl = "ImageProducts/product26.png",
                             ProductId = 26
                         },
                         new
                         {
                             ImagesId = 27,
-                            ImagesUrl = "/ImageProducts/product27.png",
+                            ImagesUrl = "ImageProducts/product27.png",
                             ProductId = 27
                         },
                         new
                         {
                             ImagesId = 28,
-                            ImagesUrl = "/ImageProducts/product28.png",
+                            ImagesUrl = "ImageProducts/product28.png",
                             ProductId = 28
                         });
                 });
@@ -855,6 +855,9 @@ namespace UngDungQuanLiNhaHang.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IngredientId"));
+
+                    b.Property<double>("ConversionRate")
+                        .HasColumnType("float");
 
                     b.Property<string>("IngredientName")
                         .IsRequired()
@@ -876,6 +879,10 @@ namespace UngDungQuanLiNhaHang.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("UsageUnit")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("IngredientId");
 
                     b.ToTable("ingredients");
@@ -884,282 +891,338 @@ namespace UngDungQuanLiNhaHang.Migrations
                         new
                         {
                             IngredientId = 1,
+                            ConversionRate = 1000.0,
                             IngredientName = "Thịt Bò",
                             IsActive = true,
                             MinQuantity = 1.0,
                             Price = 200000.0,
-                            Quantity = 10000.0,
-                            Unit = "g"
+                            Quantity = 10.0,
+                            Unit = "kg",
+                            UsageUnit = "g"
                         },
                         new
                         {
                             IngredientId = 2,
+                            ConversionRate = 1000.0,
                             IngredientName = "Bánh Phở",
                             IsActive = true,
                             MinQuantity = 1.0,
                             Price = 30000.0,
-                            Quantity = 40000.0,
-                            Unit = "g"
+                            Quantity = 40.0,
+                            Unit = "kg",
+                            UsageUnit = "g"
                         },
                         new
                         {
                             IngredientId = 3,
+                            ConversionRate = 10.0,
                             IngredientName = "Nước Phở",
                             IsActive = true,
                             MinQuantity = 1.0,
                             Price = 10000.0,
                             Quantity = 10.0,
-                            Unit = "lít"
+                            Unit = "lít",
+                            UsageUnit = "ml"
                         },
                         new
                         {
                             IngredientId = 4,
+                            ConversionRate = 10.0,
                             IngredientName = "Nước Bún Bò",
                             IsActive = true,
                             MinQuantity = 1.0,
                             Price = 10000.0,
                             Quantity = 10.0,
-                            Unit = "lít"
+                            Unit = "lít",
+                            UsageUnit = "ml"
                         },
                         new
                         {
                             IngredientId = 5,
+                            ConversionRate = 1000.0,
                             IngredientName = "Giò Heo ",
                             IsActive = true,
                             MinQuantity = 1.0,
                             Price = 120000.0,
-                            Quantity = 30000.0,
-                            Unit = "g"
+                            Quantity = 30.0,
+                            Unit = "kg",
+                            UsageUnit = "g"
                         },
                         new
                         {
                             IngredientId = 6,
+                            ConversionRate = 1000.0,
                             IngredientName = "Huyết Heo",
                             IsActive = true,
                             MinQuantity = 1.0,
                             Price = 100000.0,
-                            Quantity = 20000.0,
-                            Unit = "g"
+                            Quantity = 20.0,
+                            Unit = "kg",
+                            UsageUnit = "g"
                         },
                         new
                         {
                             IngredientId = 7,
+                            ConversionRate = 1000.0,
                             IngredientName = "Bún",
                             IsActive = true,
                             MinQuantity = 1.0,
                             Price = 15000.0,
-                            Quantity = 20000.0,
-                            Unit = "g"
+                            Quantity = 20.0,
+                            Unit = "kg",
+                            UsageUnit = "g"
                         },
                         new
                         {
                             IngredientId = 8,
+                            ConversionRate = 1000.0,
                             IngredientName = "Chả Lụa",
                             IsActive = true,
                             MinQuantity = 1.0,
                             Price = 100000.0,
-                            Quantity = 2000.0,
-                            Unit = "g"
+                            Quantity = 20.0,
+                            Unit = "kg",
+                            UsageUnit = "g"
                         },
                         new
                         {
                             IngredientId = 9,
+                            ConversionRate = 1000.0,
                             IngredientName = "Thịt Heo",
                             IsActive = true,
                             MinQuantity = 1.0,
                             Price = 200000.0,
-                            Quantity = 50000.0,
-                            Unit = "g"
+                            Quantity = 50.0,
+                            Unit = "kg",
+                            UsageUnit = "g"
                         },
                         new
                         {
                             IngredientId = 10,
+                            ConversionRate = 1000.0,
                             IngredientName = "Mọc",
                             IsActive = true,
                             MinQuantity = 1.0,
                             Price = 150000.0,
-                            Quantity = 20000.0,
-                            Unit = "g"
+                            Quantity = 5.0,
+                            Unit = "kg",
+                            UsageUnit = "g"
                         },
                         new
                         {
                             IngredientId = 11,
+                            ConversionRate = 1000.0,
                             IngredientName = "Mực",
                             IsActive = true,
                             MinQuantity = 1.0,
                             Price = 250000.0,
-                            Quantity = 20000.0,
-                            Unit = "g"
+                            Quantity = 5.0,
+                            Unit = "kg",
+                            UsageUnit = "g"
                         },
                         new
                         {
                             IngredientId = 12,
+                            ConversionRate = 1000.0,
                             IngredientName = "Tôm sú",
                             IsActive = true,
                             MinQuantity = 1.0,
                             Price = 250000.0,
-                            Quantity = 40000.0,
-                            Unit = "g"
+                            Quantity = 40.0,
+                            Unit = "kg",
+                            UsageUnit = "g"
                         },
                         new
                         {
                             IngredientId = 13,
+                            ConversionRate = 1000.0,
                             IngredientName = "Tôm Hùm",
                             IsActive = true,
                             MinQuantity = 1.0,
                             Price = 450000.0,
-                            Quantity = 30000.0,
-                            Unit = "g"
+                            Quantity = 30.0,
+                            Unit = "kg",
+                            UsageUnit = "g"
                         },
                         new
                         {
                             IngredientId = 14,
+                            ConversionRate = 1000.0,
                             IngredientName = "Cua",
                             IsActive = true,
                             MinQuantity = 1.0,
                             Price = 350000.0,
-                            Quantity = 300000.0,
-                            Unit = "g"
+                            Quantity = 30.0,
+                            Unit = "kg",
+                            UsageUnit = "g"
                         },
                         new
                         {
                             IngredientId = 15,
+                            ConversionRate = 1000.0,
                             IngredientName = "Ghẹ",
                             IsActive = true,
                             MinQuantity = 1.0,
                             Price = 300000.0,
-                            Quantity = 30000.0,
-                            Unit = "g"
+                            Quantity = 30.0,
+                            Unit = "kg",
+                            UsageUnit = "g"
                         },
                         new
                         {
                             IngredientId = 16,
+                            ConversionRate = 1000.0,
                             IngredientName = "Bơ",
                             IsActive = true,
                             MinQuantity = 1.0,
                             Price = 100000.0,
-                            Quantity = 30000.0,
-                            Unit = "g"
+                            Quantity = 3.0,
+                            Unit = "kg",
+                            UsageUnit = "g"
                         },
                         new
                         {
                             IngredientId = 17,
+                            ConversionRate = 1000.0,
                             IngredientName = "Phô mai",
                             IsActive = true,
                             MinQuantity = 1.0,
                             Price = 100000.0,
-                            Quantity = 3000.0,
-                            Unit = "g"
+                            Quantity = 3.0,
+                            Unit = "kg",
+                            UsageUnit = "g"
                         },
                         new
                         {
                             IngredientId = 18,
+                            ConversionRate = 1000.0,
                             IngredientName = "Cá Đuối",
                             IsActive = true,
                             MinQuantity = 1.0,
                             Price = 100000.0,
-                            Quantity = 30000.0,
-                            Unit = "g"
+                            Quantity = 30.0,
+                            Unit = "kg",
+                            UsageUnit = "g"
                         },
                         new
                         {
                             IngredientId = 19,
+                            ConversionRate = 1000.0,
                             IngredientName = "Măng Chua",
                             IsActive = true,
                             MinQuantity = 1.0,
                             Price = 100000.0,
-                            Quantity = 30000.0,
-                            Unit = "g"
+                            Quantity = 3.0,
+                            Unit = "kg",
+                            UsageUnit = "g"
                         },
                         new
                         {
                             IngredientId = 20,
+                            ConversionRate = 1000.0,
                             IngredientName = "Hàu",
                             IsActive = true,
                             MinQuantity = 5.0,
-                            Price = 800000.0,
-                            Quantity = 200000.0,
-                            Unit = "g"
+                            Price = 80000.0,
+                            Quantity = 20.0,
+                            Unit = "kg",
+                            UsageUnit = "g"
                         },
                         new
                         {
                             IngredientId = 21,
+                            ConversionRate = 1000.0,
                             IngredientName = "Óc móng tay",
                             IsActive = true,
                             MinQuantity = 5.0,
                             Price = 100000.0,
-                            Quantity = 200000.0,
-                            Unit = "g"
+                            Quantity = 2.0,
+                            Unit = "kg",
+                            UsageUnit = "g"
                         },
                         new
                         {
                             IngredientId = 22,
+                            ConversionRate = 1000.0,
                             IngredientName = "Miến",
                             IsActive = true,
                             MinQuantity = 5.0,
                             Price = 50000.0,
-                            Quantity = 200000.0,
-                            Unit = "g"
+                            Quantity = 20.0,
+                            Unit = "kg",
+                            UsageUnit = "g"
                         },
                         new
                         {
                             IngredientId = 23,
+                            ConversionRate = 30.0,
                             IngredientName = "Trứng Muối",
                             IsActive = true,
                             MinQuantity = 2.0,
                             Price = 100000.0,
                             Quantity = 20.0,
-                            Unit = "trứng"
+                            Unit = "khay",
+                            UsageUnit = "quả"
                         },
                         new
                         {
                             IngredientId = 24,
+                            ConversionRate = 1000.0,
                             IngredientName = "Ốc Hương",
                             IsActive = true,
                             MinQuantity = 2.0,
                             Price = 200000.0,
-                            Quantity = 20000.0,
-                            Unit = "g"
+                            Quantity = 20.0,
+                            Unit = "kg",
+                            UsageUnit = "g"
                         },
                         new
                         {
                             IngredientId = 25,
+                            ConversionRate = 1000.0,
                             IngredientName = "Gạo",
                             IsActive = true,
                             MinQuantity = 2.0,
                             Price = 20000.0,
-                            Quantity = 20000.0,
-                            Unit = "g"
+                            Quantity = 200.0,
+                            Unit = "kg",
+                            UsageUnit = "g"
                         },
                         new
                         {
                             IngredientId = 26,
+                            ConversionRate = 30.0,
                             IngredientName = "Mì",
                             IsActive = true,
                             MinQuantity = 20.0,
                             Price = 5000.0,
                             Quantity = 200.0,
-                            Unit = "gói"
+                            Unit = "Thùng",
+                            UsageUnit = "gói"
                         },
                         new
                         {
                             IngredientId = 27,
+                            ConversionRate = 1000.0,
                             IngredientName = "Sò Huyết",
                             IsActive = true,
                             MinQuantity = 2.0,
                             Price = 200000.0,
-                            Quantity = 20000.0,
-                            Unit = "g"
+                            Quantity = 20.0,
+                            Unit = "kg",
+                            UsageUnit = "g"
                         },
                         new
                         {
                             IngredientId = 28,
+                            ConversionRate = 1000.0,
                             IngredientName = "Cá Mú",
                             IsActive = true,
                             MinQuantity = 2.0,
                             Price = 250000.0,
-                            Quantity = 20000.0,
-                            Unit = "g"
+                            Quantity = 20.0,
+                            Unit = "kg",
+                            UsageUnit = "g"
                         });
                 });
 
@@ -1355,6 +1418,9 @@ namespace UngDungQuanLiNhaHang.Migrations
                     b.Property<DateTime>("Create_At")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("HangfireJobId")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("InvoiceStatusId")
                         .HasColumnType("int");
 
@@ -1379,9 +1445,6 @@ namespace UngDungQuanLiNhaHang.Migrations
                     b.Property<int?>("customerId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("customersCustomerId")
-                        .HasColumnType("int");
-
                     b.Property<int>("employeeId")
                         .HasColumnType("int");
 
@@ -1399,7 +1462,7 @@ namespace UngDungQuanLiNhaHang.Migrations
 
                     b.HasIndex("PaymentMethodId");
 
-                    b.HasIndex("customersCustomerId");
+                    b.HasIndex("customerId");
 
                     b.HasIndex("tablesTableId");
 
@@ -1410,7 +1473,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                         {
                             InvoiceId = 1,
                             AddressId = 1,
-                            Create_At = new DateTime(2025, 10, 17, 14, 27, 56, 891, DateTimeKind.Utc).AddTicks(3634),
+                            Create_At = new DateTime(2025, 11, 3, 12, 33, 15, 88, DateTimeKind.Utc).AddTicks(3023),
                             InvoiceStatusId = 4,
                             InvoiceType = false,
                             IsPayment = true,
@@ -1424,7 +1487,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                         {
                             InvoiceId = 2,
                             AddressId = 1,
-                            Create_At = new DateTime(2025, 10, 17, 14, 27, 56, 891, DateTimeKind.Utc).AddTicks(3637),
+                            Create_At = new DateTime(2025, 11, 3, 12, 33, 15, 88, DateTimeKind.Utc).AddTicks(3026),
                             InvoiceStatusId = 4,
                             InvoiceType = false,
                             IsPayment = false,
@@ -1438,7 +1501,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                         {
                             InvoiceId = 3,
                             AddressId = 1,
-                            Create_At = new DateTime(2025, 10, 17, 14, 27, 56, 891, DateTimeKind.Utc).AddTicks(3639),
+                            Create_At = new DateTime(2025, 11, 3, 12, 33, 15, 88, DateTimeKind.Utc).AddTicks(3028),
                             InvoiceStatusId = 4,
                             InvoiceType = false,
                             IsPayment = true,
@@ -1452,7 +1515,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                         {
                             InvoiceId = 4,
                             AddressId = 1,
-                            Create_At = new DateTime(2025, 10, 17, 14, 27, 56, 891, DateTimeKind.Utc).AddTicks(3641),
+                            Create_At = new DateTime(2025, 11, 3, 12, 33, 15, 88, DateTimeKind.Utc).AddTicks(3030),
                             InvoiceStatusId = 4,
                             InvoiceType = false,
                             IsPayment = true,
@@ -1466,7 +1529,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                         {
                             InvoiceId = 5,
                             AddressId = 1,
-                            Create_At = new DateTime(2025, 10, 17, 14, 27, 56, 891, DateTimeKind.Utc).AddTicks(3642),
+                            Create_At = new DateTime(2025, 11, 3, 12, 33, 15, 88, DateTimeKind.Utc).AddTicks(3032),
                             InvoiceStatusId = 4,
                             InvoiceType = false,
                             IsPayment = true,
@@ -1480,7 +1543,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                         {
                             InvoiceId = 6,
                             AddressId = 1,
-                            Create_At = new DateTime(2025, 10, 17, 14, 27, 56, 891, DateTimeKind.Utc).AddTicks(3644),
+                            Create_At = new DateTime(2025, 11, 3, 12, 33, 15, 88, DateTimeKind.Utc).AddTicks(3034),
                             InvoiceStatusId = 4,
                             InvoiceType = false,
                             IsPayment = true,
@@ -1494,7 +1557,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                         {
                             InvoiceId = 7,
                             AddressId = 1,
-                            Create_At = new DateTime(2025, 10, 17, 14, 27, 56, 891, DateTimeKind.Utc).AddTicks(3645),
+                            Create_At = new DateTime(2025, 11, 3, 12, 33, 15, 88, DateTimeKind.Utc).AddTicks(3035),
                             InvoiceStatusId = 4,
                             InvoiceType = false,
                             IsPayment = true,
@@ -1508,7 +1571,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                         {
                             InvoiceId = 8,
                             AddressId = 1,
-                            Create_At = new DateTime(2025, 10, 17, 14, 27, 56, 891, DateTimeKind.Utc).AddTicks(3647),
+                            Create_At = new DateTime(2025, 11, 3, 12, 33, 15, 88, DateTimeKind.Utc).AddTicks(3037),
                             InvoiceStatusId = 4,
                             InvoiceType = false,
                             IsPayment = true,
@@ -1522,7 +1585,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                         {
                             InvoiceId = 9,
                             AddressId = 1,
-                            Create_At = new DateTime(2025, 10, 17, 14, 27, 56, 891, DateTimeKind.Utc).AddTicks(3649),
+                            Create_At = new DateTime(2025, 11, 3, 12, 33, 15, 88, DateTimeKind.Utc).AddTicks(3040),
                             InvoiceStatusId = 4,
                             InvoiceType = false,
                             IsPayment = true,
@@ -1595,7 +1658,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                         new
                         {
                             PaymentMethodId = 3,
-                            PaymentMethodName = "Thahh Toán Khi Nhận Hàng"
+                            PaymentMethodName = "Thanh toán khi nhận hàng"
                         });
                 });
 
@@ -1627,6 +1690,9 @@ namespace UngDungQuanLiNhaHang.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("isDelete")
+                        .HasColumnType("bit");
+
                     b.HasKey("ProductOptionId");
 
                     b.HasIndex("IngredientId");
@@ -1644,7 +1710,8 @@ namespace UngDungQuanLiNhaHang.Migrations
                             OptionValue = 100.0,
                             Price = 30000.0,
                             ProductId = 1,
-                            Unit = "g"
+                            Unit = "g",
+                            isDelete = false
                         },
                         new
                         {
@@ -1654,7 +1721,8 @@ namespace UngDungQuanLiNhaHang.Migrations
                             OptionValue = 100.0,
                             Price = 30000.0,
                             ProductId = 2,
-                            Unit = "g"
+                            Unit = "g",
+                            isDelete = false
                         },
                         new
                         {
@@ -1664,7 +1732,8 @@ namespace UngDungQuanLiNhaHang.Migrations
                             OptionValue = 100.0,
                             Price = 30000.0,
                             ProductId = 3,
-                            Unit = "g"
+                            Unit = "g",
+                            isDelete = false
                         },
                         new
                         {
@@ -1674,7 +1743,8 @@ namespace UngDungQuanLiNhaHang.Migrations
                             OptionValue = 150.0,
                             Price = 20000.0,
                             ProductId = 10,
-                            Unit = "g"
+                            Unit = "g",
+                            isDelete = false
                         },
                         new
                         {
@@ -1684,7 +1754,8 @@ namespace UngDungQuanLiNhaHang.Migrations
                             OptionValue = 100.0,
                             Price = 150000.0,
                             ProductId = 9,
-                            Unit = "g"
+                            Unit = "g",
+                            isDelete = false
                         },
                         new
                         {
@@ -1694,7 +1765,8 @@ namespace UngDungQuanLiNhaHang.Migrations
                             OptionValue = 100.0,
                             Price = 150000.0,
                             ProductId = 9,
-                            Unit = "g"
+                            Unit = "g",
+                            isDelete = false
                         },
                         new
                         {
@@ -1704,7 +1776,8 @@ namespace UngDungQuanLiNhaHang.Migrations
                             OptionValue = 300.0,
                             Price = 10000.0,
                             ProductId = 1,
-                            Unit = "g"
+                            Unit = "g",
+                            isDelete = false
                         },
                         new
                         {
@@ -1714,7 +1787,8 @@ namespace UngDungQuanLiNhaHang.Migrations
                             OptionValue = 300.0,
                             Price = 100000.0,
                             ProductId = 9,
-                            Unit = "g"
+                            Unit = "g",
+                            isDelete = false
                         });
                 });
 
@@ -1852,6 +1926,9 @@ namespace UngDungQuanLiNhaHang.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<double>("Price")
                         .HasColumnType("float");
 
@@ -1889,6 +1966,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "",
                             IsActive = true,
+                            IsDeleted = false,
                             Price = 50000.0,
                             PriceSale = 45000.0,
                             ProductName = "Phở Bò",
@@ -1905,6 +1983,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "",
                             IsActive = true,
+                            IsDeleted = false,
                             Price = 55000.0,
                             PriceSale = 50000.0,
                             ProductName = "Bún Bò",
@@ -1921,6 +2000,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "",
                             IsActive = true,
+                            IsDeleted = false,
                             Price = 55000.0,
                             PriceSale = 50000.0,
                             ProductName = "Bún Mọc",
@@ -1937,6 +2017,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "",
                             IsActive = true,
+                            IsDeleted = false,
                             Price = 80000.0,
                             PriceSale = 75000.0,
                             ProductName = "Bún Hải Sản",
@@ -1953,6 +2034,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "",
                             IsActive = true,
+                            IsDeleted = false,
                             Price = 250000.0,
                             PriceSale = 250000.0,
                             ProductName = "Cua Sốt Bơ Tỏi",
@@ -1969,6 +2051,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "",
                             IsActive = true,
+                            IsDeleted = false,
                             Price = 250000.0,
                             PriceSale = 250000.0,
                             ProductName = "Cua Sốt Phô Mai",
@@ -1985,6 +2068,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "",
                             IsActive = true,
+                            IsDeleted = false,
                             Price = 250000.0,
                             PriceSale = 250000.0,
                             ProductName = "Tôm Hùm Sốt Bơ Tỏi",
@@ -2001,6 +2085,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "",
                             IsActive = true,
+                            IsDeleted = false,
                             Price = 250000.0,
                             PriceSale = 250000.0,
                             ProductName = "Tôm Hùm Sốt Phô Mai",
@@ -2017,6 +2102,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "",
                             IsActive = true,
+                            IsDeleted = false,
                             Price = 300000.0,
                             PriceSale = 250000.0,
                             ProductName = "Lẩu Hải Sản",
@@ -2033,6 +2119,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "",
                             IsActive = true,
+                            IsDeleted = false,
                             Price = 200000.0,
                             PriceSale = 200000.0,
                             ProductName = "Lẩu Cá Đuối",
@@ -2049,6 +2136,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "",
                             IsActive = true,
+                            IsDeleted = false,
                             Price = 200000.0,
                             PriceSale = 200000.0,
                             ProductName = "Mực Hấp ",
@@ -2065,6 +2153,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "",
                             IsActive = true,
+                            IsDeleted = false,
                             Price = 100000.0,
                             PriceSale = 90000.0,
                             ProductName = "Bò Nướng Ngói",
@@ -2081,6 +2170,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "",
                             IsActive = true,
+                            IsDeleted = false,
                             Price = 80000.0,
                             PriceSale = 70000.0,
                             ProductName = "Hàu Nướng Mỡ Hành",
@@ -2097,6 +2187,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "",
                             IsActive = true,
+                            IsDeleted = false,
                             Price = 80000.0,
                             PriceSale = 70000.0,
                             ProductName = "Hàu Nướng Phô Mai",
@@ -2113,6 +2204,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "",
                             IsActive = true,
+                            IsDeleted = false,
                             Price = 80000.0,
                             PriceSale = 70000.0,
                             ProductName = "Ốc Móng Tay Cháy Tỏi",
@@ -2129,6 +2221,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "",
                             IsActive = true,
+                            IsDeleted = false,
                             Price = 80000.0,
                             PriceSale = 70000.0,
                             ProductName = "Miến Xào Thịt Cua",
@@ -2145,6 +2238,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "",
                             IsActive = true,
+                            IsDeleted = false,
                             Price = 150000.0,
                             PriceSale = 140000.0,
                             ProductName = "Ốc Hương Sốt Trứng Muối",
@@ -2161,6 +2255,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "",
                             IsActive = true,
+                            IsDeleted = false,
                             Price = 150000.0,
                             PriceSale = 140000.0,
                             ProductName = "Cơm Chiên Hải Sản",
@@ -2177,6 +2272,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "",
                             IsActive = true,
+                            IsDeleted = false,
                             Price = 150000.0,
                             PriceSale = 140000.0,
                             ProductName = "Mì Xào Bò",
@@ -2193,6 +2289,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "",
                             IsActive = true,
+                            IsDeleted = false,
                             Price = 120000.0,
                             PriceSale = 100000.0,
                             ProductName = "Sò Huyết Cháy Tỏi",
@@ -2209,6 +2306,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "",
                             IsActive = true,
+                            IsDeleted = false,
                             Price = 120000.0,
                             PriceSale = 100000.0,
                             ProductName = "Sò Huyết Sốt Thái",
@@ -2225,6 +2323,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "1 phần gồm 300g mực tươi hấp với hành và các gia vị.",
                             IsActive = true,
+                            IsDeleted = false,
                             Price = 120000.0,
                             PriceSale = 100000.0,
                             ProductName = "Mực Hấp Hành",
@@ -2241,6 +2340,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "1 phần gồm 1 con cá mú hấp vớ  các gia vị.",
                             IsActive = true,
+                            IsDeleted = false,
                             Price = 200000.0,
                             PriceSale = 100000.0,
                             ProductName = "Cá Mú Hấp",
@@ -2257,6 +2357,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "1 phần gồm 500g Nghêu",
                             IsActive = true,
+                            IsDeleted = false,
                             Price = 200000.0,
                             PriceSale = 100000.0,
                             ProductName = "Nghêu Hấp",
@@ -2273,6 +2374,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "",
                             IsActive = true,
+                            IsDeleted = false,
                             Price = 20000.0,
                             PriceSale = 18000.0,
                             ProductName = "Coca Cola Lon",
@@ -2289,6 +2391,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "",
                             IsActive = true,
+                            IsDeleted = false,
                             Price = 20000.0,
                             PriceSale = 18000.0,
                             ProductName = "Pepsi Lon",
@@ -2305,6 +2408,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "",
                             IsActive = true,
+                            IsDeleted = false,
                             Price = 25000.0,
                             PriceSale = 22000.0,
                             ProductName = "Bia Tiger Lon",
@@ -2321,6 +2425,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                             Create_At = new DateTime(2025, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "",
                             IsActive = true,
+                            IsDeleted = false,
                             Price = 30000.0,
                             PriceSale = 25000.0,
                             ProductName = "Bia Heniken Lon",
@@ -2417,6 +2522,9 @@ namespace UngDungQuanLiNhaHang.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("isDelete")
+                        .HasColumnType("bit");
+
                     b.HasKey("RecipeId");
 
                     b.HasIndex("IngredientId");
@@ -2432,7 +2540,8 @@ namespace UngDungQuanLiNhaHang.Migrations
                             IngredientId = 1,
                             ProductId = 1,
                             Quantity = 100.0,
-                            Unit = "g"
+                            Unit = "g",
+                            isDelete = false
                         },
                         new
                         {
@@ -2440,7 +2549,8 @@ namespace UngDungQuanLiNhaHang.Migrations
                             IngredientId = 2,
                             ProductId = 1,
                             Quantity = 200.0,
-                            Unit = "g"
+                            Unit = "g",
+                            isDelete = false
                         },
                         new
                         {
@@ -2448,7 +2558,8 @@ namespace UngDungQuanLiNhaHang.Migrations
                             IngredientId = 3,
                             ProductId = 1,
                             Quantity = 300.0,
-                            Unit = "ml"
+                            Unit = "ml",
+                            isDelete = false
                         },
                         new
                         {
@@ -2456,7 +2567,8 @@ namespace UngDungQuanLiNhaHang.Migrations
                             IngredientId = 1,
                             ProductId = 2,
                             Quantity = 100.0,
-                            Unit = "g"
+                            Unit = "g",
+                            isDelete = false
                         },
                         new
                         {
@@ -2464,7 +2576,8 @@ namespace UngDungQuanLiNhaHang.Migrations
                             IngredientId = 4,
                             ProductId = 2,
                             Quantity = 300.0,
-                            Unit = "ml"
+                            Unit = "ml",
+                            isDelete = false
                         },
                         new
                         {
@@ -2472,7 +2585,8 @@ namespace UngDungQuanLiNhaHang.Migrations
                             IngredientId = 5,
                             ProductId = 2,
                             Quantity = 50.0,
-                            Unit = "g"
+                            Unit = "g",
+                            isDelete = false
                         },
                         new
                         {
@@ -2480,7 +2594,8 @@ namespace UngDungQuanLiNhaHang.Migrations
                             IngredientId = 6,
                             ProductId = 2,
                             Quantity = 50.0,
-                            Unit = "g"
+                            Unit = "g",
+                            isDelete = false
                         },
                         new
                         {
@@ -2488,7 +2603,8 @@ namespace UngDungQuanLiNhaHang.Migrations
                             IngredientId = 7,
                             ProductId = 2,
                             Quantity = 200.0,
-                            Unit = "g"
+                            Unit = "g",
+                            isDelete = false
                         },
                         new
                         {
@@ -2496,7 +2612,8 @@ namespace UngDungQuanLiNhaHang.Migrations
                             IngredientId = 9,
                             ProductId = 3,
                             Quantity = 100.0,
-                            Unit = "g"
+                            Unit = "g",
+                            isDelete = false
                         },
                         new
                         {
@@ -2504,7 +2621,8 @@ namespace UngDungQuanLiNhaHang.Migrations
                             IngredientId = 8,
                             ProductId = 3,
                             Quantity = 50.0,
-                            Unit = "g"
+                            Unit = "g",
+                            isDelete = false
                         },
                         new
                         {
@@ -2512,7 +2630,8 @@ namespace UngDungQuanLiNhaHang.Migrations
                             IngredientId = 7,
                             ProductId = 3,
                             Quantity = 100.0,
-                            Unit = "g"
+                            Unit = "g",
+                            isDelete = false
                         },
                         new
                         {
@@ -2520,7 +2639,8 @@ namespace UngDungQuanLiNhaHang.Migrations
                             IngredientId = 10,
                             ProductId = 3,
                             Quantity = 50.0,
-                            Unit = "g"
+                            Unit = "g",
+                            isDelete = false
                         },
                         new
                         {
@@ -2528,7 +2648,8 @@ namespace UngDungQuanLiNhaHang.Migrations
                             IngredientId = 11,
                             ProductId = 4,
                             Quantity = 50.0,
-                            Unit = "g"
+                            Unit = "g",
+                            isDelete = false
                         },
                         new
                         {
@@ -2536,7 +2657,8 @@ namespace UngDungQuanLiNhaHang.Migrations
                             IngredientId = 12,
                             ProductId = 4,
                             Quantity = 50.0,
-                            Unit = "g"
+                            Unit = "g",
+                            isDelete = false
                         },
                         new
                         {
@@ -2544,7 +2666,8 @@ namespace UngDungQuanLiNhaHang.Migrations
                             IngredientId = 14,
                             ProductId = 4,
                             Quantity = 50.0,
-                            Unit = "g"
+                            Unit = "g",
+                            isDelete = false
                         },
                         new
                         {
@@ -2552,7 +2675,8 @@ namespace UngDungQuanLiNhaHang.Migrations
                             IngredientId = 15,
                             ProductId = 4,
                             Quantity = 50.0,
-                            Unit = "g"
+                            Unit = "g",
+                            isDelete = false
                         },
                         new
                         {
@@ -2560,15 +2684,17 @@ namespace UngDungQuanLiNhaHang.Migrations
                             IngredientId = 7,
                             ProductId = 4,
                             Quantity = 150.0,
-                            Unit = "g"
+                            Unit = "g",
+                            isDelete = false
                         },
                         new
                         {
                             RecipeId = 18,
                             IngredientId = 14,
                             ProductId = 5,
-                            Quantity = 2.0,
-                            Unit = "con"
+                            Quantity = 500.0,
+                            Unit = "g",
+                            isDelete = false
                         },
                         new
                         {
@@ -2576,15 +2702,17 @@ namespace UngDungQuanLiNhaHang.Migrations
                             IngredientId = 16,
                             ProductId = 5,
                             Quantity = 100.0,
-                            Unit = "g"
+                            Unit = "g",
+                            isDelete = false
                         },
                         new
                         {
                             RecipeId = 20,
                             IngredientId = 14,
                             ProductId = 6,
-                            Quantity = 2.0,
-                            Unit = "con"
+                            Quantity = 500.0,
+                            Unit = "g",
+                            isDelete = false
                         },
                         new
                         {
@@ -2592,15 +2720,17 @@ namespace UngDungQuanLiNhaHang.Migrations
                             IngredientId = 17,
                             ProductId = 6,
                             Quantity = 100.0,
-                            Unit = "g"
+                            Unit = "g",
+                            isDelete = false
                         },
                         new
                         {
                             RecipeId = 22,
                             IngredientId = 13,
                             ProductId = 7,
-                            Quantity = 1.0,
-                            Unit = "con"
+                            Quantity = 500.0,
+                            Unit = "g",
+                            isDelete = false
                         },
                         new
                         {
@@ -2608,15 +2738,17 @@ namespace UngDungQuanLiNhaHang.Migrations
                             IngredientId = 16,
                             ProductId = 7,
                             Quantity = 100.0,
-                            Unit = "g"
+                            Unit = "g",
+                            isDelete = false
                         },
                         new
                         {
                             RecipeId = 24,
                             IngredientId = 13,
                             ProductId = 8,
-                            Quantity = 1.0,
-                            Unit = "con"
+                            Quantity = 500.0,
+                            Unit = "g",
+                            isDelete = false
                         },
                         new
                         {
@@ -2624,7 +2756,8 @@ namespace UngDungQuanLiNhaHang.Migrations
                             IngredientId = 17,
                             ProductId = 8,
                             Quantity = 100.0,
-                            Unit = "g"
+                            Unit = "g",
+                            isDelete = false
                         },
                         new
                         {
@@ -2632,7 +2765,8 @@ namespace UngDungQuanLiNhaHang.Migrations
                             IngredientId = 11,
                             ProductId = 9,
                             Quantity = 200.0,
-                            Unit = "g"
+                            Unit = "g",
+                            isDelete = false
                         },
                         new
                         {
@@ -2640,7 +2774,8 @@ namespace UngDungQuanLiNhaHang.Migrations
                             IngredientId = 12,
                             ProductId = 9,
                             Quantity = 200.0,
-                            Unit = "g"
+                            Unit = "g",
+                            isDelete = false
                         },
                         new
                         {
@@ -2648,7 +2783,8 @@ namespace UngDungQuanLiNhaHang.Migrations
                             IngredientId = 14,
                             ProductId = 9,
                             Quantity = 200.0,
-                            Unit = "g"
+                            Unit = "g",
+                            isDelete = false
                         },
                         new
                         {
@@ -2656,7 +2792,8 @@ namespace UngDungQuanLiNhaHang.Migrations
                             IngredientId = 1,
                             ProductId = 9,
                             Quantity = 200.0,
-                            Unit = "g"
+                            Unit = "g",
+                            isDelete = false
                         },
                         new
                         {
@@ -2664,7 +2801,8 @@ namespace UngDungQuanLiNhaHang.Migrations
                             IngredientId = 7,
                             ProductId = 9,
                             Quantity = 200.0,
-                            Unit = "g"
+                            Unit = "g",
+                            isDelete = false
                         },
                         new
                         {
@@ -2672,7 +2810,8 @@ namespace UngDungQuanLiNhaHang.Migrations
                             IngredientId = 18,
                             ProductId = 10,
                             Quantity = 500.0,
-                            Unit = "g"
+                            Unit = "g",
+                            isDelete = false
                         },
                         new
                         {
@@ -2680,7 +2819,8 @@ namespace UngDungQuanLiNhaHang.Migrations
                             IngredientId = 19,
                             ProductId = 10,
                             Quantity = 200.0,
-                            Unit = "g"
+                            Unit = "g",
+                            isDelete = false
                         },
                         new
                         {
@@ -2688,7 +2828,8 @@ namespace UngDungQuanLiNhaHang.Migrations
                             IngredientId = 11,
                             ProductId = 11,
                             Quantity = 300.0,
-                            Unit = "g"
+                            Unit = "g",
+                            isDelete = false
                         },
                         new
                         {
@@ -2696,23 +2837,26 @@ namespace UngDungQuanLiNhaHang.Migrations
                             IngredientId = 1,
                             ProductId = 12,
                             Quantity = 200.0,
-                            Unit = "g"
+                            Unit = "g",
+                            isDelete = false
                         },
                         new
                         {
                             RecipeId = 35,
                             IngredientId = 20,
                             ProductId = 13,
-                            Quantity = 1.0,
-                            Unit = "kg"
+                            Quantity = 1000.0,
+                            Unit = "g",
+                            isDelete = false
                         },
                         new
                         {
                             RecipeId = 36,
                             IngredientId = 20,
                             ProductId = 14,
-                            Quantity = 1.0,
-                            Unit = "kg"
+                            Quantity = 1000.0,
+                            Unit = "g",
+                            isDelete = false
                         },
                         new
                         {
@@ -2720,7 +2864,8 @@ namespace UngDungQuanLiNhaHang.Migrations
                             IngredientId = 21,
                             ProductId = 15,
                             Quantity = 300.0,
-                            Unit = "g"
+                            Unit = "g",
+                            isDelete = false
                         },
                         new
                         {
@@ -2728,7 +2873,8 @@ namespace UngDungQuanLiNhaHang.Migrations
                             IngredientId = 22,
                             ProductId = 16,
                             Quantity = 200.0,
-                            Unit = "g"
+                            Unit = "g",
+                            isDelete = false
                         },
                         new
                         {
@@ -2736,7 +2882,8 @@ namespace UngDungQuanLiNhaHang.Migrations
                             IngredientId = 14,
                             ProductId = 16,
                             Quantity = 200.0,
-                            Unit = "g"
+                            Unit = "g",
+                            isDelete = false
                         },
                         new
                         {
@@ -2744,7 +2891,8 @@ namespace UngDungQuanLiNhaHang.Migrations
                             IngredientId = 24,
                             ProductId = 17,
                             Quantity = 300.0,
-                            Unit = "g"
+                            Unit = "g",
+                            isDelete = false
                         },
                         new
                         {
@@ -2752,7 +2900,8 @@ namespace UngDungQuanLiNhaHang.Migrations
                             IngredientId = 23,
                             ProductId = 17,
                             Quantity = 100.0,
-                            Unit = "g"
+                            Unit = "g",
+                            isDelete = false
                         },
                         new
                         {
@@ -2760,7 +2909,8 @@ namespace UngDungQuanLiNhaHang.Migrations
                             IngredientId = 12,
                             ProductId = 18,
                             Quantity = 200.0,
-                            Unit = "g"
+                            Unit = "g",
+                            isDelete = false
                         },
                         new
                         {
@@ -2768,7 +2918,8 @@ namespace UngDungQuanLiNhaHang.Migrations
                             IngredientId = 11,
                             ProductId = 18,
                             Quantity = 200.0,
-                            Unit = "g"
+                            Unit = "g",
+                            isDelete = false
                         },
                         new
                         {
@@ -2776,7 +2927,8 @@ namespace UngDungQuanLiNhaHang.Migrations
                             IngredientId = 25,
                             ProductId = 18,
                             Quantity = 200.0,
-                            Unit = "g"
+                            Unit = "g",
+                            isDelete = false
                         },
                         new
                         {
@@ -2784,7 +2936,8 @@ namespace UngDungQuanLiNhaHang.Migrations
                             IngredientId = 26,
                             ProductId = 19,
                             Quantity = 300.0,
-                            Unit = "g"
+                            Unit = "g",
+                            isDelete = false
                         },
                         new
                         {
@@ -2792,7 +2945,8 @@ namespace UngDungQuanLiNhaHang.Migrations
                             IngredientId = 1,
                             ProductId = 19,
                             Quantity = 200.0,
-                            Unit = "g"
+                            Unit = "g",
+                            isDelete = false
                         },
                         new
                         {
@@ -2800,7 +2954,8 @@ namespace UngDungQuanLiNhaHang.Migrations
                             IngredientId = 27,
                             ProductId = 20,
                             Quantity = 300.0,
-                            Unit = "g"
+                            Unit = "g",
+                            isDelete = false
                         },
                         new
                         {
@@ -2808,7 +2963,8 @@ namespace UngDungQuanLiNhaHang.Migrations
                             IngredientId = 27,
                             ProductId = 21,
                             Quantity = 300.0,
-                            Unit = "g"
+                            Unit = "g",
+                            isDelete = false
                         },
                         new
                         {
@@ -2816,7 +2972,8 @@ namespace UngDungQuanLiNhaHang.Migrations
                             IngredientId = 11,
                             ProductId = 22,
                             Quantity = 300.0,
-                            Unit = "g"
+                            Unit = "g",
+                            isDelete = false
                         },
                         new
                         {
@@ -2824,7 +2981,8 @@ namespace UngDungQuanLiNhaHang.Migrations
                             IngredientId = 28,
                             ProductId = 23,
                             Quantity = 500.0,
-                            Unit = "g"
+                            Unit = "g",
+                            isDelete = false
                         });
                 });
 
@@ -3006,6 +3164,9 @@ namespace UngDungQuanLiNhaHang.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("isDelete")
+                        .HasColumnType("bit");
+
                     b.HasKey("SupplierID");
 
                     b.HasIndex("AddressId");
@@ -3019,7 +3180,8 @@ namespace UngDungQuanLiNhaHang.Migrations
                             AddressId = 7,
                             Email = "ctyabc@gmail.com",
                             Phone = "0239092399",
-                            SupplierName = "Công Ty Thực Phẩm Sạch ABC"
+                            SupplierName = "Công Ty Thực Phẩm Sạch ABC",
+                            isDelete = false
                         },
                         new
                         {
@@ -3027,7 +3189,8 @@ namespace UngDungQuanLiNhaHang.Migrations
                             AddressId = 8,
                             Email = "haisan23@gmail.com",
                             Phone = "0239092459",
-                            SupplierName = "Công Ty Hải Sản Cà Mau"
+                            SupplierName = "Công Ty Hải Sản Cà Mau",
+                            isDelete = false
                         });
                 });
 
@@ -3205,10 +3368,6 @@ namespace UngDungQuanLiNhaHang.Migrations
 
             modelBuilder.Entity("UngDungQuanLiNhaHang.Models.BookTable", b =>
                 {
-                    b.HasOne("UngDungQuanLiNhaHang.Models.Customers", "Customers")
-                        .WithMany()
-                        .HasForeignKey("CustomersCustomerId");
-
                     b.HasOne("UngDungQuanLiNhaHang.Models.Tables", "Tables")
                         .WithMany("BookTables")
                         .HasForeignKey("TablesTableId");
@@ -3216,6 +3375,12 @@ namespace UngDungQuanLiNhaHang.Migrations
                     b.HasOne("UngDungQuanLiNhaHang.Models.BookTableStatus", "BookTableStatus")
                         .WithMany("BookTables")
                         .HasForeignKey("bookTableStatusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("UngDungQuanLiNhaHang.Models.Customers", "Customers")
+                        .WithMany("bookTables")
+                        .HasForeignKey("customerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -3356,7 +3521,7 @@ namespace UngDungQuanLiNhaHang.Migrations
 
                     b.HasOne("UngDungQuanLiNhaHang.Models.Customers", "customers")
                         .WithMany("invoices")
-                        .HasForeignKey("customersCustomerId");
+                        .HasForeignKey("customerId");
 
                     b.HasOne("UngDungQuanLiNhaHang.Models.Tables", "tables")
                         .WithMany("Invoices")
@@ -3574,6 +3739,8 @@ namespace UngDungQuanLiNhaHang.Migrations
 
                     b.Navigation("Cart")
                         .IsRequired();
+
+                    b.Navigation("bookTables");
 
                     b.Navigation("invoices");
 

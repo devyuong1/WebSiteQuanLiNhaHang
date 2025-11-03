@@ -33,7 +33,14 @@ namespace UngDungQuanLiNhaHang.Repository {
                 .Include(p => p.productOptions)
                 .Include(p => p.productReviews)
                     .ThenInclude(pr => pr.Customers)
-                 .AsSplitQuery()
+                .FirstOrDefaultAsync(p => p.ProductId == productId && p.IsActive == true);
+        }
+        public async Task<Products?> GetProductByIdForUpdateIngredient(int productId) {
+            return await _context.products
+                .Include(p => p.recipes)
+                    .ThenInclude(s => s.Ingredient)
+                .Include(p => p.productOptions)
+                    .ThenInclude(s => s.Ingredient)
                 .FirstOrDefaultAsync(p => p.ProductId == productId && p.IsActive == true);
         }
         public async Task<List<Products>> GetAllProducts() {

@@ -147,6 +147,17 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
             return ApiResponse<EmployeeResponse>.SuccessResponse(employeeResponse, "Lấy thông tin nhân viên thành công.");
         }
 
+        public async Task<ApiResponse<List<RoleResponse>>> GetRoles() {
+            var result = await employeeRepo.GetRoles();
+            if ( result == null )
+                return ApiResponse<List<RoleResponse>>.FailResponse("Not Found");
+            var response = result.Select(item => new RoleResponse() { 
+                roleId = item.RoleId,
+                roleName = item.RoleName,
+            } ).ToList();
+            return ApiResponse<List<RoleResponse>>.SuccessResponse(response);
+        }
+
         public async Task<ApiResponse<bool>> UpdateEmployee(EmployeeDTO employeeDTO) {
             var result = await employeeRepo.GetEmployeeById(employeeDTO.employeeId);
             if ( result == null ) {

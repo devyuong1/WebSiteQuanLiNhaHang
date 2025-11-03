@@ -21,8 +21,8 @@ namespace UngDungQuanLiNhaHang.Controllers
         
 
         // GET: api/Ingredients
-        [HttpGet]
-        [Authorize(Roles = "Admin, Manager, Employee")]
+        [HttpGet("Getingredients/{page}")]
+        [Authorize(Roles = "Admin,Manager,Employee")]
 
         public async Task<ActionResult<ApiResponse<IEnumerable<IngredientResponse>>>> Getingredients(int page = 1)
         {
@@ -32,9 +32,19 @@ namespace UngDungQuanLiNhaHang.Controllers
             }
             return BadRequest(result);
         }
+        [HttpGet("GetListIngredient")]
+        [Authorize(Roles = "Admin,Manager,Employee")]
+
+        public async Task<ActionResult<ApiResponse<List<ListIngredientResponse>>>> GetListIngredient() {
+            var result = await services.GetListIngredient();
+            if ( result.Success ) {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
 
         // GET: api/Ingredients/5
-        [HttpGet("{id}")]
+        [HttpGet("GetIngredient/{id}")]
         [Authorize(Roles = "Admin, Manager, Employee")]
 
         public async Task<ActionResult<ApiResponse<IngredientResponse>>> GetIngredient(int id)
@@ -49,10 +59,10 @@ namespace UngDungQuanLiNhaHang.Controllers
 
         // PUT: api/Ingredients/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
+        [HttpPut("PutIngredient/{id}")]
         [Authorize(Roles = "Admin, Manager, Employee")]
 
-        public async Task<IActionResult> PutIngredient(int id, IngredientDTO ingredient)
+        public async Task<ActionResult<ApiResponse<bool>>> PutIngredient(int id,[FromBody] IngredientDTO ingredient)
         {
             if (id != ingredient.ingredientId || !ModelState.IsValid)
             {
@@ -67,8 +77,8 @@ namespace UngDungQuanLiNhaHang.Controllers
         }
 
         // POST: api/Ingredients
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
+       
+        [HttpPost("PostIngredient")]
         [Authorize(Roles = "Admin, Manager, Employee")]
 
         public async Task<ActionResult<Ingredient>> PostIngredient([FromBody]IngredientDTO ingredient)
@@ -85,7 +95,7 @@ namespace UngDungQuanLiNhaHang.Controllers
         }
 
         // DELETE: api/Ingredients/5
-        [HttpDelete("{id}")]
+        [HttpDelete("ActiveIngredient/{id}")]
         [Authorize(Roles = "Admin, Manager, Employee")]
 
         public async Task<IActionResult> ActiveIngredient(int id)

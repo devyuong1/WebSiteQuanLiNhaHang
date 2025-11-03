@@ -19,5 +19,8 @@ namespace UngDungQuanLiNhaHang.Repository {
         public async Task<Ingredient?> GetIngredientByName(string name) {
             return await _context.ingredients.FirstOrDefaultAsync(i => i.IngredientName == name);
         }
+        public async Task<List<Ingredient>> GetListIngredient() {
+            return await _context.ingredients.AsNoTracking().ToListAsync();
+        }
     }
 }

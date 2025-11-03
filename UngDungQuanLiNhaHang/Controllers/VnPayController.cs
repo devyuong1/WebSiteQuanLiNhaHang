@@ -10,20 +10,12 @@ using UngDungQuanLiNhaHang.VnPayLibary;
 namespace UngDungQuanLiNhaHang.Controllers {
     [Route("api/[controller]")]
     [ApiController]
-    public class VnPayController(IVnPayService vnPayService,IInvoiceServices invoiceService,Logger<VnPayController> _logger) : ControllerBase {
-        [Authorize]
-        [HttpPost("CreatePaymentUrlVnpay")]
-        public async Task<ActionResult<ApiResponse<string>>> CreatePaymentUrlVnpay([FromBody] PaymentInformationModel model) {
-
-            
-            //var url = vnPayService.CreatePaymentUrl(model, HttpContext, "http://localhost:5030/api/VnPay/PaymentCallbackVnpay", model.id);
-            //if ( url == null ) {
-            //    return ApiResponse<string>.FailResponse("Lỗi hệ thống.");
-            //}
-            //return Ok(ApiResponse<string>.SuccessResponse(url));
-            return ApiResponse<string>.FailResponse("Lỗi hệ thống.");
+    public class VnPayController(IVnPayService vnPayService,
+        IBookTableServices bookTableServices,
+        IInvoiceServices invoiceService,
+        Logger<VnPayController> _logger
+        ) : ControllerBase {
         
-        }
 
         [HttpGet("PaymentCallbackVnpay")]
         public async Task<IActionResult> PaymentCallbackVnpay() {
@@ -58,25 +50,17 @@ namespace UngDungQuanLiNhaHang.Controllers {
                 var isSuccess = await invoiceService.UpdatePayMent(orderId); // Cập nhật trạng thái thanh toán  hóa đơn "
                 var isDeleteCart = await invoiceService.DeleteCartByInvoiceId(orderId);
                 if ( isSuccess.Success == false  || isDeleteCart.Success == false) {
-                    return Redirect($"http://localhost:5173/Payment/Error?orderId={orderId}&reason={isDeleteCart.Message}");
+                    return Redirect($"http://localhost:5173/Payment/Error?orderId={orderId}&&reason=Lỗi hệ thống vui lòng liên hệ nhà hàng để được hỗ trợ.");
                 }
 
                 return Redirect($"http://localhost:5173/Payment/Success");
             }
 
-            return Redirect($"http://localhost:5173/Payment/Error?orderId={orderId}&reason=Thanh toán thất bại");
+            return Redirect($"http://localhost:5173/Payment/Error?orderId={orderId}&reason=Thanh toán thất bại. Vui lòng kiểm tra lại tài khoản.");
 
         }
 
-        [HttpPost("CreatePaymentUrlDatBan")]
-        public async Task<IActionResult> CreatePaymentUrlDatBan([FromBody] PaymentInformationModel model) {
-            var url = vnPayService.CreatePaymentUrlForBookTable(model, HttpContext, "http://localhost:5030/api/VnPay/PaymentCallbackDatBan", 1);
-            if ( url == null ) {
-                return NotFound();
-            }
-            return Ok(url);
-
-        }
+        
 
         [HttpGet("PaymentCallbackDatBan")]
         public async Task<IActionResult> PaymentCallbackDatBan() {
@@ -88,22 +72,29 @@ namespace UngDungQuanLiNhaHang.Controllers {
                     vnpay.AddResponseData(item.Key, item.Value);
             }
 
-            string vnp_HashSecret = "ZZ2TQT0NTL3SLVBHR3GV2YIAAG9AQFO8";
-            bool isValid = vnpay.ValidateSignature(vnp_HashSecret);
+            string vnpSecureHash = query["vnp_SecureHash"].ToString();
+            string hashSecret = "ZZ2TQT0NTL3SLVBHR3GV2YIAAG9AQFO8";
 
-            //if ( !isValid ) {
-            //    return Redirect("https://yourfrontend.com/payment-failure?reason=invalid-signature");
-            //}
+            // ✅ Truyền đúng thứ tự: (vnp_SecureHash, HashSecret)
+            bool isValid = vnpay.ValidateSignature(vnpSecureHash, hashSecret);
+
+            if ( !isValid ) {
+                return Redirect("https://yourfrontend.com/payment-failure?reason=invalid-signature");
+            }
 
             string responseCode = vnpay.GetResponseData("vnp_ResponseCode");
             string transactionStatus = vnpay.GetResponseData("vnp_TransactionStatus");
-            string orderId = vnpay.GetResponseData("vnp_TxnRef");
+            string bookTableId = vnpay.GetResponseData("vnp_TxnRef");
 
             if ( responseCode == "00" && transactionStatus == "00" ) {
-                return Redirect($"http://localhost:5173/DatBanSuccess");
+                var isUpdatePayment = await bookTableServices.UpdateBookingPayment(int.Parse(bookTableId));
+                if (isUpdatePayment.Success) {
+                    return Redirect($"http://localhost:5173/DatBanSuccess");
+                }
+                return Redirect($"http://localhost:5173/DatBanError?bookTableId={bookTableId}&reason=Lỗi hệ thống vui lòng liên hệ nhà hàng để được hỗ trợ.");
             }
             else {
-                return Redirect($"http://localhost:5173/DatBanError");
+                return Redirect($"http://localhost:5173/DatBanErro?bookTableId={bookTableId}&reason=Thanh toán thất bại. Vui lòng kiểm tra lại tài khoản.");
             }
         }
     }

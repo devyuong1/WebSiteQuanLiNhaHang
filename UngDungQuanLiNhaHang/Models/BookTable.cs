@@ -14,7 +14,9 @@ namespace UngDungQuanLiNhaHang.Models {
         public DateTime Create_At { get; set; }
         public int TableId { get; set; }
         public Tables? Tables { get; set; }
+        public string? HangfireJobId { get; set; }
         public int customerId { get; set; }
+        [ForeignKey("customerId")]
         public Customers? Customers { get; set; }
         public int bookTableStatusId { get; set; }
         [ForeignKey("bookTableStatusId")]

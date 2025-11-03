@@ -4,11 +4,11 @@ using UngDungQuanLiNhaHang.ResponseDTO;
 
 namespace UngDungQuanLiNhaHang.Services.Interfaces {
     public interface IAuthServices {
-        public Task<ApiResponse<UserDetails>> Login(LoginDTO customer);
-        public Task<ApiResponse<bool>> Register(CustomerDTO customer);
-        public  Task<ApiResponse<CustomerResponse>> RefreshToken(TokenRequestDTO item);
-        public  Task<ApiResponse<UserDetails>> RefreshTokenEmployee(TokenRequestDTO item);
-        public Task<ApiResponse<UserDetails>> LoginEmployee(LoginDTO employee);
+         Task<ApiResponse<UserDetails>> Login(LoginDTO customer);
+         Task<ApiResponse<bool>> Register(CustomerDTO customer);
+          Task<ApiResponse<CustomerResponse>> RefreshToken(TokenRequestDTO item);
+          Task<ApiResponse<UserDetails>> RefreshTokenEmployee(TokenRequestDTO item);
+         Task<ApiResponse<UserDetails>> LoginEmployee(LoginDTO employee);
 
     }
 }

@@ -19,10 +19,10 @@ namespace UngDungQuanLiNhaHang.Controllers
     public class CategorysController(ICategoryServices categoryService) : ControllerBase
     {
         // GET: api/Categorys
-        [HttpGet]
-        [Authorize(Roles = "Admin, Manager, Employee")]
+        [HttpGet("Getcategories")]
+        [Authorize(Roles = "Admin,Manager,Employee")]
 
-        public async Task<ActionResult<ApiResponse<IEnumerable<CategoryResponse>>>> Getcategories(int page = 1)
+        public async Task<ActionResult<ApiResponse<PageResponse<CategoryResponse>>>> Getcategories([FromQuery] int page = 1)
         {
             var result = await categoryService.GetAllCategories(page);
             if (!result.Success)
@@ -31,11 +31,20 @@ namespace UngDungQuanLiNhaHang.Controllers
             }
             return Ok(result);
         }
+        [HttpGet("GetListCategory")]
+        
 
+        public async Task<ActionResult<ApiResponse<List<CategoryResponse>>>> GetListCategory(int page = 1) {
+            var result = await categoryService.GetListCategory();
+            if ( !result.Success ) {
+                return BadRequest(result);
+            }
+            return Ok(result);
+        }
         // GET: api/Categorys/5
         [Authorize(Roles = "Admin, Manager, Employee")]
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Categorys>> GetCategorys(int id)
+        [HttpGet("GetCategorys/{id}")]
+        public async Task<ActionResult<ApiResponse<CategoryResponse>>> GetCategorys(int id)
         {
             var categorys = await categoryService.GetCategoryById(id);
             if (!categorys.Success)
@@ -47,9 +56,9 @@ namespace UngDungQuanLiNhaHang.Controllers
 
         // PUT: api/Categorys/5
         
-        [Authorize(Roles = "Admin, Manager, Employee")]
-        [HttpPut]
-        public async Task<IActionResult> PutCategorys([FromBody]CategoryDTO categoryDTO)
+        [Authorize(Roles = "Admin,Manager,Employee")]
+        [HttpPut("PutCategorys")]
+        public async Task<ActionResult<ApiResponse<bool>>> PutCategorys([FromBody]CategoryDTO categoryDTO)
         {
 
             if ( categoryDTO == null || !ModelState.IsValid ) {
@@ -65,9 +74,9 @@ namespace UngDungQuanLiNhaHang.Controllers
 
         // POST: api/Categorys
        
-        [Authorize(Roles = "Admin, Manager, Employee")]
-        [HttpPost]
-        public async Task<ActionResult<Categorys>> PostCategorys([FromBody]CategoryDTO categoryDTO)
+        [Authorize(Roles = "Admin,Manager,Employee")]
+        [HttpPost("PostCategorys")]
+        public async Task<ActionResult<ApiResponse<bool>>> PostCategorys([FromBody]CategoryDTO categoryDTO)
         {
             if(categoryDTO == null || !ModelState.IsValid)
             {
@@ -82,7 +91,7 @@ namespace UngDungQuanLiNhaHang.Controllers
         }
 
         // PUT: api/Categorys/5
-        [Authorize(Roles = "Admin, Manager, Employee")]
+        [Authorize(Roles = "Admin,Manager,Employee")]
         [HttpPut("ActiveCategorys/{id}")]
         public async Task<IActionResult> ActiveCategorys( int id)
         {

@@ -19,7 +19,7 @@ namespace UngDungQuanLiNhaHang.Controllers
     public class ProductsController(IProductService productService) : ControllerBase
     {
        
-        [HttpPost]
+        [HttpPost("Getproducts")]
         public async Task<ActionResult<ApiResponse<PageResponse<ProductResponse>>>> Getproducts([FromBody]ProductPageDTO productPageDTO)
         {
             var products = await productService.GetAllProducts(productPageDTO);
@@ -29,7 +29,6 @@ namespace UngDungQuanLiNhaHang.Controllers
             }
             return BadRequest(products);
         }
-
         // GET: api/Products/5
         [HttpGet("GetProductById/{id}")]
         public async Task<ActionResult<ApiResponse<ProductDetailResponse>>> GetProductById(int id)
@@ -49,6 +48,18 @@ namespace UngDungQuanLiNhaHang.Controllers
             }
             return BadRequest(products);
         }
+        // GET: api/Products/5
+        [HttpGet("GetProductForPut/{id}")]
+
+        public async Task<ActionResult<ApiResponse<PutProductResponse>>> GetProductForPut(int id) {
+            var products = await productService.GetProductId(id);
+            if ( products.Success ) {
+                return Ok(products);
+            }
+            return BadRequest(products);
+        }
+
+
 
         [HttpGet("GetListProductTopSelling")]
         public async Task<ActionResult<ApiResponse<List<ProductResponse>>>> GetListProductTopSelling()
@@ -92,9 +103,9 @@ namespace UngDungQuanLiNhaHang.Controllers
         [Consumes("multipart/form-data")]
         [Authorize(Roles = "Admin, Manager, Employee")]
 
-        public async Task<ActionResult<ApiResponse<bool>>> UpdateImgProduct(int productId, [FromForm] List<ImgProductDTO> imgProductDTO)
+        public async Task<ActionResult<ApiResponse<int>>> UpdateImgProduct([FromForm] int productId, [FromForm] IFormFile file)
         {
-            var result = await productService.UpdateImgProduct(productId, imgProductDTO);
+            var result = await productService.UpdateImgProduct(productId, file);
             if (result.Success)
             {
                 return Ok(result);
@@ -104,9 +115,9 @@ namespace UngDungQuanLiNhaHang.Controllers
        
         [HttpPost("PostProducts")]
         [Authorize(Roles = "Admin, Manager, Employee")]
+        
 
-
-        public async Task<ActionResult<ApiResponse<bool>>> PostProducts([FromBody] ProductDTO productDTO)
+        public async Task<ActionResult<ApiResponse<int>>> PostProducts([FromBody] ProductDTO productDTO)
         {
             var result = await productService.AddProduct(productDTO);
             if (result.Success)
@@ -119,9 +130,9 @@ namespace UngDungQuanLiNhaHang.Controllers
         [Consumes("multipart/form-data")]
         [Authorize(Roles = "Admin, Manager, Employee")]
 
-        public async Task<ActionResult<ApiResponse<bool>>> AddImgProduct(int productId, [FromForm] List<ImgProductDTO> imgProductDTO)
+        public async Task<ActionResult<ApiResponse<bool>>> AddImgProduct([FromForm] int productId, [FromForm] IFormFile file)
         {
-            var result = await productService.AddImgProduct(productId,imgProductDTO);
+            var result = await productService.AddImgProduct(productId,file);
             if (result.Success)
             {
                 return Ok(result);

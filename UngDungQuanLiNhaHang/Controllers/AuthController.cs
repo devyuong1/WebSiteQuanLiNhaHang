@@ -37,9 +37,9 @@ namespace UngDungQuanLiNhaHang.Controllers {
             }
             return BadRequest(result);
         }
-        [Authorize]
+        
         [HttpPost("refresh-token")]
-        public async Task<IActionResult> RefreshToken([FromBody] TokenRequestDTO tokenRequest) {
+        public async Task<ActionResult<ApiResponse<UserDetails>>> RefreshToken([FromBody] TokenRequestDTO tokenRequest) {
             if (!ModelState.IsValid) {
                 return BadRequest("Dữ liệu không hợp lệ");
             }
@@ -49,9 +49,9 @@ namespace UngDungQuanLiNhaHang.Controllers {
             }
             return BadRequest(result);
         }
-        [Authorize]
+        
         [HttpPost("RefreshTokenEmployee")]
-        public async Task<IActionResult> RefreshTokenEmployee([FromBody] TokenRequestDTO tokenRequest) {
+        public async Task<ActionResult<ApiResponse<UserDetails>>> RefreshTokenEmployee([FromBody] TokenRequestDTO tokenRequest) {
             if (!ModelState.IsValid) {
                 return BadRequest("Dữ liệu không hợp lệ");
             }

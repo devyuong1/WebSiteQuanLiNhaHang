@@ -17,7 +17,6 @@ namespace UngDungQuanLiNhaHang.Models {
         public ICollection<AddressCustomer> AddressCustomers { get; set; } = new List<AddressCustomer>();
         public ICollection<Employees> employees { get; set; } = new List<Employees>();
 
-        
         public ICollection<Suppliers> suppliers { get; set; } = new List<Suppliers>();
 
         public ICollection<Invoices> invoices { get; set; } = new List<Invoices>();

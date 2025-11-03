@@ -9,6 +9,7 @@ namespace UngDungQuanLiNhaHang.Models {
         public required string SupplierName {get; set;}
         public required string Phone {  get; set;}
         public required string Email { get; set;}
+        public bool isDelete { get; set; } = false;
         public int AddressId { get; set;}
         [ForeignKey("AddressId")]
 

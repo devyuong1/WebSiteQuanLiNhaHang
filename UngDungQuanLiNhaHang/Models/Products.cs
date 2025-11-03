@@ -13,6 +13,7 @@ namespace UngDungQuanLiNhaHang.Models {
         public int Quantity { get; set; }
         public int SoldCount { get; set; }
         public bool IsActive { get; set; } = true;
+        public bool IsDeleted { get; set; } = false;
         public DateTime Create_At { get; set; } = DateTime.UtcNow;
         public DateTime Update_At { get; set; } = DateTime.UtcNow;
         public double AverageRating { get; set; } = 5;

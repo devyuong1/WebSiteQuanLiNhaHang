@@ -19,10 +19,10 @@ namespace UngDungQuanLiNhaHang.Controllers
     public class PurchaseInvoicesController(IPurchaseInvoiceServices purchaseInvoiceServices) : ControllerBase
     {
         // GET: api/PurchaseInvoices
-        [HttpGet]
+        [HttpGet("GetpurchaseInvoices")]
         [Authorize(Roles = "Admin, Manager, Employee")]
 
-        public async Task<ActionResult<IEnumerable<ApiResponse<PurchaseInvoiceResponse>>>> GetpurchaseInvoice(int page = 1)
+        public async Task<ActionResult<ApiResponse<PageResponse<PurchaseInvoiceResponse>>>> GetpurchaseInvoices([FromQuery]int page = 1)
         {
             var result = await purchaseInvoiceServices.GetAllPurchaseInvoices(page);
             if (!result.Success)
@@ -32,22 +32,30 @@ namespace UngDungQuanLiNhaHang.Controllers
             return Ok(result);
         }
 
-        // GET: api/PurchaseInvoices/5
-        [HttpGet("{id}")]
+        [HttpGet("GetPurchaseInvoiceDashboard")]
         [Authorize(Roles = "Admin, Manager, Employee")]
 
-        public async Task<ActionResult<ApiResponse<PurchaseInvoiceResponse>>> GetPurchaseInvoice(int id)
+        public async Task<ActionResult<ApiResponse<purchaseInvoiceDashboard>>> GetPurchaseInvoiceDashboard()
         {
-            var result = await purchaseInvoiceServices.GetPurchaseInvoiceById(id);
+            var result = await purchaseInvoiceServices.GetPurchaseInvoiceDashboard();
             if (!result.Success)
             {
                 return NotFound(result);
             }
             return Ok(result);
         }
+        [HttpGet("GetPurchaseInvoice")]
+        [Authorize(Roles = "Admin, Manager, Employee")]
 
-       
-        [HttpPut]
+        public async Task<ActionResult<ApiResponse<PurchaseInvoiceResponse>>> GetPurchaseInvoice(int id) {
+            var result = await purchaseInvoiceServices.GetPurchaseInvoiceById(id);
+            if ( !result.Success ) {
+                return NotFound(result);
+            }
+            return Ok(result);
+        }
+
+        [HttpPut("PutPurchaseInvoice")]
         [Authorize(Roles = "Admin, Manager, Employee")]
 
         public async Task<ActionResult<ApiResponse<bool>>> PutPurchaseInvoice([FromBody] PurchaseInvoiceDTO purchaseInvoice)
@@ -63,10 +71,10 @@ namespace UngDungQuanLiNhaHang.Controllers
               return Ok(result);
         }
 
-        [HttpPost]
+        [HttpPost("PostPurchaseInvoice")]
         [Authorize(Roles = "Admin, Manager, Employee")]
 
-        public async Task<ActionResult<PurchaseInvoice>> PostPurchaseInvoice(PurchaseInvoiceDTO purchaseInvoice)
+        public async Task<ActionResult<ApiResponse<bool>>> PostPurchaseInvoice([FromBody] PurchaseInvoiceDTO purchaseInvoice)
         {
             if ( purchaseInvoice == null || !ModelState.IsValid ) {
                 return BadRequest("PurchaseInvoice data is null.");

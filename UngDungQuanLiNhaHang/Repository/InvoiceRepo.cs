@@ -53,9 +53,21 @@ namespace UngDungQuanLiNhaHang.Repository {
             return await _context.invoices
                 .Include(i => i.InvoiceStatus)
                 .Include(i => i.customers)
+                .Include(i => i.address)
+                .Include(i => i.PaymentMethod)
                 .Include(i => i.invoiceItems)
+                    
                     .ThenInclude(ii => ii.Products)
                         .ThenInclude(ii => ii.images)
+                 .Include(i => i.invoiceItems)
+                       .ThenInclude(pp => pp.orderItemOptions)
+                 .FirstOrDefaultAsync(s => s.InvoiceId == InvoicesId);
+        }
+        public async Task<Invoices?> GetInvoicesByInvoicesIdForUpdateIngredient(int InvoicesId) {
+            return await _context.invoices
+                .AsNoTracking()
+                .Include(i => i.invoiceItems)
+                    .ThenInclude(ii => ii.Products)     
                  .Include(i => i.invoiceItems)
                        .ThenInclude(pp => pp.orderItemOptions)
                  .FirstOrDefaultAsync(s => s.InvoiceId == InvoicesId);
@@ -66,11 +78,13 @@ namespace UngDungQuanLiNhaHang.Repository {
                 .Include(i => i.PaymentMethod)
                 .Include(i => i.customers)
                 .Include(i => i.InvoiceStatus)
+                .Include(i => i.address)
                 .Include(i => i.invoiceItems)
                     .ThenInclude(ii => ii.Products)
                         .ThenInclude(ii => ii.images)
                  .Include(i => i.invoiceItems)
-                       .ThenInclude(pp => pp.orderItemOptions)          
+                       .ThenInclude(pp => pp.orderItemOptions)       
+                .OrderByDescending(i => i.Create_At)
                 .ToListAsync();
         }
         public async Task<Dictionary<int, double>> GetMonthlyRevenueAsync(int year) {
@@ -114,6 +128,14 @@ namespace UngDungQuanLiNhaHang.Repository {
 
         public async Task<Invoices?> GetInvoiceForCart(int invoiceId) {
             return await _context.invoices.Include(x => x.invoiceItems).FirstOrDefaultAsync(s => s.InvoiceId == invoiceId);
+        }
+        public async Task<List<Invoices>> GetAllInvoiceByDay(DateTime date) {
+            var start = date.Date;
+            var end = start.AddDays(1);
+
+            return await _context.invoices
+                .Where(item => item.Create_At >= start && item.Create_At < end)
+                .ToListAsync();
         }
     }
 }

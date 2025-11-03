@@ -11,29 +11,26 @@ namespace UngDungQuanLiNhaHang.Controllers
     [ApiController]
     public class EmployeesController(IEmployeeServices services) : ControllerBase
     {
-        
-
-        
 
         // GET: api/Employees
-        [HttpGet]
+        [HttpGet("Getemployees")]
         [Authorize(Roles = "Admin, Manager")]
 
-        public async Task<ActionResult<IEnumerable<EmployeeResponse>>> Getemployees(int page = 1)
+        public async Task<ActionResult<ApiResponse<PageResponse<EmployeeResponse>>>> Getemployees(int page = 1)
         {
             var result = await services.GetAllEmployees(page);
             if ( result.Success) {
-                return Ok(result.Access);
+                return Ok(result);
             }
-            return BadRequest(result.Message);
+            return BadRequest(result);
         }
 
         // GET: api/Employees/5
-        [HttpGet("{id}")]
+        [HttpGet("GetEmployee")]
         [Authorize(Roles = "Admin, Manager")]
 
 
-        public async Task<ActionResult<EmployeeResponse>> GetEmployees(int id)
+        public async Task<ActionResult<ApiResponse<EmployeeResponse>>> GetEmployee(int id)
         {
             if (id <= 0) {
                 return BadRequest("Id không hợp lệ");
@@ -42,20 +39,20 @@ namespace UngDungQuanLiNhaHang.Controllers
 
             if (result.Success)
             {
-                return Ok(result.Access);
+                return Ok(result);
             }
 
-            return NotFound(result.Message);
+            return NotFound(result);
         }
 
         // PUT: api/Employees/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
+        [HttpPut("PutEmployees")]
         [Authorize(Roles = "Admin, Manager")]
 
-        public async Task<IActionResult> PutEmployees(int id, EmployeeDTO item)
+        public async Task<ActionResult<ApiResponse<bool>>> PutEmployees([FromBody] EmployeeDTO item)
         {
-            if (id != item.employeeId || !ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return BadRequest("Dữ liệu không hợp lệ.");
             }
@@ -72,8 +69,8 @@ namespace UngDungQuanLiNhaHang.Controllers
         // POST: api/Employees
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [Authorize(Roles = "Admin, Manager")]
-        [HttpPost]
-        public async Task<ActionResult<Employees>> PostEmployees(EmployeeDTO employees)
+        [HttpPost("PostEmployees")]
+        public async Task<ActionResult<ApiResponse<bool>>> PostEmployees([FromBody]EmployeeDTO employees)
         {
             if (!ModelState.IsValid)
             {
@@ -86,7 +83,12 @@ namespace UngDungQuanLiNhaHang.Controllers
             }
             return BadRequest(result.Message);
         }
-
+        [Authorize(Roles = "Admin, Manager")]
+        [HttpGet("GetRoles")]
+        public async Task<ActionResult<ApiResponse<List<RoleResponse>>>> GetRoles() {
+            var roles = await services.GetRoles();
+            return Ok(roles);
+        }
         // DELETE: api/Employees/5
         [Authorize(Roles = "Admin, Manager")]
         [HttpDelete("{id}")]

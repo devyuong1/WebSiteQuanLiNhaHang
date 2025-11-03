@@ -1,19 +1,20 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Hangfire;
+using Hangfire.SqlServer;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Security.Claims;
 using System.Text;
+using UngDungQuanLiNhaHang.Controllers;
 using UngDungQuanLiNhaHang.Data;
 using UngDungQuanLiNhaHang.Helpers;
+using UngDungQuanLiNhaHang.Models;
 using UngDungQuanLiNhaHang.Repository;
 using UngDungQuanLiNhaHang.Security;
 using UngDungQuanLiNhaHang.Services.Implementations;
 using UngDungQuanLiNhaHang.Services.Interfaces;
-using Hangfire;
-using Hangfire.SqlServer;
-using UngDungQuanLiNhaHang.Controllers;
-
+using UngDungQuanLiNhaHang.Hubs;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<DataDbConText>(options => 
@@ -33,8 +34,9 @@ builder.Services.AddHangfire(configuration => configuration
     }));
 builder.Services.AddHangfireServer();
 // Add services to the container.
-
-
+builder.Services.Configure<EmailSettings>(
+    builder.Configuration.GetSection("EmailSettings"));
+builder.Services.AddSignalR();
 builder.Services.AddControllers();
 builder.Services.AddSwaggerGen(c =>
 {
@@ -92,19 +94,27 @@ builder.Services.AddAuthentication(
                     Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"] ?? "ashsjabhdsjksdfjkdsfjsdjkfbsdjk123")), // Thiết lập khóa bí mật để xác thực token.
                 RoleClaimType = ClaimTypes.Role
             };
+            options.Events = new JwtBearerEvents {
+                OnMessageReceived = context =>
+                {
+                    // SignalR gửi token qua query string "access_token"
+                    var accessToken = context.Request.Query["access_token"];
+
+                    // Nếu request đến Hub endpoint
+                    var path = context.HttpContext.Request.Path;
+                    if ( !string.IsNullOrEmpty(accessToken) &&
+                        path.StartsWithSegments("/orderHub") ) {
+                        context.Token = accessToken;
+                    }
+
+                    return Task.CompletedTask;
+                }
+            };
         }
+
+
 );
 
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowFrontend",
-        policy =>
-        {
-            policy.WithOrigins("http://localhost:5173") // origin của React
-                  .AllowAnyHeader()
-                  .AllowAnyMethod();
-        });
-});
 
 builder.Services.AddScoped<IAuthServices, AuthServices>();
 builder.Services.AddScoped<IEmployeeServices, EmployeeService>();
@@ -143,29 +153,30 @@ builder.Services.AddScoped<IInvoiceServices, InvoiceService>();
 builder.Services.AddScoped<ProductReviewRepo>();
 builder.Services.AddScoped<IProductReviewService, ProductReviewService>();
 builder.Services.AddScoped<IVnPayService, VpPayService>();
+builder.Services.AddScoped<RefreshTokenRepo>();
+builder.Services.AddScoped<Logger<InvoiceService>>();
+builder.Services.AddScoped<IOrderNotificationService,OrderNotificationService>();
+builder.Services.AddScoped<Logger<IngredientService>>();
+
+
+builder.Services.AddTransient<IEmailService, EmailService>();
+
 
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAllOrigins",
         policy =>
         {
-            policy.AllowAnyOrigin()  // Cho phép mọi domain
+            policy.WithOrigins("http://localhost:3000", "http://localhost:5173")
+                //.AllowAnyOrigin()  // Cho phép mọi domain
                   .AllowAnyHeader()  // Cho phép mọi header
-                  .AllowAnyMethod(); // Cho phép mọi phương thức GET, POST, PUT...
+                  .AllowAnyMethod() // Cho phép mọi phương thức GET, POST, PUT...
+                .AllowCredentials();
         });
 });
+builder.Services.AddSignalR();
 
 
-//builder.Services.AddCors(options =>
-//{
-//    options.AddPolicy("AllowAllOrigins",
-//        policy =>
-//        {
-//            policy.AllowAnyOrigin()  // Cho phép mọi domain
-//                  .AllowAnyHeader()  // Cho phép mọi header
-//                  .AllowAnyMethod(); // Cho phép mọi phương thức GET, POST, PUT...
-//        });
-//});
 var app = builder.Build();
 
 //app.UseCors("AllowFrontend");
@@ -188,7 +199,7 @@ app.UseStaticFiles();
 
 app.UseAuthentication();
 app.UseAuthorization();
-
+app.MapHub<OrderHub>("/orderHub");
 app.MapControllers();
 app.UseHangfireDashboard("/hangfire");
 app.Run();

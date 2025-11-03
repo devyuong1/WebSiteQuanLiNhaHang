@@ -33,5 +33,8 @@ namespace UngDungQuanLiNhaHang.Repository {
         public async Task<Employees?> GetEmployeeByPhone(string phone) {
             return await _context.employees.FirstOrDefaultAsync(e => e.Phone == phone);
         }
+        public async Task<List<Roles>> GetRoles() {
+            return await _context.roles.Where(s => s.RoleId != 4).ToListAsync();
+        }
     }
 }

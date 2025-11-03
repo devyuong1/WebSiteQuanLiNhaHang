@@ -5,7 +5,7 @@ using UngDungQuanLiNhaHang.Services.Interfaces;
 using UngDungQuanLiNhaHang.Security;
 using UngDungQuanLiNhaHang.Models;
 namespace UngDungQuanLiNhaHang.Services.Implementations {
-    public class AuthServices(CustomerRepo customerRepo,JWT jwt,TransactionRepo transactionRepo,CartRepo cartRepo, EmployeeRepo employeeRepo) : IAuthServices {
+    public class AuthServices(CustomerRepo customerRepo,JWT jwt,TransactionRepo transactionRepo,CartRepo cartRepo, EmployeeRepo employeeRepo,RefreshTokenRepo refreshTokenRepo) : IAuthServices {
         public async Task<ApiResponse<UserDetails>> Login(LoginDTO customer) {
             var user = await customerRepo.GetCustomerByEmail(customer.Email);
             if (user == null ) {
@@ -108,20 +108,12 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
         }
 
         public async Task<ApiResponse<CustomerResponse>> RefreshToken(TokenRequestDTO item) {
-            var principal = jwt.GetPrincipalFromExpiredToken(item.Token);
-            if ( principal == null ) {
-                return ApiResponse<CustomerResponse>.FailResponse("Token không hợp lệ.");
-            }
-            var userId = int.Parse(principal.Claims.FirstOrDefault(c => c.Type == "UserID")!.Value);
-            var user = await customerRepo.GetCustomerById(userId);
-            if ( user == null ) {
-                return ApiResponse<CustomerResponse>.FailResponse("Người dùng không tồn tại.");
-            }
-            var storedRefreshToken = user.refreshTokens!.FirstOrDefault(t => t.Token == item.RefreshToken);
-            if ( storedRefreshToken == null ) {
+          
+            var storedRefreshToken = await refreshTokenRepo.GetCustomerByRf(item.refresh_token);
+            if ( storedRefreshToken == null || storedRefreshToken.Customers == null) {
                 return ApiResponse<CustomerResponse>.FailResponse("Refresh token không tồn tại.");
             }
-            if ( storedRefreshToken.IsUsed ) {
+            if (  storedRefreshToken.IsUsed ) {
                 return ApiResponse<CustomerResponse>.FailResponse("Refresh token đã được sử dụng.");
             }
             if ( storedRefreshToken.IsRevoked ) {
@@ -130,6 +122,7 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
             if ( storedRefreshToken.ExpiresAt < DateTime.UtcNow ) {
                 return ApiResponse<CustomerResponse>.FailResponse("Refresh token đã hết hạn.");
             }
+            var user = storedRefreshToken.Customers;
             try {
                 await transactionRepo.BeginTransactionAsync();
                 
@@ -145,7 +138,7 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
                     ExpiresAt = DateTime.Now.AddDays(7),
                     IsUsed = false,
                     IsRevoked = false,
-                    ReplacedByToken = item.RefreshToken
+                    ReplacedByToken = item.refresh_token
                 };
                 storedRefreshToken.IsUsed = true;
 
@@ -169,17 +162,8 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
         }
 
         public async Task<ApiResponse<UserDetails>> RefreshTokenEmployee(TokenRequestDTO item) {
-            var principal = jwt.GetPrincipalFromExpiredToken(item.Token);
-            if ( principal == null ) {
-                return ApiResponse<UserDetails>.FailResponse("Token không hợp lệ.");
-            }
-            var userId = int.Parse(principal.Claims.FirstOrDefault(c => c.Type == "UserID")!.Value);
-            var user = await employeeRepo.GetEmployeeById(userId);
-            if ( user == null ) {
-                return ApiResponse<UserDetails>.FailResponse("Người dùng không tồn tại.");
-            }
-            var storedRefreshToken = user.RefreshTokens!.FirstOrDefault(t => t.Token == item.RefreshToken);
-            if ( storedRefreshToken == null ) {
+            var storedRefreshToken = await refreshTokenRepo.GetEmployeeByRf(item.refresh_token);
+            if ( storedRefreshToken == null || storedRefreshToken.Employees == null ) {
                 return ApiResponse<UserDetails>.FailResponse("Refresh token không tồn tại.");
             }
             if ( storedRefreshToken.IsUsed ) {
@@ -194,30 +178,30 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
             try {
                 await transactionRepo.BeginTransactionAsync();
 
+                var employee = storedRefreshToken.Employees;
 
-
-                var newJwtToken = jwt.GenerateJWT(user.Fullname, user.EmployeeId, user.Role!.RoleName);
-                var newRefreshToken = jwt.GenerateRefreshToken(user.Fullname);
+                var newJwtToken = jwt.GenerateJWT(employee.Fullname, employee.EmployeeId, employee.Role!.RoleName);
+                var newRefreshToken = jwt.GenerateRefreshToken(employee.Fullname);
                 RefreshTokens rfToken = new RefreshTokens {
-                   employeeId = user.EmployeeId,
+                   employeeId = employee.EmployeeId,
                     Token = newRefreshToken,
                     JwtId = "1234567890",
                     CreatedAt = DateTime.Now,
                     ExpiresAt = DateTime.Now.AddDays(7),
                     IsUsed = false,
                     IsRevoked = false,
-                    ReplacedByToken = item.RefreshToken
+                    ReplacedByToken = item.refresh_token
                 };
                 storedRefreshToken.IsUsed = true;
 
-                user.RefreshTokens!.Add(rfToken);
-                employeeRepo.UpdateEmployee(user);
+                employee.RefreshTokens!.Add(rfToken);
+                employeeRepo.UpdateEmployee(employee);
                 await transactionRepo.CompleteAsync();
                 await transactionRepo.CommitAsync();
                 var response = new UserDetails {
-                    userId = user.EmployeeId,
-                    fullName = user.Fullname,
-                    email = user.Email,
+                    userId = employee.EmployeeId,
+                    fullName = employee.Fullname,
+                    email = employee.Email,
                     access_token = newJwtToken,
                     refresh_token = newRefreshToken
                 };

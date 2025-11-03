@@ -1,4 +1,5 @@
 ﻿using Hangfire;
+using System.Security.Policy;
 using UngDungQuanLiNhaHang.Models;
 using UngDungQuanLiNhaHang.Repository;
 using UngDungQuanLiNhaHang.RequestDTO;
@@ -8,7 +9,8 @@ using UngDungQuanLiNhaHang.Services.Interfaces;
 namespace UngDungQuanLiNhaHang.Services.Implementations {
     public class BookTableServices(
         BookTableRepo bookTableRepo,
-        TransactionRepo transactionRepo
+        TransactionRepo transactionRepo,
+        IVnPayService vnPayService
         ) : IBookTableServices {
 
 
@@ -36,10 +38,13 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
 
         public async Task CancelBookingAsync(int bookTableId) {
             var booking = await bookTableRepo.GetBookingByIdAsync(bookTableId);
-            if ( booking == null ) {
+            if ( booking == null  ) {
                 return;
             }
-            if ( booking.BookTableStatus != null && booking.BookTableStatus.status == "Cancelled" ) {
+            if (  booking.IsDepositPaid == true) {
+                return;
+            }
+            if (  booking.BookTableStatus != null && booking.BookTableStatus.status == "Cancelled" ) {
                 return;
             }
             try {
@@ -58,15 +63,16 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
             }
         }
 
-        public async Task<ApiResponse<BookTableResponse>> CreateBookingAsync(int customerId, BookTableDTO dto) {
+        public async Task<ApiResponse<string>> CreateBookingAsync(int customerId, BookTableDTO dto,HttpContext httpContext) {
             var existingBooking = await bookTableRepo.GetBookTableByDate(dto.bookingDate, dto.tableId);
             // Kiểm tra nếu đã có đặt bàn trong khung giờ này
 
             if ( existingBooking != null && existingBooking.bookTableStatusId != 4 ) {
-                return ApiResponse<BookTableResponse>.FailResponse("Bàn đã được đặt trong khung giờ này");
+                return ApiResponse<string>.FailResponse("Bàn đã được đặt trong khung giờ này");
             }
             try {
                 await transactionRepo.BeginTransactionAsync();
+
                 var newBooking = new BookTable {
                     customerId = customerId,
                     TableId = dto.tableId,
@@ -79,34 +85,31 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
 
                 };
                 await bookTableRepo.AddAsync(newBooking);
+                
+                
                 await transactionRepo.CompleteAsync();
                 await transactionRepo.CommitAsync();
-                var response = new BookTableResponse {
-                    bookTableId = newBooking.BookTableId,
-                    bookingDate = newBooking.BookingDate,
-                    depositAmount = newBooking.DepositAmount,
-                    isDepositPaid = newBooking.IsDepositPaid,
-                    tableId = newBooking.TableId,
-                    statusId = newBooking.bookTableStatusId,
-                    numberOfPeople = newBooking.NumberOfGuests,
-                    statusName = "Chờ xử lý."
-                };
+                
+                PaymentInformationModel res = new PaymentInformationModel();
 
+                res.customerId = customerId.ToString();
+                res.Amount = 300000.0;
+                res.orderId = newBooking.BookTableId;
+                res.OrderType = "false";
+                string url = vnPayService.CreatePaymentUrlForBookTable(res, httpContext, "http://localhost:5030/api/VnPay/PaymentCallbackDatBan", newBooking.BookTableId);
                 BackgroundJob.Schedule<IBookTableServices>(
                     service => service.CancelBookingAsync(newBooking.BookTableId),
                     TimeSpan.FromMinutes(15)
-                );
+                 );
 
 
-                return ApiResponse<BookTableResponse>.SuccessResponse(response, "Đặt bàn thành công");
+                return ApiResponse<string>.SuccessResponse(url, "Thêm đặt bàn thành công");
             }
             catch ( Exception ex ) {
                 await transactionRepo.RollbackAsync();
-                return ApiResponse<BookTableResponse>.FailResponse("Đặt bàn thất bại" + ex.ToString());
+                return ApiResponse<string>.FailResponse("tạo đăt bàn thất bại." + ex.ToString());
             }
         }
-
-
 
         public async Task<ApiResponse<PageResponse<BookTableResponse>>> GetAllBookingsAsync(DateTime date, int page = 1) {
             int pageSize = 12;
@@ -186,6 +189,43 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
             return ApiResponse<PageResponse<BookTableResponse>>.SuccessResponse(pageResponse, "Lấy danh sách đặt bàn theo trạng thái thành công");
         }
 
+        public async Task<ApiResponse<List<TableResponse>>> GetTablesByDate(DateTime date, int numberOfGuests) {
+            var tables = await bookTableRepo.GetByNumberOfGuests(numberOfGuests);
+            if ( tables == null || !tables.Any() ) {
+                return ApiResponse<List<TableResponse>>.FailResponse("Lỗi hệ thống.");
+            }
+            var bookTables = await bookTableRepo.GetBookTableByDate(date);
+            List<TableResponse> responses = new List<TableResponse>();
+            foreach ( var item in tables ) {
+                if ( bookTables.FirstOrDefault(s => s.TableId == item.TableId) == null ) {
+                    responses.Add(new TableResponse() {
+                        tableId = item.TableId,
+                        numberOfPeople = item.Capacity,
+                    });
+                }
+            }
+                return ApiResponse<List<TableResponse>>.SuccessResponse(responses);
+        }
+
+        public async Task<ApiResponse<bool>> UpdateBookingPayment(int bookTableId) {
+            var booktable = await bookTableRepo.GetBookingByIdAsync(bookTableId);
+            if ( booktable == null  ) {
+                return ApiResponse<bool>.FailResponse("Dữ liệu không hợp lệ.");
+                }
+            try {
+                await transactionRepo.BeginTransactionAsync();
+                booktable.IsDepositPaid = true;
+                await transactionRepo.CompleteAsync();
+                await transactionRepo.CommitAsync();
+                return ApiResponse<bool>.SuccessResponse(true, "Cập nhật thành công.");
+            }
+            catch ( Exception ex ) { 
+            
+                await transactionRepo.RollbackAsync();
+                return ApiResponse<bool>.FailResponse("Lỗi hệ thống." + ex.Message.ToString());
+            }
+        }
+
         public async Task<ApiResponse<bool>> UpdateBookingStatusAsync(int bookTableId, int statusID) {
             var booking = await bookTableRepo.GetBookingByIdAsync(bookTableId);
             if ( booking == null ) {
@@ -194,7 +234,7 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
             if ( booking != null && booking.bookTableStatusId == 4 ) {
                 return ApiResponse<bool>.FailResponse("Trạng thái đang là hủy");
             }
-            if (  booking.bookTableStatusId >= statusID ) {
+            if ( booking != null &&  booking.bookTableStatusId >= statusID ) {
                 return ApiResponse<bool>.FailResponse("Trạng thái không hợp lệ");
             }
             try {
@@ -210,5 +250,7 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
                 return ApiResponse<bool>.FailResponse("Cập nhật trạng thái đặt bàn thất bại" + ex.ToString());
             }
         }
+
+
     }
 }

@@ -47,9 +47,9 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
                         addressId = a.AddressId,
                         province = a.Address!.Province,
                         district = a.Address.District,
-                        hamlet = a.Address.Province,
+                        hamlet = a.Address.Hamlet,
                         street = a.Address.Street,
-                        houseNumber = a.Address.Province,
+                        houseNumber = a.Address.HouseNumber,
                         isDefault = a.Address.IsDefault
                     })
                     .ToList()

@@ -4,7 +4,7 @@ using UngDungQuanLiNhaHang.Models;
 
 namespace UngDungQuanLiNhaHang.Repository {
     public class CategoryRepo(DataDbConText _context) {
-        public async Task<IEnumerable<Categorys>> GetAllCategories() {
+        public async Task<List<Categorys>> GetAllCategories() {
             return await _context.categories.ToListAsync();
         }
         public async Task<Categorys?> GetCategoryById(int id) {

@@ -8,6 +8,7 @@ namespace UngDungQuanLiNhaHang.Models {
         public int RecipeId { get; set; }
         public double Quantity { get; set; }
         public required string Unit {  get; set; }
+        public bool isDelete { get; set; } = false;
         public int IngredientId { get; set; }
         [ForeignKey("IngredientId")]
 

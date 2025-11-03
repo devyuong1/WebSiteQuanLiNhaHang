@@ -39,15 +39,30 @@ namespace UngDungQuanLiNhaHang.Repository {
                 .ToListAsync();
         }
         public async Task<List<BookTable>> GetBookingsByStatusIdAsync(DateTime date, int statusId) {
+            var startDate = date.Date;
+            var endDate = startDate.AddDays(1);
+
             return await _context.bookTables
                 .Include(b => b.BookTableStatus)
                 .Include(b => b.Customers)
-                .Where(b => b.BookingDate.Date == date && b.bookTableStatusId == statusId)
+                .Where(b => b.BookingDate >= startDate && b.BookingDate < endDate
+                            && b.bookTableStatusId == statusId)
+                .OrderByDescending(b => b.BookingDate) // 👈 sắp xếp theo ngày đặt bàn
                 .ToListAsync();
         }
         public async Task<BookTable?> GetBookingByIdAsync(int bookTableId) {
             return await _context.bookTables
                 .FirstOrDefaultAsync(b => b.BookTableId == bookTableId);
+        }
+        public async Task<List<Tables>?> GetByNumberOfGuests(int quantity) {
+            return await _context.tables.Where( s => s.Capacity >= quantity).ToListAsync();
+        }
+        public async Task<List<BookTable>> GetBookTableByDate(DateTime bookingTime) {
+            return await _context.bookTables
+                .Where(
+                b => b.BookingDate.Hour <= bookingTime.Hour + 4 && b.BookingDate.Hour >= bookingTime.Hour - 4
+                && b.BookingDate.Date == bookingTime.Date
+                ).ToListAsync();
         }
     }
 }

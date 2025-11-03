@@ -9,7 +9,7 @@ namespace UngDungQuanLiNhaHang.Services.Interfaces {
 
         // trả về danh sách hóa đơn của người dùng 
         Task<ApiResponse<List<InvoiceForCustomerResponse>>> GetInvoicesByCustomerId(int customerId);
-        Task<ApiResponse<bool>> UpdateActiveInvoice(int invoiceId, int statusId );
+        Task<ApiResponse<bool>> UpdateActiveInvoice(int invoiceId, int statusId , int employeeId);
         // người dung hủy hóa đơn của mình
         Task<ApiResponse<bool>> CancellInvoiceForCustomer(int customerId, int invoiceId);
         
@@ -29,6 +29,8 @@ namespace UngDungQuanLiNhaHang.Services.Interfaces {
         Task<ApiResponse<InvoiceForAdminResponse>> GetInvoiceById(int invoiceId);
         Task<ApiResponse<RevenueDayResponse>> GetRevenueByDay(DateTime date);
         Task<ApiResponse<RevenueMonth>> GetRevenueByMonth( int year);
+        Task<ApiResponse<DashboardSummaryResponse>> GetDashboardSummary();
+
 
         // he thong
         Task<ApiResponse<bool>> UpdatePayMent(int invoiceId);

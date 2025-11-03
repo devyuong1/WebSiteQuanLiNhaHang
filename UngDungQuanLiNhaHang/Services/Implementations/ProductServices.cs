@@ -1,10 +1,14 @@
-﻿using UngDungQuanLiNhaHang.Repository;
+﻿using Humanizer;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Build.Definition;
+using Microsoft.Extensions.Logging;
+using System.Text.Json;
+using UngDungQuanLiNhaHang.Helpers;
+using UngDungQuanLiNhaHang.Models;
+using UngDungQuanLiNhaHang.Repository;
 using UngDungQuanLiNhaHang.RequestDTO;
 using UngDungQuanLiNhaHang.ResponseDTO;
 using UngDungQuanLiNhaHang.Services.Interfaces;
-using UngDungQuanLiNhaHang.Models;
-using UngDungQuanLiNhaHang.Helpers;
-using Microsoft.AspNetCore.Mvc;
 
 namespace UngDungQuanLiNhaHang.Services.Implementations {
     public class ProductServices(
@@ -26,7 +30,7 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
 
             if ( productDTO.productOptionsDTO != null ) {
                 foreach ( var ingredient in productDTO.productOptionsDTO ) {
-                    var ingredientExists = await ingredientRepo.GetIngredientById(ingredient.IngredientId);
+                    var ingredientExists = await ingredientRepo.GetIngredientById(ingredient.ingredientId);
                     if ( ingredientExists == null ) {
                         return ApiResponse<int>.FailResponse($"Ingredient {ingredient.optionName} does not exist");
                     }
@@ -34,9 +38,9 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
             }
             if ( productDTO.recipeDTO != null ) {
                 foreach ( var ingredient in productDTO.recipeDTO ) {
-                    var ingredientExists = await ingredientRepo.GetIngredientById(ingredient.IngredientId);
+                    var ingredientExists = await ingredientRepo.GetIngredientById(ingredient.ingredientId);
                     if ( ingredientExists == null ) {
-                        return ApiResponse<int>.FailResponse($"Ingredient {ingredient.IngredientId} does not exist");
+                        return ApiResponse<int>.FailResponse($"Ingredient {ingredient.ingredientId} does not exist");
                     }
                 }
             }
@@ -53,25 +57,30 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
                 Update_At = DateTime.UtcNow,
                 AverageRating = 0,
                 TotalReviews = 0,
-                CategoryId = productDTO.categoryId
+                CategoryId = productDTO.categoryId,
+                images = [],
+                productOptions = [],
+                recipes = []
             };
 
 
             try {
                 await transactionRepo.BeginTransactionAsync();
                 await productRepo.AddProduct(products);
-
-
                 if ( productDTO.productOptionsDTO != null ) {
+                    logger.LogInformation("ProductOptionsDTO: {Data}",
+                         JsonSerializer.Serialize(productDTO.productOptionsDTO, new JsonSerializerOptions {
+                             WriteIndented = true
+                         }));
                     foreach ( var ingredient in productDTO.productOptionsDTO ) {
-                        var ingredientExists = await ingredientRepo.GetIngredientById(ingredient.IngredientId);
+                        var ingredientExists = await ingredientRepo.GetIngredientById(ingredient.ingredientId);
                         if ( ingredientExists == null ) {
                             return ApiResponse<int>.FailResponse($"Ingredient {ingredient.optionName} does not exist");
                         }
                         ProductOptions productOptions = new ProductOptions() {
                             OptionName = ingredient.optionName,
-                            IngredientId = ingredient.IngredientId,
-                            OptionValue = ingredient.optionValue,
+                            Ingredient = ingredientExists,
+                            OptionValue = ingredient.quantity,
                             Unit = ingredient.unit,
                             Price = ingredient.price,
                             ProductId = products.ProductId
@@ -83,20 +92,21 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
 
                 if ( productDTO.recipeDTO != null ) {
                     foreach ( var ingredient in productDTO.recipeDTO ) {
-                        var ingredientExists = await ingredientRepo.GetIngredientById(ingredient.IngredientId);
+                        var ingredientExists = await ingredientRepo.GetIngredientById(ingredient.ingredientId);
                         if ( ingredientExists == null ) {
-                            return ApiResponse<int>.FailResponse($"Ingredient {ingredient.IngredientId} does not exist");
+                            return ApiResponse<int>.FailResponse($"Ingredient {ingredient.ingredientId} does not exist");
                         }
                         Recipes recipes = new Recipes() {
-                            IngredientId = ingredient.IngredientId,
-                            Quantity = ingredient.Quantity,
-                            Unit = ingredient.Unit,
+                            Ingredient = ingredientExists,
+                            Quantity = ingredient.quantity,
+                            Unit = ingredient.unit,
                             ProductId = products.ProductId
                         };
                         await productRepo.ProductAddRecipe(recipes);
                     }
                 }
 
+                
 
                 await transactionRepo.CompleteAsync();
                 await transactionRepo.CommitAsync();
@@ -133,33 +143,44 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
         }
 
         public async Task<ApiResponse<PageResponse<ProductResponse>>> GetAllProducts(ProductPageDTO productPageDTO) {
+            int pageSize = 12;
             var products = await productRepo.GetAllProducts();
             var totalItems = products.Count;
-            var totalPages = ( int )Math.Ceiling(totalItems / ( double )productPageDTO.pageSize);
+            var totalPages = ( int )Math.Ceiling(totalItems / ( double )pageSize);
 
             if ( productPageDTO.page < 1 ) productPageDTO.page = 1;
-            if ( productPageDTO.CategoryId > 0 ) {
-                products = products.Where(p => p.CategoryId == productPageDTO.CategoryId.Value).ToList();
+            if ( productPageDTO.categoryId > 0 ) {
+                products = products.Where(p => p.CategoryId == productPageDTO.categoryId.Value).ToList();
             }
-            if ( !string.IsNullOrEmpty(productPageDTO.Search) ) {
-                products = products.Where(p => p.ProductName.Contains(productPageDTO.Search, StringComparison.OrdinalIgnoreCase)).ToList();
+            if ( !string.IsNullOrEmpty(productPageDTO.name) ) {
+                products = products.Where(p => p.ProductName.Contains(productPageDTO.name, StringComparison.OrdinalIgnoreCase)).ToList();
             }
             var pagedProducts = products
-                .Skip(( productPageDTO.page - 1 ) * productPageDTO.pageSize)
-                .Take(productPageDTO.pageSize)
+
+                .Skip(( productPageDTO.page - 1 ) * pageSize)
+                .Take(pageSize)
                 .ToList();
+            if ( productPageDTO.orderBy == 1 ) {
+                // Sắp xếp Tăng dần và GÁN KẾT QUẢ ĐÃ SẮP XẾP trở lại
+                pagedProducts = pagedProducts.OrderBy(item => item.Price).ToList();
+            }
+            if ( productPageDTO.orderBy == 2 ) {
+                // Sắp xếp Giảm dần và GÁN KẾT QUẢ ĐÃ SẮP XẾP trở lại
+                pagedProducts = pagedProducts.OrderByDescending(item => item.Price).ToList();
+            }
             var productResponses = pagedProducts.Select(p => new ProductResponse {
                 productId = p.ProductId,
                 productName = p.ProductName,
                 price = p.Price,
                 priceSale = p.PriceSale,
+                quantity = p.Quantity,
                 sold = p.SoldCount,
                 averageRating = p.AverageRating,
                 image = p.images?.FirstOrDefault()?.ImagesUrl?.ToString() ?? "/no-image.png"
             }).ToList();
             var pageResponse = new PageResponse<ProductResponse> {
                 page = productPageDTO.page,
-                pageSize = productPageDTO.pageSize,
+                pageSize = pageSize,
                 totalItems = totalItems,
                 totalPages = totalPages,
                 list = productResponses
@@ -229,7 +250,7 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
         public async Task<ApiResponse<int>> UpdateProduct(UpdateProductDTO productDTO) {
             // kiem tra productDTO
             var isExists = await productRepo.IsProductExists(productDTO.productId);
-            if ( isExists ) {
+            if ( !isExists ) {
                 return ApiResponse<int>.FailResponse("Product does not exist");
             }
             var isExists2 = await productRepo.IsProductExistsByNameAndId(productDTO.productName, productDTO.productId);
@@ -237,7 +258,6 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
                 return ApiResponse<int>.FailResponse("Product name already exists");
             }
             var product = await productRepo.GetProductById2(productDTO.productId);
-
             if ( product == null ) {
                 return ApiResponse<int>.FailResponse("Product does not exist");
             }
@@ -250,45 +270,83 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
 
             try {
                 await transactionRepo.BeginTransactionAsync();
-                if ( productDTO.productOptions != null && productDTO.productOptions.Count > 0 ) {
-                    // xoa het option cu
-                    product.productOptions.Clear();
-                    foreach ( var ingredient in productDTO.productOptions ) {
-                        // them option moi
-                        var ingredientExists = await ingredientRepo.GetIngredientById(ingredient.IngredientId);
-                        if ( ingredientExists == null ) {
-                            return ApiResponse<int>.FailResponse($"Ingredient {ingredient.optionName} does not exist");
+                logger.LogInformation("ProductOptionsDTO: {Data}",
+                         JsonSerializer.Serialize(productDTO, new JsonSerializerOptions {
+                             WriteIndented = true
+                         }));
+                if ( productDTO.productOptionsDTO != null && productDTO.productOptionsDTO.Count > 0 ) {
+                    // delete soft nhung option khong co trong DTO
+                    var existingOptions = product.productOptions.ToList();
+                    foreach ( var existing in existingOptions ) {
+                        var updatedOption = productDTO.productOptionsDTO.FirstOrDefault(o => o.id == existing.ProductOptionId);
+                        if ( updatedOption != null ) {
+                            // ✅ Cập nhật lại option có sẵn
+                            existing.OptionName = updatedOption.optionName;
+                            existing.OptionValue = updatedOption.quantity;
+                            existing.isDelete = false;
+                            existing.Price = updatedOption.price;
+                            existing.Unit = updatedOption.unit;
                         }
-                        ProductOptions productOptions = new ProductOptions() {
-                            OptionName = ingredient.optionName,
-                            IngredientId = ingredient.IngredientId,
-                            OptionValue = ingredient.optionValue,
-                            Unit = ingredient.unit,
-                            Price = ingredient.price,
-                            ProductId = product.ProductId
-                        };
-                        product.productOptions.Add(productOptions);
-                    }
-                }
-                if ( productDTO.recipes != null && productDTO.recipes.Count > 0 ) {
-                    // xoa het recipe cu
-                    product.recipes.Clear();
-                    foreach ( var ingredient in productDTO.recipes ) {
-                        // them recipe moi
-                        var ingredientExists = await ingredientRepo.GetIngredientById(ingredient.IngredientId);
-                        if ( ingredientExists == null ) {
-                            return ApiResponse<int>.FailResponse($"Ingredient {ingredient.IngredientId} does not exist");
+                        else {
+                            // ⚠️ Soft delete option không còn trong danh sách FE
+                            existing.isDelete = true;
                         }
-                        Recipes recipes = new Recipes() {
-                            IngredientId = ingredient.IngredientId,
-                            Quantity = ingredient.Quantity,
-                            Unit = ingredient.Unit,
-                            ProductId = product.ProductId
-                        };
-                        product.recipes.Add(recipes);
-                    }
-                }
 
+                    }
+                    foreach ( var item in productDTO.productOptionsDTO ) {
+                        // them option moi
+                       if (item.id == 0) {
+                            var ingredientExists = await ingredientRepo.GetIngredientById(item.ingredientId);
+                            if ( ingredientExists == null ) {
+                                return ApiResponse<int>.FailResponse($"Ingredient {item.optionName} does not exist");
+                            }
+                            ProductOptions productOptions = new ProductOptions() {
+                                OptionName = item.optionName,
+                                IngredientId = item.ingredientId,
+                                OptionValue = item.quantity,
+                                Unit = item.unit,
+                                Price = item.price,
+                                ProductId = product.ProductId
+                            };
+                            product.productOptions.Add(productOptions);
+                        }
+                    }
+                }
+                
+                if ( productDTO.recipeDTO != null && productDTO.recipeDTO.Count > 0 ) {
+                    var existingRecipes = product.recipes.ToList();
+                    foreach ( var existing in existingRecipes ) {
+                        var updatedRecipe = productDTO.recipeDTO.FirstOrDefault(o => o.recipeId == existing.RecipeId);
+                        if ( updatedRecipe != null ) {
+                            // ✅ Cập nhật lại recipe có sẵn
+                            existing.Quantity = updatedRecipe.quantity;
+                            existing.isDelete = false;
+                            existing.Unit = updatedRecipe.unit;
+                        }
+                        else {
+                            // ⚠️ Soft delete recipe không còn trong danh sách FE
+                            existing.isDelete = true;
+                        }
+
+                    }
+                    foreach ( var ingredient in productDTO.recipeDTO ) {
+                        // them recipe moi
+                        if ( ingredient.recipeId == 0 ) {
+                            var ingredientExists = await ingredientRepo.GetIngredientById(ingredient.ingredientId);
+                            if ( ingredientExists == null ) {
+                                return ApiResponse<int>.FailResponse($"Ingredient {ingredient.ingredientId} does not exist");
+                            }
+                            Recipes recipes = new Recipes() {
+                                IngredientId = ingredient.ingredientId,
+                                Quantity = ingredient.quantity,
+                                Unit = ingredient.unit,
+                                ProductId = product.ProductId
+                            };
+                            product.recipes.Add(recipes);
+                        }
+                    }
+                }
+                productRepo.UpdateProduct(product);
                 await transactionRepo.CompleteAsync();
                 await transactionRepo.CommitAsync();
                 return ApiResponse<int>.SuccessResponse(product.ProductId, "Product updated successfully");
@@ -303,8 +361,8 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
 
 
 
-        public async Task<ApiResponse<bool>> AddImgProduct(int productid,List<ImgProductDTO> imgProductDTO) {
-            if ( imgProductDTO == null  || imgProductDTO.Count == 0 ) {
+        public async Task<ApiResponse<bool>> AddImgProduct(int productid,IFormFile file) {
+            if ( file == null  ) {
                 return ApiResponse<bool>.FailResponse("Thêm sản phẩm thành công nhưng chưa có hình ảnh.");
             }
             var product = await productRepo.GetProductById(productid);
@@ -314,17 +372,17 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
             var savedFiles = new List<string>();
             try {
                 await transactionRepo.BeginTransactionAsync();
-                foreach ( var file in imgProductDTO ) {
-                    if ( file.imgId == 0 && file != null && file.file != null && file.file.Length > 0 ) {
-                        string imageURL = await handlerFiles.SaveFile(file.file, "products");
+               
+                    if ( file != null && file.Length > 0 ) {
+                        string imageURL = await handlerFiles.SaveFile(file, "products");
                         Images image = new Images() {
                             ImagesUrl = imageURL,
-                            ProductId = product.ProductId
+                            
                         };
                         savedFiles.Add(imageURL);
                         product.images.Add(image);
                     }
-                }
+                
                 await transactionRepo.CompleteAsync();
                 await transactionRepo.CommitAsync();
                 return ApiResponse<bool>.SuccessResponse(true, "Thêm sản phẩm và hình ảnh thành công.");
@@ -344,47 +402,70 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
             }
         }
 
-        public async Task<ApiResponse<bool>> UpdateImgProduct(int productId, List<ImgProductDTO> productDTO) {
+        public async Task<ApiResponse<bool>> UpdateImgProduct(int productId, IFormFile file) {
             var savedFiles = new List<string>();
             List<Images> imagesToRemove = new List<Images>();
+            logger.LogInformation("ProductOptionsDTOssss: {Data}",
+                         JsonSerializer.Serialize(productId, new JsonSerializerOptions {
+                             WriteIndented = true
+                         }));
             var product = await productRepo.GetProductById(productId);
             if ( product == null ) {
-                return ApiResponse<bool>.FailResponse("Sản phẩm đã cập nhật nhưng lỗi khi cập nhật ảnh.");
+                return ApiResponse<bool>.FailResponse("Product not Found");
             }
             try {
-                if ( productDTO != null && productDTO.Count > 0 ) {
-                    // xoa nhung img khong co trong nhung img moi
-                    var imagesToRemove2 = product.images
-                    .Where(img => !productDTO.Any(f => f.imgId != 0 && f.imgId == img.ImagesId))
-                    .ToList();
+                //if ( productDTO != null && productDTO.Count > 0 ) {
+                //    // xoa nhung img khong co trong nhung img moi
+                //    var imagesToRemove2 = product.images
+                //    .Where(img => !productDTO.Any(f => f.imgId != 0 && f.imgId == img.ImagesId))
+                //    .ToList();
 
-                    foreach ( var img in imagesToRemove2 ) {
-                        imagesToRemove.Add(img);
-                        product.images.Remove(img);
-                    }
-                    // them nhung img moi
-                    foreach ( var file in productDTO ) {
-                        if ( file.imgId == 0 && file != null && file.file != null && file.file.Length > 0 ) {
-                            string imageURL = await handlerFiles.SaveFile(file.file, "products");
-                            Images image = new Images() {
-                                ImagesUrl = imageURL,
-                                ProductId = product.ProductId
-                            };
-                            savedFiles.Add(imageURL);
-                            product.images.Add(image);
-                        }
-                    }
+                //    foreach ( var img in imagesToRemove2 ) {
+                //        imagesToRemove.Add(img);
+                //        product.images.Remove(img);
+                //    }
+                //    // them nhung img moi
+                //    foreach ( var file in productDTO ) {
+                //        if ( file.imgId == 0 && file != null && file.file != null && file.file.Length > 0 ) {
+                //            string imageURL = await handlerFiles.SaveFile(file.file, "products");
+                //            Images image = new Images() {
+                //                ImagesUrl = imageURL,
+                //                ProductId = product.ProductId
+                //            };
+                //            savedFiles.Add(imageURL);
+                //            product.images.Add(image);
+                //        }
+                //    }
 
+                //}
+               
+                product.images.Clear();
+                
+                if ( file != null && file.Length > 0 ) {
+                    string imageURL = await handlerFiles.SaveFile(file, "products");
+                   
+                    savedFiles.Add(imageURL);
+                    product.images.Add(new Images() {
+                        ImagesUrl = imageURL,
+
+                    });
                 }
 
 
                 await transactionRepo.CompleteAsync();
                 await transactionRepo.CommitAsync();
-
+                logger.LogInformation("ProductOptionsDTO: {Data}",
+                         JsonSerializer.Serialize(product, new JsonSerializerOptions {
+                             WriteIndented = true
+                         }));
                 // xoa file img khoi server 
                 foreach ( var img in imagesToRemove ) {
                     try {
-                        handlerFiles.DeleteFile(img.ImagesUrl);
+                        foreach ( var item in product.images ) {
+                            if ( item != null ) {
+                                handlerFiles.DeleteFile(item.ImagesUrl);
+                            }
+                        }
                     }
                     catch ( Exception ex ) {
                         logger.LogWarning($"Error deleting image: {img.ImagesUrl}, error: {ex.Message}");
@@ -400,9 +481,14 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
                     }
                 }
                 catch ( Exception fileEx ) {
+                    logger.LogError(fileEx, "Error updating product images");
                     // Log the file deletion error
                     Console.WriteLine($"Error deleting files: {fileEx.Message}");
                 }
+                Console.WriteLine("=== ERROR DETAIL ===");
+                Console.WriteLine(ex.ToString());
+                Console.WriteLine("====================");
+                logger.LogError(ex, "Error updating product images");
                 return ApiResponse<bool>.FailResponse($"Sản phẩm đã cập nhật nhưng lỗi khi cập nhật ảnh.: {ex.Message}");
             }
         }
@@ -456,6 +542,39 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
                 image = p.images.FirstOrDefault()?.ImagesUrl ?? "/no-image.png"
             }).ToList();
             return ApiResponse<List<ProductResponse>>.SuccessResponse(productResponses, "Lấy thông tin thành công.");
+        }
+
+        public async Task<ApiResponse<PutProductResponse>> GetProductId(int productId) {
+            var product = await productRepo.GetProductById2(productId);
+            if ( product == null ) {
+                return ApiResponse<PutProductResponse>.FailResponse("Not found");
+            }
+            var res = new PutProductResponse() {
+                productId = productId,
+                productName = product.ProductName,
+                description = product.Description,
+                price = product.Price,
+                priceSale = product.PriceSale,
+                quantity = product.Quantity,
+                categoryId = product.CategoryId,
+                image = product.images.First()?.ImagesUrl ?? "",
+                productOptionsDTO = product.productOptions.Where(i => i.isDelete == false).Select(item => new ProductOptionsDTO() {
+                    id = item.ProductOptionId,
+                    ingredientId = item.IngredientId,
+                    optionName = item.OptionName,
+                    quantity = item.OptionValue,
+                    price = item.Price,
+                    unit = item.Unit,
+                }).ToList(),
+                recipeDTO = product.recipes.Where(i => i.isDelete == false).Select(item => new RecipeDTO() {
+                    recipeId = item.RecipeId,
+                    ingredientId = item.IngredientId,
+                    unit = item.Unit,
+                    quantity = item.Quantity,
+                }).ToList()
+
+            };
+            return ApiResponse<PutProductResponse>.SuccessResponse(res);
         }
     }
 }

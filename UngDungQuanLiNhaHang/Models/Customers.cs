@@ -21,5 +21,6 @@ namespace UngDungQuanLiNhaHang.Models {
         public ICollection<Invoices> invoices { get; set; } = new List<Invoices>();
         public ICollection<ProductReviews> productReviews { get; set; } = new List<ProductReviews>();
         public ICollection<RefreshTokens> refreshTokens { get; set; } = new List<RefreshTokens>();
+        public ICollection<BookTable> bookTables { get; set; } = new List<BookTable>();
     }
 }

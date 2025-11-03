@@ -7,5 +7,7 @@
         public double price { get; set; }
         public required string unit { get; set; }
         public bool isActive { get; set; } = true;
+        public required string usageUnit { get; set; }
+        public double conversionRate { get; set; }
     }
 }

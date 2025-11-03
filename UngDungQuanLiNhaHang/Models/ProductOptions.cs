@@ -10,6 +10,7 @@ namespace UngDungQuanLiNhaHang.Models {
         public double OptionValue { get; set; }
         public required string Unit { get; set; }
         public double Price { get; set; }
+        public bool isDelete { get; set; } = false;
         public int ProductId { get; set; }
         [ForeignKey("ProductId")]
         public Products? Product { get; set; }

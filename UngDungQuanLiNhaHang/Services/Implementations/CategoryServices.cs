@@ -13,7 +13,7 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
                 return ApiResponse<bool>.FailResponse("Danh mục đã tồn tại.");
             Categorys categorys = new Categorys {
                 CategoryName = categoryDTO.categoryName,
-                IsActive = true
+                IsActive = categoryDTO.isActive
             };
             try {
                 await transactionRepo.BeginTransactionAsync();
@@ -87,6 +87,20 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
                 isActive = result.IsActive
             };
             return ApiResponse<CategoryResponse>.SuccessResponse(categoryDTO, "Lấy danh mục thành công.");
+        }
+
+        public async Task<ApiResponse<List<CategoryResponse>>> GetListCategory() {
+            var result = await categoryRepo.GetAllCategories();
+            if ( result == null  || result.Count == 0) {
+                return ApiResponse<List<CategoryResponse>>.FailResponse("Lỗi hệ thống.");
+            }
+            var list = new List<CategoryResponse>();
+            list = result.Where(s => s.IsActive == true).Select(item => new CategoryResponse { 
+                categoryId = item.CategoryId,
+                categoryName = item.CategoryName,
+                isActive = item.IsActive
+            }).ToList();
+            return ApiResponse<List<CategoryResponse>>.SuccessResponse(list, "Lấy dữ liệu thành công");
         }
 
         public async Task<ApiResponse<bool>> UpdateCategory(CategoryDTO categoryDTO) {

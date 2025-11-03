@@ -80,6 +80,19 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
             return ApiResponse<PageResponse<SupplierResponse>>.SuccessResponse(pageResponse);
         }
 
+        public async Task<ApiResponse<List<ListSupplierResponse>>> GetListSuppliers() {
+            var suppliers = await supplierRepo.GetAllSuppliers();
+            if (suppliers.Count == 0) {
+                return ApiResponse<List<ListSupplierResponse>>.FailResponse("Not Found");
+
+            }
+            var response = suppliers.Select(item => new ListSupplierResponse() {
+                supplierId = item.SupplierID,
+                supplierName = item.SupplierName,
+            }).ToList();
+            return ApiResponse<List<ListSupplierResponse>>.SuccessResponse(response);
+        }
+
         public async Task<ApiResponse<SupplierResponse>> GetSupplierById(int supplierId) {
             var result = await supplierRepo.GetSupplierById(supplierId);
             if ( result == null ) {

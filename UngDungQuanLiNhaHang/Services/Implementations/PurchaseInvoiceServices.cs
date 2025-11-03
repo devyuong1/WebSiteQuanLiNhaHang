@@ -1,4 +1,5 @@
-﻿using UngDungQuanLiNhaHang.Models;
+﻿using System.Diagnostics;
+using UngDungQuanLiNhaHang.Models;
 using UngDungQuanLiNhaHang.Repository;
 using UngDungQuanLiNhaHang.RequestDTO;
 using UngDungQuanLiNhaHang.ResponseDTO;
@@ -29,7 +30,7 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
                 PurchaseInvoice purchaseInvoice = new PurchaseInvoice {
                     SupplierId = purchaseInvoiceDTO.supplierId,
                     EmployeeId = purchaseInvoiceDTO.employeeId,
-                    Create_At = DateTime.Now,
+                    Create_At = purchaseInvoiceDTO.create_At,
                     Totalamount = purchaseInvoiceDTO.totalamount,
                     IsPayment = purchaseInvoiceDTO.isPayment,
                     purchaseInvoiceItems = purchaseInvoiceDTO.items.Select(item => new PurchaseInvoiceItem {
@@ -69,8 +70,9 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
                 return ApiResponse<PageResponse<PurchaseInvoiceResponse>>.FailResponse("Dữ liệu hóa đơn nhập hàng không đầy đủ");
             }
             var purchaseInvoiceDTOs = result.Select(pi => new PurchaseInvoiceResponse {
+                purchaseInvoiceId = pi.PurchaseInvoiceId,
                 totalamount = pi.Totalamount,
-                create_At = pi.Create_At,
+                create_At = pi.Create_At.AddHours(7),
                 isPayment = pi.IsPayment,
                 supplierName = pi.Suppliers?.SupplierName,
                 employeeName = pi.Employees?.Fullname,
@@ -101,20 +103,34 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
                 return ApiResponse<PurchaseInvoiceResponse>.FailResponse("Dữ liệu hóa đơn nhập hàng không đầy đủ");
             }
             var purchaseInvoiceDTO = new PurchaseInvoiceResponse {
+                purchaseInvoiceId = result.PurchaseInvoiceId,
                 totalamount = result.Totalamount,
                 create_At = result.Create_At,
                 isPayment = result.IsPayment,
                 supplierName = result.Suppliers?.SupplierName,
                 employeeName = result.Employees?.Fullname,
+                supplierId = result.SupplierId,
                 purchaseInvoiceItems = result.purchaseInvoiceItems.Select(item => new PurchaseInvoiceItemResponse {
                     purchaseInvoiceItemId = item.PurchaseInvoiceId,
                     ingredientName = item.Ingredient?.IngredientName,
                     quantity = item.Quantity,
                     price = item.Price,
-                    unit = item.Unit
+                    unit = item.Unit,
+                    ingredientId = item.IngredientId
                 }).ToList() ?? new List<PurchaseInvoiceItemResponse>()
             };
             return ApiResponse<PurchaseInvoiceResponse>.SuccessResponse(purchaseInvoiceDTO, "Lấy thông tin hóa đơn nhập hàng thành công");
+        }
+
+        public async Task<ApiResponse<purchaseInvoiceDashboard>> GetPurchaseInvoiceDashboard() {
+            var result = await purchaseInvoiceRepo.GetAllByDay(DateTime.Now);
+            
+            var res = new purchaseInvoiceDashboard() {
+                totalPurchaseInvoices = result.Count(),
+                totalAmountSpent = result.Where(item => item.IsPayment == true).Sum(item => item.Totalamount),
+                totalDebtAmount = result.Where(item => item.IsPayment == false).Sum(item => item.Totalamount)
+            };
+            return ApiResponse<purchaseInvoiceDashboard>.SuccessResponse(res);
         }
 
         public async Task<ApiResponse<bool>> PaymentPurchaseInvoice(int purchaseInvoiceId) {
@@ -163,6 +179,11 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
                     return ApiResponse<bool>.FailResponse($"Nguyên liệu với mã {item.ingredientId} không tồn tại");
                 validIngredients[ingredient.IngredientId] = ingredient;
             }
+
+
+           
+            
+
             try {
                 await transactionRepo.BeginTransactionAsync();
                 // Revert the ingredient quantities based on the existing invoice items
@@ -178,6 +199,7 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
                 // Update the invoice details
                 existingInvoice.Totalamount = purchaseInvoiceDTO.totalamount;
                 existingInvoice.IsPayment = purchaseInvoiceDTO.isPayment;
+                existingInvoice.Create_At = purchaseInvoiceDTO.create_At;
                 existingInvoice.purchaseInvoiceItems = purchaseInvoiceDTO.items.Select(item => new PurchaseInvoiceItem {
                     IngredientId = item.ingredientId,
                     Quantity = item.quantity,
@@ -185,7 +207,7 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
                     Unit = item.unit
                 }).ToList();
                 purchaseInvoiceRepo.UpdatePurchaseInvoice(existingInvoice);
-                await transactionRepo.CompleteAsync();
+                
                 // Update the ingredient quantities based on the new invoice items
                 foreach ( var item in existingInvoice.purchaseInvoiceItems ) {
                     validIngredients[item.IngredientId].Quantity += item.Quantity;

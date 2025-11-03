@@ -8,5 +8,6 @@ namespace UngDungQuanLiNhaHang.Services.Interfaces {
         public Task<ApiResponse<bool>> DisableCategory(int categoryId);
         public Task<ApiResponse<PageResponse<CategoryResponse>>> GetAllCategories(int page = 1);
         public Task<ApiResponse<CategoryResponse>> GetCategoryById(int categoryId);
+        public Task<ApiResponse<List<CategoryResponse>>> GetListCategory();
     }
 }

@@ -1,13 +1,16 @@
-﻿using UngDungQuanLiNhaHang.RequestDTO;
+﻿using UngDungQuanLiNhaHang.Models;
+using UngDungQuanLiNhaHang.RequestDTO;
 using UngDungQuanLiNhaHang.ResponseDTO;
 
 namespace UngDungQuanLiNhaHang.Services.Interfaces {
     public interface IIngredientServices {
-        public Task<ApiResponse<bool>> AddIngredient(IngredientDTO item);
-        public Task<ApiResponse<bool>> UpdateIngredient(IngredientDTO ingredientDTO);
+        Task<ApiResponse<bool>> AddIngredient(IngredientDTO item);
+        Task<ApiResponse<bool>> UpdateIngredient(IngredientDTO ingredientDTO);
 
-        public Task<ApiResponse<bool>> DisableIngredient(int ingredientId);
-        public Task<ApiResponse<PageResponse<IngredientResponse>>> GetAllIngredients(int page =1);
-        public Task<ApiResponse<IngredientResponse>> GetIngredientById(int ingredientId);
+        Task<ApiResponse<bool>> DisableIngredient(int ingredientId);
+        Task<ApiResponse<PageResponse<IngredientResponse>>> GetAllIngredients(int page = 1);
+        Task<ApiResponse<IngredientResponse>> GetIngredientById(int ingredientId);
+        Task<ApiResponse<List<ListIngredientResponse>>> GetListIngredient();
+        Task  UpdateStockIngredinet(int invoiceId);
     }
 }

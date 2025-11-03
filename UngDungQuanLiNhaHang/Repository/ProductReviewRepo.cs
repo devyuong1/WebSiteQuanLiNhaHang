@@ -8,6 +8,9 @@ namespace UngDungQuanLiNhaHang.Repository {
             await _context.productReviews.AddAsync(productReviews);
 
         }
+        public async Task<ProductReviews?> GetProductReviewByProductIdAndInvoiceId(int invoiceId,int productid) {
+            return await _context.productReviews.FirstOrDefaultAsync(i => i.InvoiceId == invoiceId && i.ProductId == productid);
+        }
         public async Task<ProductReviews?> GetProductReviewById(int productReviewId) {
             return await _context.productReviews.FindAsync(productReviewId);
         }

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using UngDungQuanLiNhaHang.Data;
@@ -29,6 +30,7 @@ namespace UngDungQuanLiNhaHang.Controllers
 
             if ( userIdClaim == null )
                 return Unauthorized("Token không hợp lệ ");
+
             var bookings = await bookTableServices.GetAllBookingsAsync(time, page);
             if (!bookings.Success) {
                 return NotFound(bookings);
@@ -37,15 +39,21 @@ namespace UngDungQuanLiNhaHang.Controllers
         }
         [HttpGet("GetBookingsByStatusIdAsync")]
         [Authorize(Roles = "Admin, Manager, Employee")]
-        public async Task<ActionResult<ApiResponse<PageResponse<BookTableResponse>>>> GetBookingsByStatusIdAsync(DateTime time, int id, int page = 1) {
+        public async Task<ActionResult<ApiResponse<PageResponse<BookTableResponse>>>> GetBookingsByStatusIdAsync([FromQuery] string  time, [FromQuery] int id, [FromQuery] int page = 1) {
                 var userIdClaim = User.FindFirst("UserID");
             
                 if ( userIdClaim == null )
                  return Unauthorized("Token không hợp lệ ");
-                var bookings = await bookTableServices.GetBookingsByStatusIdAsync(time, id, page);
-                if (!bookings.Success) {
-                    return NotFound(bookings);
+                DateTime date;
+                var formats = new[] { "yyyy-MM-dd", "dd/MM/yyyy", "MM/dd/yyyy", "yyyy/MM/dd" };
+                if ( !DateTime.TryParseExact(time, formats, CultureInfo.InvariantCulture, DateTimeStyles.None, out date) ) {
+                    return BadRequest(new ApiResponse<string> {
+                        Success = false,
+                        Message = $"Định dạng ngày không hợp lệ ({time}). Hãy dùng định dạng yyyy-MM-dd hoặc dd/MM/yyyy."
+                    });
                 }
+            var bookings = await bookTableServices.GetBookingsByStatusIdAsync(date, id, page);
+                
                 return Ok(bookings);
         }
         [HttpGet("UpdateBookingStatusAsync")]
@@ -61,16 +69,16 @@ namespace UngDungQuanLiNhaHang.Controllers
             return Ok(bookings);
         }
         // for customer
-        [HttpPost("CreateBookingAsync")]
+        [HttpPost("CreateBooking")]
         [Authorize(Roles = "Customer")]
-        public async Task<ActionResult<ApiResponse<BookTableResponse>>> CreateBookingAsync( [FromBody] BookTableDTO dto) {
+        public async Task<ActionResult<ApiResponse<string>>> CreateBooking( [FromBody] BookTableDTO dto) {
             var userIdClaim = User.FindFirst("UserID");
             if ( userIdClaim == null )
                 return Unauthorized("Token không hợp lệ ");
             if (!ModelState.IsValid) {
                 return BadRequest("Dữ liệu không hợp lệ ");
             }
-            var bookings = await bookTableServices.CreateBookingAsync(int.Parse(userIdClaim.Value), dto);
+            var bookings = await bookTableServices.CreateBookingAsync(int.Parse(userIdClaim.Value), dto,HttpContext);
             if (!bookings.Success) {
                 return BadRequest(bookings);
             }
@@ -78,7 +86,7 @@ namespace UngDungQuanLiNhaHang.Controllers
         }
         [HttpPut("CancelBookingAsync")]
         [Authorize(Roles = "Customer")]
-        public async Task<ActionResult<ApiResponse<bool>>> CancelBookingAsync( [FromQuery] int bookTableId) {
+        public async Task<ActionResult<ApiResponse<bool>>> CancelBookingAsync(  int bookTableId) {
             var userIdClaim = User.FindFirst("UserID");
             if ( userIdClaim == null )
                 return Unauthorized("Token không hợp lệ ");
@@ -99,6 +107,19 @@ namespace UngDungQuanLiNhaHang.Controllers
                 return NotFound(bookings);
             }
             return Ok(bookings);
+        }
+        [HttpPost("GetTableByDay")]
+        [Authorize(Roles = "Customer")]
+        public async Task<ActionResult<ApiResponse<List<TableResponse>>>> GetTableByDay([FromBody] BookTableDTO dto) {
+            if ( !ModelState.IsValid ) {
+                return BadRequest(ApiResponse<List<TableResponse>>.FailResponse("Dữ liệu lỗi."));
+            }
+            var result = await bookTableServices.GetTablesByDate(dto.bookingDate, dto.numberOfGuests);
+            if ( !result.Success ) { 
+                return BadRequest(ApiResponse<List<TableResponse>>.FailResponse("Không tìm tháy dữ liệu."));
+
+            }
+            return Ok(result);
         }
     }
 }

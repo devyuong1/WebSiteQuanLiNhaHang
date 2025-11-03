@@ -1,9 +1,9 @@
 ﻿namespace UngDungQuanLiNhaHang.RequestDTO {
     public class RecipeDTO {
-        public required int IngredientId { get; set; }
-        public double Quantity { get; set; }
-        public required string Unit { get; set; }
-        
-        
+        public int recipeId {  get; set; }
+        public required int ingredientId { get; set; }
+        public double quantity { get; set; }
+        public required string unit { get; set; }
+       
     }
 }

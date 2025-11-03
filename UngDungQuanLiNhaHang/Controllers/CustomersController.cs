@@ -115,10 +115,10 @@ namespace UngDungQuanLiNhaHang.Controllers
             }
             return Ok(result);
         }
-        [HttpPost("DeleteAddress")]
+        [HttpDelete("DeleteAddress")]
         [Authorize(Roles = "Customer")]
 
-        public async Task<ActionResult<ApiResponse<bool>>> DeleteAddress([FromBody] AddressCustomerDTO addressCustomerDTO)
+        public async Task<ActionResult<ApiResponse<bool>>> DeleteAddress(int addressId)
         {
             var userIdClaim = User.FindFirst("UserID");
 
@@ -126,17 +126,17 @@ namespace UngDungQuanLiNhaHang.Controllers
                 return Unauthorized(ApiResponse<bool>.FailResponse("Token không hợp lệ hoặc thiếu thông tin UserID."));
 
             int customerId = int.Parse(userIdClaim.Value);
-            var result = await customerServices.DeleteAddress(customerId, addressCustomerDTO.addressId);
+            var result = await customerServices.DeleteAddress(customerId, addressId);
             if (!result.Success)
             {
                 return BadRequest(result);
             }
             return Ok(result);
         }
-        [HttpPost("SetDefaultAddress")]
+        [HttpPut("SetDefaultAddress")]
         [Authorize(Roles = "Customer")]
 
-        public async Task<ActionResult<ApiResponse<bool>>> SetDefaultAddress([FromBody] AddressCustomerDTO addressCustomerDTO)
+        public async Task<ActionResult<ApiResponse<bool>>> SetDefaultAddress(int addressId)
         {
             var userIdClaim = User.FindFirst("UserID");
 
@@ -144,7 +144,7 @@ namespace UngDungQuanLiNhaHang.Controllers
                 return Unauthorized(ApiResponse<bool>.FailResponse("Token không hợp lệ hoặc thiếu thông tin UserID."));
 
             int customerId = int.Parse(userIdClaim.Value);
-            var result = await customerServices.SetDefaultAddress(customerId, addressCustomerDTO.addressId);
+            var result = await customerServices.SetDefaultAddress(customerId, addressId);
             if (!result.Success)
             {
                 return BadRequest(result);

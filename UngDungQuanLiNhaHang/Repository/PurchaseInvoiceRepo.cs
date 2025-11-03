@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using UngDungQuanLiNhaHang.Data;
 using UngDungQuanLiNhaHang.Models;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace UngDungQuanLiNhaHang.Repository {
     public class PurchaseInvoiceRepo(DataDbConText _context) {
@@ -9,6 +10,7 @@ namespace UngDungQuanLiNhaHang.Repository {
             return await _context.purchaseInvoice
                 .Include(s => s.Suppliers)
                 .Include(s => s.Employees)
+                .OrderByDescending(i => i.Create_At)
                 .ToListAsync();
         }
         public async Task<PurchaseInvoice?> GetPurchaseInvoiceById(int purchaseInvoiceId) {
@@ -25,6 +27,11 @@ namespace UngDungQuanLiNhaHang.Repository {
         }
         public void UpdatePurchaseInvoice(PurchaseInvoice purchaseInvoice) {
             _context.purchaseInvoice.Update(purchaseInvoice);
+        }
+        public async Task<List<PurchaseInvoice>> GetAllByDay(DateTime time) {
+            var start = time.Date;
+            var end = start.AddDays(1);
+            return await _context.purchaseInvoice.Where(item => item.Create_At.Date >= start && item.Create_At < end && item.Create_At.Year == time.Year).ToListAsync();
         }
     }
 }

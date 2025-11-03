@@ -6,6 +6,8 @@
         public bool isPayment { get; set; }
         public string? supplierName { get; set; }
         public string? employeeName { get; set; }
+        public int supplierId { get; set; }
+        
         public List<PurchaseInvoiceItemResponse> purchaseInvoiceItems { get; set; } = new List<PurchaseInvoiceItemResponse>();
     }
 }

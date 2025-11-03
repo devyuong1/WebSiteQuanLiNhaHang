@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 
 using System.Threading.Tasks;
+using UngDungQuanLiNhaHang.Models;
 using UngDungQuanLiNhaHang.RequestDTO;
 using UngDungQuanLiNhaHang.ResponseDTO;
 using UngDungQuanLiNhaHang.Services.Interfaces;
@@ -66,7 +67,7 @@ namespace UngDungQuanLiNhaHang.Controllers
         }
         [HttpPut("CancellInvoiceForCustomer")]
         [Authorize(Roles = "Customer")]
-        public async Task<ActionResult<ApiResponse<bool>>> CancellInvoiceForCustomer([FromQuery] int invoiceId) {
+        public async Task<ActionResult<ApiResponse<bool>>> CancellInvoiceForCustomer( int invoiceId) {
             var userIdClaim = User.FindFirst("UserID");
             if ( userIdClaim == null )
                 return Unauthorized("Token không hợp lệ ");
@@ -147,6 +148,23 @@ namespace UngDungQuanLiNhaHang.Controllers
             }
             return Ok(response);
         }
+
+        [HttpPut("UpdateStatusInvoice")]
+        [Authorize(Roles = "Admin, Employee, Manager")]
+        public async Task<ActionResult<ApiResponse<bool>>> UpdateStatusInvoice([FromQuery] int invoiceId, [FromQuery] int statusId) {
+            var userIdClaim = User.FindFirst("UserID");
+            if ( userIdClaim == null )
+                return Unauthorized("Token không hợp lệ ");
+
+
+
+            var response = await invoiceServices.UpdateActiveInvoice(invoiceId,statusId,int.Parse(userIdClaim.Value));
+            if ( !response.Success ) {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
+
         [HttpGet("GetRevenueByDay")]
         [Authorize(Roles = "Employee, Manager, Admin")]
         public async Task<ActionResult<ApiResponse<RevenueDayResponse>>> GetRevenueByDay([FromQuery] DateTime date) {
@@ -166,6 +184,17 @@ namespace UngDungQuanLiNhaHang.Controllers
             if ( userIdClaim == null )
                 return Unauthorized("Token không hợp lệ ");
             var response = await invoiceServices.GetRevenueByMonth(year);
+            if ( !response.Success ) {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
+
+        [HttpGet("GetDashboardSummary")]
+        [Authorize(Roles = "Employee, Manager, Admin")]
+        public async Task<ActionResult<ApiResponse<DashboardSummaryResponse>>> GetDashboardSummary() {
+            
+            var response = await invoiceServices.GetDashboardSummary();
             if ( !response.Success ) {
                 return BadRequest(response);
             }

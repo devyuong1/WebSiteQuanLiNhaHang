@@ -1,5 +1,6 @@
 ﻿namespace UngDungQuanLiNhaHang.ResponseDTO {
     public class InvoiceItemResponse {
+        public int productId { set; get; }
         public required string productName { get; set; }
         public required string productImage { get; set; }
         public int quantity { get; set; }

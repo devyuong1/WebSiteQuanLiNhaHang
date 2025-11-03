@@ -5,6 +5,7 @@
         public double price { get; set; }
         public double priceSale { get; set; }
         public int sold { get; set; }
+        public int quantity { set; get; }
         public double averageRating { get; set; } = 5;
         public string image { get; set; } = "";
 

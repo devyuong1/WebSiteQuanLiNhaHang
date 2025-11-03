@@ -10,6 +10,8 @@ namespace UngDungQuanLiNhaHang.Models {
         public double Quantity { get; set; }
         public double MinQuantity { get; set; }
         public double Price { get; set; }
+        public required string  UsageUnit { get; set; }
+        public double ConversionRate { get; set; }
         public required string Unit {  get; set; }
         public bool IsActive { get; set; } = true;
 

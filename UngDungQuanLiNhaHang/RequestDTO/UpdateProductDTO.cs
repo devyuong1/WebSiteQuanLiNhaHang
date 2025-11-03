@@ -6,9 +6,9 @@
         public double price { get; set; }
         public double priceSale { get; set; }
         public int quantity { get; set; }
-        public int CategoryId { get; set; }
-        public List<UpdateImagesFileDTO> files { get; set; } = new List<UpdateImagesFileDTO>();
-        public ICollection<RecipeDTO> recipes { get; set; } = [];
-        public ICollection<ProductOptionsDTO> productOptions { get; set; } = [];
+        public int categoryId { get; set; }
+        
+        public ICollection<RecipeDTO> recipeDTO { get; set; } = [];
+        public ICollection<ProductOptionsDTO> productOptionsDTO { get; set; } = [];
     }
 }

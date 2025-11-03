@@ -1,12 +1,14 @@
 ﻿using Hangfire;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System.Text;
+using System.Text.Json;
 using UngDungQuanLiNhaHang.Models;
 using UngDungQuanLiNhaHang.Repository;
 using UngDungQuanLiNhaHang.RequestDTO;
 using UngDungQuanLiNhaHang.ResponseDTO;
 using UngDungQuanLiNhaHang.Services.Interfaces;
-using Microsoft.AspNetCore.Http;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace UngDungQuanLiNhaHang.Services.Implementations {
@@ -17,8 +19,95 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
         CartRepo cartRepo,
         EmployeeRepo employeeRepo,
         BookTableRepo bookTableRepo,
-        IVnPayService vnPayService
+        IVnPayService vnPayService,
+        Logger<InvoiceService> logger,
+        IEmailService emailService,
+        IOrderNotificationService orderNotificationService
         ) : IInvoiceServices {
+
+        private static string BuildInvoiceEmailBody(Invoices invoices) {
+            var sb = new StringBuilder();
+
+            sb.Append($@"
+        <div style='font-family: Arial, sans-serif; line-height: 1.6'>
+            <h2 style='color:#4CAF50;'>Cảm ơn bạn đã đặt hàng!</h2>
+            <p>Đơn hàng <b>#{invoices.InvoiceId}</b> của bạn đã được tiếp nhận thành công.</p>
+
+            <h3>Chi tiết đơn hàng:</h3>
+            <table style='width:100%; border-collapse: collapse;'>
+                <thead>
+                    <tr style='background-color:#f2f2f2;'>
+                        <th style='border:1px solid #ddd; padding:8px;'>Sản phẩm</th>
+                        <th style='border:1px solid #ddd; padding:8px;'>Số lượng</th>
+                        <th style='border:1px solid #ddd; padding:8px;'>Giá</th>
+                        <th style='border:1px solid #ddd; padding:8px;'>Thành tiền</th>
+                    </tr>
+                </thead>
+                <tbody>
+    ");
+
+            foreach ( var item in invoices.invoiceItems ) {
+                var productName = item.Products?.ProductName ?? "Sản phẩm";
+                var totalPrice = item.Quantity * item.Price;
+                sb.Append($@"
+            <tr>
+                <td style='border:1px solid #ddd; padding:8px;'>{productName}</td>
+                <td style='border:1px solid #ddd; padding:8px; text-align:center;'>{item.Quantity}</td>
+                <td style='border:1px solid #ddd; padding:8px; text-align:right;'>{item.Price:N0} đ</td>
+                <td style='border:1px solid #ddd; padding:8px; text-align:right;'>{totalPrice:N0} đ</td>
+            </tr>
+        ");
+                if ( item.orderItemOptions != null && item.orderItemOptions.Any() ) {
+                    sb.Append("<tr><td colspan='4'>");
+                    sb.Append(@"
+            <div style='margin-top:16px; padding-top:16px; border-top:1px solid #e0e0e0;'>
+                <p style='font-weight:600; margin-bottom:8px; color:#1976d2; font-size:14px;'>Tùy chọn thêm:</p>
+        ");
+
+                    foreach ( var opt in item.orderItemOptions ) {
+                        var optionTotal = opt.Price * opt.Quantity;
+
+                        sb.Append($@"
+                <div style='margin-bottom:12px; padding:12px; background-color:#f5f5f5; border-radius:6px;'>
+                    <p style='font-weight:600; margin:0 0 6px 0; font-size:13px;'>{opt.OrderItemOptionName}</p>
+
+                    <div style='display:flex; justify-content:space-between; margin-bottom:4px;'>
+                        <span style='color:#666; font-size:12px;'>Số lượng:</span>
+                        <span style='font-size:12px; font-weight:500;'>x{opt.Quantity}</span>
+                    </div>
+
+                    <div style='display:flex; justify-content:space-between; margin-bottom:4px;'>
+                        <span style='color:#666; font-size:12px;'>Giá:</span>
+                        <span style='font-size:12px; font-weight:500;'>{opt.Price:N0}đ</span>
+                    </div>
+
+                    <div style='display:flex; justify-content:space-between;'>
+                        <span style='color:#666; font-size:12px;'>Thành tiền:</span>
+                        <span style='font-size:12px; font-weight:600; color:#d32f2f;'>{optionTotal:N0}đ</span>
+                    </div>
+                </div>
+            ");
+                    }
+
+                    sb.Append("</div></td></tr>");
+                }
+            }
+
+            sb.Append($@"
+                </tbody>
+            </table>
+            <h3 style='text-align:right; color:#e91e63;'>Tổng cộng: {invoices.TotalAmount:N0} đ</h3>
+
+            <p><b>Địa chỉ giao hàng:</b> {invoices.address?.Province}, {invoices.address?.District}</p>
+            <p><b>Phương thức thanh toán:</b> {invoices.PaymentMethod?.PaymentMethodName}</p>
+
+            <hr/>
+            <p style='font-size:14px;'>Nếu bạn có bất kỳ thắc mắc nào, vui lòng liên hệ bộ phận hỗ trợ của chúng tôi.</p>
+        </div>
+    ");
+
+            return sb.ToString();
+        }
         public async Task<ApiResponse<bool>> AddInvoiceItem(int employeeId, InvoiceItemDTO invoiceItemDTO) {
             bool isEmployeeExists = await employeeRepo.IsEmployeeExists(employeeId);
             if ( !isEmployeeExists ) {
@@ -233,12 +322,11 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
         }
 
         public async Task CancellInvoiceOnlineForStaff(int invoiceId) {
-
-
-
-
             var invoice = await invoiceRepo.GetByInvoiceIdForCancell(invoiceId);
             if ( invoice == null ) {
+                return;
+            }
+            if ( invoice.IsPayment == true ) {
                 return;
             }
             invoice.InvoiceStatusId = 5; // trạng thái hủy
@@ -310,18 +398,15 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
             }
             // kiem tra cart 
             var carts = await cartRepo.GetCartByCustomerId(customerId);
-
             if ( carts == null  ) {
                 return ApiResponse<bool>.FailResponse("Cart not found");
             }
-
 
             // tao hoa don
             Invoices invoices = new Invoices();
             invoices.customerId = customerId;
             invoices.AddressId = invoiceDTO.addressId;
             invoices.PaymentMethodId = invoiceDTO.paymentMethodId;
-
             invoices.TotalQuantity = invoiceDTO.totalQuantity;
             invoices.TotalAmount = invoiceDTO.invoiceItems.Sum(s => s.quantity * s.price);
             invoices.IsPayment = invoiceDTO.isPayment;
@@ -403,6 +488,54 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
 
                 await transactionRepo.CompleteAsync();
                 await transactionRepo.CommitAsync();
+                // gui mail cho khach hang khi dat hang
+                BackgroundJob.Schedule<IEmailService>(x => x.SendEmailAsync(
+                    "ntam74143@gmail.com",
+                    "Đặt đơn hàng thành công.",
+                    BuildInvoiceEmailBody(invoices)
+                ), TimeSpan.FromMinutes(2));
+                var respon = new InvoiceForAdminResponse {
+                    invoiceId = invoices.InvoiceId,
+                    totalAmount = invoices.TotalAmount,
+                    totalQuantity = invoices.TotalQuantity,
+                    isPayment = invoices.IsPayment,
+                    invoiceType = invoices.InvoiceType,
+                    invoiceStatusName = invoices.InvoiceStatus != null ? invoices.InvoiceStatus.InvoiceStatusName : "Dữ liệu lỗi. Vui lòng thử lại sau.",
+                    customerId = invoices.customerId,
+                    customerName = invoices.customers != null ? invoices.customers.FullName : "Khách vãng lai",
+                    create_At = invoices.Create_At.ToString("HH:mm dd/MM/yyyy"),
+                    tableId = invoices.tableId != null ? invoices.tableId : 0,
+                    paymentMethodName = invoices.PaymentMethod != null ? invoices.PaymentMethod.PaymentMethodName : "Dữ liệu lỗi. Vui lòng thử lại sau.",
+                    employeeId = invoices.employeeId,
+                    productReviews = invoices.productReviews != null ? invoices.productReviews.Select(pr => new ProductReviewResponse {
+                        productReviewId = pr.ProductReviewId,
+                        rating = pr.Rating,
+                        comment = pr.Comment,
+                        create_At = pr.Create_At,
+                        userName = pr.Customers != null ? pr.Customers.FullName : "Dữ liệu lỗi. Vui lòng thử lại sau.",
+                    }).ToList() : new List<ProductReviewResponse>(),
+                    addressDetail = invoices.address != null ?
+                      string.Join(", ", new[] {
+                           $"{invoices.address.HouseNumber} , Đường: {invoices.address.Street}".Trim(),
+                           invoices.address.Hamlet,
+                           invoices.address.District,
+                           invoices.address.Province
+                      }.Where(s => !string.IsNullOrWhiteSpace(s)))
+
+               : "Khách vãng lai",
+                    invoiceItems = invoices.invoiceItems != null ? invoices.invoiceItems.Select(ii => new InvoiceItemResponse {
+                        productName = ii.Products != null ? ii.Products.ProductName : "Dữ liệu lỗi. Vui lòng thử lại sao ",
+                        quantity = ii.Quantity,
+                        price = ii.Price,
+                        productImage = ii.Products?.images?.FirstOrDefault()?.ImagesUrl ?? "Img",
+                        options = ii.orderItemOptions != null ? ii.orderItemOptions.Select(oio => new InvoiceItemOptionRespon {
+                            optionName = oio.OrderItemOptionName,
+                            quantity = oio.Quantity,
+                            price = oio.Price
+                        }).ToList() : new List<InvoiceItemOptionRespon>()
+                    }).ToList() : new List<InvoiceItemResponse>()
+                };
+                await orderNotificationService.NotifyNewOrder(respon);
                 return ApiResponse<bool>.SuccessResponse(true, "Đặt hàng thành công.");
 
 
@@ -647,11 +780,10 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
                     if ( cartitem == null ) {
                         return ApiResponse<InvoideForPaymentResponse>.FailResponse("Sản phẩm không tồn tại trong giỏ hàng");
                     }
-                    // xoa san pham ra khoi gio hang
-                    //carts.CartItems.Remove(cartitem);
+                    
 
                 }
-                Console.WriteLine(333);
+                
                 foreach ( var item in invoiceDTO.invoiceItems ) {
                     // tao invoice item
                     InvoiceItems items = new InvoiceItems() {
@@ -735,6 +867,7 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
                 create_At = i.Create_At,
                 invoiceStatusId = i.InvoiceStatusId,
                 invoiceItems = i.invoiceItems.Select(ii => new InvoiceItemResponse {
+                    productId = ii.ProductId,
                     productName = ii.Products != null ? ii.Products.ProductName : "Dữ liệu lỗi. Vui lòng thử lại sao ",
                     quantity = ii.Quantity,
                     price = ii.Price,
@@ -749,15 +882,19 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
             return ApiResponse<List<InvoiceForCustomerResponse>>.SuccessResponse(response);
         }
 
-        public async Task<ApiResponse<bool>> UpdateActiveInvoice(int invoiceId, int statusId) {
+        public async Task<ApiResponse<bool>> UpdateActiveInvoice(int invoiceId, int statusId,int employeeId) {
             var invoice = await invoiceRepo.GetById(invoiceId);
             if ( invoice == null ) {
                 return ApiResponse<bool>.FailResponse("Không có hóa đơn");
             }
-            if ( statusId <= 0 || statusId > 4 || statusId <= invoice.InvoiceStatusId ) {
+            if ( statusId <= 0 || statusId > 6 || statusId <= invoice.InvoiceStatusId ) {
                 return ApiResponse<bool>.FailResponse("Trạng thái không hợp lệ");
             }
+            if (statusId == 4) {
+                invoice.IsPayment = true;
+            }
             invoice.InvoiceStatusId = statusId;
+            invoice.employeeId = employeeId;
             try {
                 await transactionRepo.BeginTransactionAsync();
 
@@ -775,7 +912,7 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
             int pageSize = 12;
             var invoices = await invoiceRepo.GetAllInvoicesByDateAndStatusId(Date, status);
             if ( invoices == null || invoices.Count == 0 ) {
-                return ApiResponse<PageResponse<InvoiceForAdminResponse>>.FailResponse("Không có hóa đơn nào trong hôm nay.");
+                return ApiResponse<PageResponse<InvoiceForAdminResponse>>.SuccessResponse(new PageResponse<InvoiceForAdminResponse>(),"Không có hóa đơn nào trong hôm nay.");
             }
             var pagedInvoices = invoices
                 .Skip(( page - 1 ) * pageSize)
@@ -787,8 +924,9 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
                 totalQuantity = i.TotalQuantity,
                 isPayment = i.IsPayment,
                 invoiceType = i.InvoiceType,
+                invoiceStatusId = i.InvoiceStatusId,
                 invoiceStatusName = i.InvoiceStatus != null ? i.InvoiceStatus.InvoiceStatusName : "Dữ liệu lỗi. Vui lòng thử lại sau.",
-                create_At = i.Create_At,
+                create_At = i.Create_At.ToString("HH:mm dd/MM/yyyy"),
                 paymentMethodName = i.PaymentMethod != null ? i.PaymentMethod.PaymentMethodName : "Dữ liệu lỗi. Vui lòng thử lại sau.",
                 employeeId = i.employeeId,
             });
@@ -803,10 +941,17 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
         }
 
         public async Task<ApiResponse<InvoiceForAdminResponse>> GetInvoiceById(int invoiceId) {
+
             var invoice = await invoiceRepo.GetInvoicesByInvoicesId(invoiceId);
             if ( invoice == null  ) {
-                return ApiResponse<InvoiceForAdminResponse>.FailResponse("Không tìm thấy hóa đơn.");
+                return ApiResponse<InvoiceForAdminResponse>.FailResponse("Không tìm thấy hóa đơn." + invoiceId.ToString());
             }
+            logger.LogInformation("ProductOptionsDTO: {Data}",
+            JsonSerializer.Serialize(invoice, new JsonSerializerOptions {
+                WriteIndented = true,
+                ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles
+            }));
+
             var respon = new InvoiceForAdminResponse {
                 invoiceId = invoice.InvoiceId,
                 totalAmount = invoice.TotalAmount,
@@ -815,8 +960,9 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
                 invoiceType = invoice.InvoiceType,
                 invoiceStatusName = invoice.InvoiceStatus != null ? invoice.InvoiceStatus.InvoiceStatusName : "Dữ liệu lỗi. Vui lòng thử lại sau.",
                 customerId = invoice.customerId,
+                invoiceStatusId = invoice.InvoiceStatusId,
                 customerName = invoice.customers != null ? invoice.customers.FullName : "Khách vãng lai",
-                create_At = invoice.Create_At,
+                create_At = invoice.Create_At.ToString("HH:mm dd/MM/yyyy"),
                 tableId = invoice.tableId != null ? invoice.tableId : 0,
                 paymentMethodName = invoice.PaymentMethod != null ? invoice.PaymentMethod.PaymentMethodName : "Dữ liệu lỗi. Vui lòng thử lại sau.",
                 employeeId = invoice.employeeId,
@@ -829,7 +975,7 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
                 }).ToList() : new List<ProductReviewResponse>(),
                 addressDetail = invoice.address != null ?
                        string.Join(", ", new[] {
-                           $"{invoice.address.HouseNumber} {invoice.address.Street}".Trim(),
+                           $"{invoice.address.HouseNumber} , Đường: {invoice.address.Street}".Trim(),
                            invoice.address.Hamlet,
                            invoice.address.District,
                            invoice.address.Province
@@ -928,6 +1074,25 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
                 await transactionRepo.RollbackAsync();
                 return ApiResponse<bool>.FailResponse("Lỗi hệ thống" + ex.Message);
             }
+        }
+
+        public async Task<ApiResponse<DashboardSummaryResponse>> GetDashboardSummary() {
+            var result = await invoiceRepo.GetAllInvoiceByDay(DateTime.Now);
+            var totalOrder = result.Count();
+            var pendingOrder = result.Where(item => item.InvoiceStatusId == 1).Count();
+            var cancelOrder = result.Where(item => item.InvoiceStatusId == 5).Count();
+            var comleteOrder = result.Where(item => item.InvoiceId == 4).Count();
+            var totalAmount = result.Where(item => item.InvoiceId == 4).Sum(item => item.TotalAmount);
+
+            var res = new DashboardSummaryResponse() {
+                todayRevenue = totalAmount,
+                pendingOrders = pendingOrder,
+                cancelledOrders = cancelOrder,
+                completedOrders = comleteOrder,
+                totalOrdersToday = totalOrder,
+
+            };
+            return ApiResponse<DashboardSummaryResponse>.SuccessResponse(res);
         }
     }
 }

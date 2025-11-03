@@ -9,5 +9,6 @@ namespace UngDungQuanLiNhaHang.Services.Interfaces {
         Task<ApiResponse<bool>> DeleteProductReview(int customerId, int productReviewId);
         // cập nhật đánh giá của khách hàng
         Task<ApiResponse<bool>> UpdateProductReview(int customerId, ProductReviewDTO productReviewDTO);
+        Task<ApiResponse<ProductReviewResponse>> GetProductReviewByInvoiIdAndProductId(int invoiceId, int productId);
     }
 }

@@ -70,5 +70,13 @@ namespace UngDungQuanLiNhaHang.Controllers
             }
             return BadRequest(result);
         }
+        [HttpGet("GetByInvoiceIdAndProductId")]
+        [Authorize(Roles = "Customer")]
+        public async Task<ActionResult<ApiResponse<ProductReviewResponse>>> GetByInvoiceIdAndProductId(int invoiceId,int productId) {
+            var result = await productReviewService.GetProductReviewByInvoiIdAndProductId(invoiceId,productId);
+            
+            return Ok(result); 
+            
+        }
     }
 }
