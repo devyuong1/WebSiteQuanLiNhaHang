@@ -32,16 +32,25 @@ namespace UngDungQuanLiNhaHang.Security {
 
         }
 
-        public String GenerateRefreshToken(string userName) {
-            var secretKey = configuration["Jwt:Key"] ?? "thanhtam1";
+        public string GenerateRefreshToken(string userName ,int employeeId) {
 
-            var guid = Guid.NewGuid().ToString();
-            var rawToken = $"{userName}:{guid}";
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.UTF8.GetBytes(configuration["Jwt:Key"] ?? "ashsjabhdsjksdfjkdsfjsdjkfbsdjk123");
+            var tokenDescriptor = new SecurityTokenDescriptor {
+                Subject = new ClaimsIdentity(new Claim[]
+                {
+                    new Claim("employeeId", employeeId.ToString()),
+                    new Claim(ClaimTypes.Name, userName),
+                    
 
-            using var hmac = new HMACSHA256(Encoding.UTF8.GetBytes(secretKey));
-            var hash = hmac.ComputeHash(Encoding.UTF8.GetBytes(rawToken));
-
-            return Convert.ToBase64String(hash);
+                }),
+                Expires = DateTime.UtcNow.AddDays(7),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),
+                Issuer = configuration["Jwt:Issuer"],
+                Audience = configuration["Jwt:Audience"]
+            };
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            return tokenHandler.WriteToken(token);
         }
         public ClaimsPrincipal? GetPrincipalFromExpiredToken(string token) {
             var tokenValidationParameters = new TokenValidationParameters {

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using UngDungQuanLiNhaHang.Models;
 using UngDungQuanLiNhaHang.Repository;
 using UngDungQuanLiNhaHang.RequestDTO;
@@ -41,6 +42,7 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
                 return ApiResponse<bool>.SuccessResponse(true);
             }
             catch ( Exception ex ) {
+                Debug.WriteLine("AddIngredient Error:" + ex.ToString());
                 await transactionRepo.RollbackAsync();
                 return ApiResponse<bool>.FailResponse("Lỗi hệ thống");
             }

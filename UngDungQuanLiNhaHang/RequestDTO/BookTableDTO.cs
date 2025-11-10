@@ -2,7 +2,7 @@
 
 namespace UngDungQuanLiNhaHang.RequestDTO {
     public class BookTableDTO {
-        public DateTime bookingDate { get; set; } = DateTime.UtcNow;
+        public DateTimeOffset bookingDate { get; set; } 
         public int numberOfGuests { get; set; }
         public int tableId { get; set; }
 

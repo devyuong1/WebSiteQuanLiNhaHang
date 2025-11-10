@@ -232,6 +232,7 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
                 }
 
             }
+            // goi y san pham cung loai
             var productByCategoryId = await productRepo.GetProductByCategoryIdAndProductId(product.CategoryId,product.ProductId);
             if (productByCategoryId.Count > 0) {
                 productResponse.products = productByCategoryId.Select(p => new ProductResponse {
@@ -575,6 +576,55 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
 
             };
             return ApiResponse<PutProductResponse>.SuccessResponse(res);
+        }
+
+        public async Task<ApiResponse<PageResponse<ProductDetailResponse>>> GetPageProducts(ProductPageDTO productPageDTO) {
+
+            int pageSize = 12;
+            var products = await productRepo.GetAllProducts();
+           
+
+            if ( productPageDTO.page < 1 ) productPageDTO.page = 1;
+            if ( productPageDTO.categoryId > 0 ) {
+                products = products.Where(p => p.CategoryId == productPageDTO.categoryId.Value).ToList();
+            }
+            if ( !string.IsNullOrEmpty(productPageDTO.name) ) {
+                products = products.Where(p => p.ProductName.Contains(productPageDTO.name, StringComparison.OrdinalIgnoreCase)).ToList();
+            }
+            var pagedProducts = products
+                .Skip(( productPageDTO.page - 1 ) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+            var productResponses = pagedProducts.Select(product => new ProductDetailResponse() {
+                productId = product.ProductId,
+                productName = product.ProductName,
+                description = product.Description,
+                price = product.Price,
+                priceSale = product.PriceSale,
+                quantity = product.Quantity,
+                sold = product.SoldCount,
+                averageRating = product.AverageRating,
+                TotalReviews = product.TotalReviews,
+                images = product.images.Select(i => i.ImagesUrl).ToList(),
+                productOptions = product.productOptions?.Select(item => new ProductOptionResponse {
+                    productOptionId = item.ProductOptionId,
+                    optionName = item.OptionName,
+                    price = item.Price
+                }).ToList() ?? [],
+            }).ToList();
+            var totalItems = products.Count;
+            var totalPages = ( int )Math.Ceiling(totalItems / ( double )pageSize);
+            var pageResponse = new PageResponse<ProductDetailResponse> {
+                page = productPageDTO.page,
+                pageSize = pageSize,
+                totalItems = totalItems,
+                totalPages = totalPages,
+                list = productResponses
+            };
+
+            return ApiResponse<PageResponse<ProductDetailResponse>>.SuccessResponse(pageResponse, "Products retrieved successfully");
+
         }
     }
 }

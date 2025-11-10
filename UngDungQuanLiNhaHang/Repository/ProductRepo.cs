@@ -46,6 +46,7 @@ namespace UngDungQuanLiNhaHang.Repository {
         public async Task<List<Products>> GetAllProducts() {
             return await _context.products
                 .Include(p => p.images)
+                .Include(p => p.productOptions)
                 .Include(p => p.Category)
                 .Where(s => s.IsActive == true)
                 .ToListAsync();

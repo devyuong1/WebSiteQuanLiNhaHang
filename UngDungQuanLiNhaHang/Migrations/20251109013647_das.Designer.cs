@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using UngDungQuanLiNhaHang.Data;
 
@@ -11,9 +12,11 @@ using UngDungQuanLiNhaHang.Data;
 namespace UngDungQuanLiNhaHang.Migrations
 {
     [DbContext(typeof(DataDbConText))]
-    partial class DataDbConTextModelSnapshot : ModelSnapshot
+    [Migration("20251109013647_das")]
+    partial class das
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1451,6 +1454,9 @@ namespace UngDungQuanLiNhaHang.Migrations
                     b.Property<int?>("tableId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("tablesTableId")
+                        .HasColumnType("int");
+
                     b.HasKey("InvoiceId");
 
                     b.HasIndex("AddressId");
@@ -1461,7 +1467,7 @@ namespace UngDungQuanLiNhaHang.Migrations
 
                     b.HasIndex("customerId");
 
-                    b.HasIndex("tableId");
+                    b.HasIndex("tablesTableId");
 
                     b.ToTable("invoices");
 
@@ -1470,7 +1476,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                         {
                             InvoiceId = 1,
                             AddressId = 1,
-                            Create_At = new DateTime(2025, 11, 9, 2, 34, 47, 753, DateTimeKind.Utc).AddTicks(2324),
+                            Create_At = new DateTime(2025, 11, 9, 1, 36, 46, 273, DateTimeKind.Utc).AddTicks(9305),
                             InvoiceStatusId = 4,
                             InvoiceType = false,
                             IsPayment = true,
@@ -1484,7 +1490,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                         {
                             InvoiceId = 2,
                             AddressId = 1,
-                            Create_At = new DateTime(2025, 11, 9, 2, 34, 47, 753, DateTimeKind.Utc).AddTicks(2329),
+                            Create_At = new DateTime(2025, 11, 9, 1, 36, 46, 273, DateTimeKind.Utc).AddTicks(9309),
                             InvoiceStatusId = 4,
                             InvoiceType = false,
                             IsPayment = false,
@@ -1498,7 +1504,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                         {
                             InvoiceId = 3,
                             AddressId = 1,
-                            Create_At = new DateTime(2025, 11, 9, 2, 34, 47, 753, DateTimeKind.Utc).AddTicks(2332),
+                            Create_At = new DateTime(2025, 11, 9, 1, 36, 46, 273, DateTimeKind.Utc).AddTicks(9311),
                             InvoiceStatusId = 4,
                             InvoiceType = false,
                             IsPayment = true,
@@ -1512,7 +1518,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                         {
                             InvoiceId = 4,
                             AddressId = 1,
-                            Create_At = new DateTime(2025, 11, 9, 2, 34, 47, 753, DateTimeKind.Utc).AddTicks(2334),
+                            Create_At = new DateTime(2025, 11, 9, 1, 36, 46, 273, DateTimeKind.Utc).AddTicks(9313),
                             InvoiceStatusId = 4,
                             InvoiceType = false,
                             IsPayment = true,
@@ -1526,7 +1532,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                         {
                             InvoiceId = 5,
                             AddressId = 1,
-                            Create_At = new DateTime(2025, 11, 9, 2, 34, 47, 753, DateTimeKind.Utc).AddTicks(2336),
+                            Create_At = new DateTime(2025, 11, 9, 1, 36, 46, 273, DateTimeKind.Utc).AddTicks(9315),
                             InvoiceStatusId = 4,
                             InvoiceType = false,
                             IsPayment = true,
@@ -1540,7 +1546,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                         {
                             InvoiceId = 6,
                             AddressId = 1,
-                            Create_At = new DateTime(2025, 11, 9, 2, 34, 47, 753, DateTimeKind.Utc).AddTicks(2338),
+                            Create_At = new DateTime(2025, 11, 9, 1, 36, 46, 273, DateTimeKind.Utc).AddTicks(9317),
                             InvoiceStatusId = 4,
                             InvoiceType = false,
                             IsPayment = true,
@@ -1554,7 +1560,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                         {
                             InvoiceId = 7,
                             AddressId = 1,
-                            Create_At = new DateTime(2025, 11, 9, 2, 34, 47, 753, DateTimeKind.Utc).AddTicks(2340),
+                            Create_At = new DateTime(2025, 11, 9, 1, 36, 46, 273, DateTimeKind.Utc).AddTicks(9319),
                             InvoiceStatusId = 4,
                             InvoiceType = false,
                             IsPayment = true,
@@ -1568,7 +1574,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                         {
                             InvoiceId = 8,
                             AddressId = 1,
-                            Create_At = new DateTime(2025, 11, 9, 2, 34, 47, 753, DateTimeKind.Utc).AddTicks(2344),
+                            Create_At = new DateTime(2025, 11, 9, 1, 36, 46, 273, DateTimeKind.Utc).AddTicks(9323),
                             InvoiceStatusId = 4,
                             InvoiceType = false,
                             IsPayment = true,
@@ -1582,7 +1588,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                         {
                             InvoiceId = 9,
                             AddressId = 1,
-                            Create_At = new DateTime(2025, 11, 9, 2, 34, 47, 753, DateTimeKind.Utc).AddTicks(2346),
+                            Create_At = new DateTime(2025, 11, 9, 1, 36, 46, 273, DateTimeKind.Utc).AddTicks(9324),
                             InvoiceStatusId = 4,
                             InvoiceType = false,
                             IsPayment = true,
@@ -3552,7 +3558,7 @@ namespace UngDungQuanLiNhaHang.Migrations
 
                     b.HasOne("UngDungQuanLiNhaHang.Models.Tables", "tables")
                         .WithMany("Invoices")
-                        .HasForeignKey("tableId");
+                        .HasForeignKey("tablesTableId");
 
                     b.Navigation("InvoiceStatus");
 

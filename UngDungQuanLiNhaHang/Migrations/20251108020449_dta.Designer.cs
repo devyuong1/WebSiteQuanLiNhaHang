@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using UngDungQuanLiNhaHang.Data;
 
@@ -11,9 +12,11 @@ using UngDungQuanLiNhaHang.Data;
 namespace UngDungQuanLiNhaHang.Migrations
 {
     [DbContext(typeof(DataDbConText))]
-    partial class DataDbConTextModelSnapshot : ModelSnapshot
+    [Migration("20251108020449_dta")]
+    partial class dta
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1451,6 +1454,9 @@ namespace UngDungQuanLiNhaHang.Migrations
                     b.Property<int?>("tableId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("tablesTableId")
+                        .HasColumnType("int");
+
                     b.HasKey("InvoiceId");
 
                     b.HasIndex("AddressId");
@@ -1461,7 +1467,7 @@ namespace UngDungQuanLiNhaHang.Migrations
 
                     b.HasIndex("customerId");
 
-                    b.HasIndex("tableId");
+                    b.HasIndex("tablesTableId");
 
                     b.ToTable("invoices");
 
@@ -1470,7 +1476,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                         {
                             InvoiceId = 1,
                             AddressId = 1,
-                            Create_At = new DateTime(2025, 11, 9, 2, 34, 47, 753, DateTimeKind.Utc).AddTicks(2324),
+                            Create_At = new DateTime(2025, 11, 8, 2, 4, 47, 606, DateTimeKind.Utc).AddTicks(4039),
                             InvoiceStatusId = 4,
                             InvoiceType = false,
                             IsPayment = true,
@@ -1484,7 +1490,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                         {
                             InvoiceId = 2,
                             AddressId = 1,
-                            Create_At = new DateTime(2025, 11, 9, 2, 34, 47, 753, DateTimeKind.Utc).AddTicks(2329),
+                            Create_At = new DateTime(2025, 11, 8, 2, 4, 47, 606, DateTimeKind.Utc).AddTicks(4042),
                             InvoiceStatusId = 4,
                             InvoiceType = false,
                             IsPayment = false,
@@ -1498,7 +1504,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                         {
                             InvoiceId = 3,
                             AddressId = 1,
-                            Create_At = new DateTime(2025, 11, 9, 2, 34, 47, 753, DateTimeKind.Utc).AddTicks(2332),
+                            Create_At = new DateTime(2025, 11, 8, 2, 4, 47, 606, DateTimeKind.Utc).AddTicks(4044),
                             InvoiceStatusId = 4,
                             InvoiceType = false,
                             IsPayment = true,
@@ -1512,7 +1518,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                         {
                             InvoiceId = 4,
                             AddressId = 1,
-                            Create_At = new DateTime(2025, 11, 9, 2, 34, 47, 753, DateTimeKind.Utc).AddTicks(2334),
+                            Create_At = new DateTime(2025, 11, 8, 2, 4, 47, 606, DateTimeKind.Utc).AddTicks(4046),
                             InvoiceStatusId = 4,
                             InvoiceType = false,
                             IsPayment = true,
@@ -1526,7 +1532,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                         {
                             InvoiceId = 5,
                             AddressId = 1,
-                            Create_At = new DateTime(2025, 11, 9, 2, 34, 47, 753, DateTimeKind.Utc).AddTicks(2336),
+                            Create_At = new DateTime(2025, 11, 8, 2, 4, 47, 606, DateTimeKind.Utc).AddTicks(4048),
                             InvoiceStatusId = 4,
                             InvoiceType = false,
                             IsPayment = true,
@@ -1540,7 +1546,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                         {
                             InvoiceId = 6,
                             AddressId = 1,
-                            Create_At = new DateTime(2025, 11, 9, 2, 34, 47, 753, DateTimeKind.Utc).AddTicks(2338),
+                            Create_At = new DateTime(2025, 11, 8, 2, 4, 47, 606, DateTimeKind.Utc).AddTicks(4049),
                             InvoiceStatusId = 4,
                             InvoiceType = false,
                             IsPayment = true,
@@ -1554,7 +1560,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                         {
                             InvoiceId = 7,
                             AddressId = 1,
-                            Create_At = new DateTime(2025, 11, 9, 2, 34, 47, 753, DateTimeKind.Utc).AddTicks(2340),
+                            Create_At = new DateTime(2025, 11, 8, 2, 4, 47, 606, DateTimeKind.Utc).AddTicks(4051),
                             InvoiceStatusId = 4,
                             InvoiceType = false,
                             IsPayment = true,
@@ -1568,7 +1574,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                         {
                             InvoiceId = 8,
                             AddressId = 1,
-                            Create_At = new DateTime(2025, 11, 9, 2, 34, 47, 753, DateTimeKind.Utc).AddTicks(2344),
+                            Create_At = new DateTime(2025, 11, 8, 2, 4, 47, 606, DateTimeKind.Utc).AddTicks(4054),
                             InvoiceStatusId = 4,
                             InvoiceType = false,
                             IsPayment = true,
@@ -1582,7 +1588,7 @@ namespace UngDungQuanLiNhaHang.Migrations
                         {
                             InvoiceId = 9,
                             AddressId = 1,
-                            Create_At = new DateTime(2025, 11, 9, 2, 34, 47, 753, DateTimeKind.Utc).AddTicks(2346),
+                            Create_At = new DateTime(2025, 11, 8, 2, 4, 47, 606, DateTimeKind.Utc).AddTicks(4055),
                             InvoiceStatusId = 4,
                             InvoiceType = false,
                             IsPayment = true,
@@ -3207,9 +3213,6 @@ namespace UngDungQuanLiNhaHang.Migrations
                     b.Property<int>("Capacity")
                         .HasColumnType("int");
 
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("Status")
                         .HasColumnType("bit");
 
@@ -3222,154 +3225,132 @@ namespace UngDungQuanLiNhaHang.Migrations
                         {
                             TableId = 1,
                             Capacity = 4,
-                            Description = "Bàn tầng trệt",
                             Status = false
                         },
                         new
                         {
                             TableId = 2,
                             Capacity = 4,
-                            Description = "Bàn tầng trệt",
                             Status = false
                         },
                         new
                         {
                             TableId = 3,
                             Capacity = 6,
-                            Description = "Bàn tầng trệt",
                             Status = false
                         },
                         new
                         {
                             TableId = 4,
                             Capacity = 6,
-                            Description = "Bàn tầng trệt",
                             Status = false
                         },
                         new
                         {
                             TableId = 5,
                             Capacity = 8,
-                            Description = "Bàn tầng trệt",
                             Status = false
                         },
                         new
                         {
                             TableId = 6,
                             Capacity = 8,
-                            Description = "Bàn tầng trệt",
                             Status = false
                         },
                         new
                         {
                             TableId = 7,
                             Capacity = 6,
-                            Description = "Bàn tầng trệt",
                             Status = false
                         },
                         new
                         {
                             TableId = 8,
                             Capacity = 6,
-                            Description = "Bàn tầng trệt",
                             Status = false
                         },
                         new
                         {
                             TableId = 9,
                             Capacity = 8,
-                            Description = "Bàn tầng trệt",
                             Status = false
                         },
                         new
                         {
                             TableId = 10,
                             Capacity = 8,
-                            Description = "Bàn tầng trệt",
                             Status = false
                         },
                         new
                         {
                             TableId = 11,
                             Capacity = 8,
-                            Description = "Bàn tầng trệt",
                             Status = false
                         },
                         new
                         {
                             TableId = 12,
                             Capacity = 8,
-                            Description = "Bàn tầng trệt",
                             Status = false
                         },
                         new
                         {
                             TableId = 13,
                             Capacity = 8,
-                            Description = "Bàn tầng trệt",
                             Status = false
                         },
                         new
                         {
                             TableId = 14,
                             Capacity = 8,
-                            Description = "Bàn tầng 1",
                             Status = false
                         },
                         new
                         {
                             TableId = 15,
                             Capacity = 8,
-                            Description = "Bàn tầng 1",
                             Status = false
                         },
                         new
                         {
                             TableId = 16,
                             Capacity = 8,
-                            Description = "Bàn tầng 1",
                             Status = false
                         },
                         new
                         {
                             TableId = 17,
                             Capacity = 8,
-                            Description = "Bàn tầng 1",
                             Status = false
                         },
                         new
                         {
                             TableId = 18,
                             Capacity = 8,
-                            Description = "Bàn tầng 1",
                             Status = false
                         },
                         new
                         {
                             TableId = 19,
                             Capacity = 8,
-                            Description = "Bàn tầng 1",
                             Status = false
                         },
                         new
                         {
                             TableId = 20,
                             Capacity = 10,
-                            Description = "Bàn tầng 1",
                             Status = false
                         },
                         new
                         {
                             TableId = 21,
                             Capacity = 10,
-                            Description = "Bàn tầng 1",
                             Status = false
                         },
                         new
                         {
                             TableId = 22,
                             Capacity = 10,
-                            Description = "Bàn tầng 1",
                             Status = false
                         });
                 });
@@ -3552,7 +3533,7 @@ namespace UngDungQuanLiNhaHang.Migrations
 
                     b.HasOne("UngDungQuanLiNhaHang.Models.Tables", "tables")
                         .WithMany("Invoices")
-                        .HasForeignKey("tableId");
+                        .HasForeignKey("tablesTableId");
 
                     b.Navigation("InvoiceStatus");
 

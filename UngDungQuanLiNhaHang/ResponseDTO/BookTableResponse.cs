@@ -9,5 +9,6 @@
         public string statusName { get; set; } = string.Empty;
         public int tableId { get; set; }
         public string CustomerName { get; set; } = string.Empty;
+        public int customerId { get; set; }
     }
 }

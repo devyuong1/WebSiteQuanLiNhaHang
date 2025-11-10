@@ -1,4 +1,5 @@
 ﻿using Hangfire;
+using System.Diagnostics;
 using System.Security.Policy;
 using UngDungQuanLiNhaHang.Models;
 using UngDungQuanLiNhaHang.Repository;
@@ -64,7 +65,7 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
         }
 
         public async Task<ApiResponse<string>> CreateBookingAsync(int customerId, BookTableDTO dto,HttpContext httpContext) {
-            var existingBooking = await bookTableRepo.GetBookTableByDate(dto.bookingDate, dto.tableId);
+            var existingBooking = await bookTableRepo.GetBookTableByDate(dto.bookingDate, dto.tableId,customerId);
             // Kiểm tra nếu đã có đặt bàn trong khung giờ này
 
             if ( existingBooking != null && existingBooking.bookTableStatusId != 4 ) {
@@ -76,7 +77,7 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
                 var newBooking = new BookTable {
                     customerId = customerId,
                     TableId = dto.tableId,
-                    BookingDate = dto.bookingDate,
+                    BookingDate = dto.bookingDate.DateTime,
                     bookTableStatusId = 1, // Pending
                     NumberOfGuests = dto.numberOfGuests,
                     IsDepositPaid = false,
@@ -141,6 +142,32 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
             };
             return ApiResponse<PageResponse<BookTableResponse>>.SuccessResponse(pageResponse, "Lấy danh sách đặt bàn thành công");
         }
+
+        public async Task<ApiResponse<List<TableResponse>>> GetAllTablesByDate() {
+            var tables = await bookTableRepo.GetAllTable();
+            foreach (var i in tables) {
+                Debug.WriteLine("Table" + i.TableId );
+                foreach(var j in i.Invoices) {
+                    Debug.WriteLine("invoiceID" + j.InvoiceId);
+                }
+            }
+            if ( tables.Count == 0)
+                return ApiResponse<List<TableResponse>>.FailResponse("Không tìm thấy danh sách bàn nào.");
+            var respon = tables.Select(item =>
+            {
+                return new TableResponse() {
+                    tableId = item.TableId,
+                    description = item.Description,
+                    status = item.Status,
+                    numberOfPeople = item.Capacity,
+                    invoiceId = item.Invoices.Count != 0 ? item.Invoices.Last() != null ? ( item.Invoices.Last().IsPayment == true ? 0 : item.Invoices.Last().InvoiceId ) : 0 : 0
+                };
+            }).ToList();
+
+
+            return ApiResponse<List<TableResponse>>.SuccessResponse(respon, "Lấy danh sách thành công.");
+        }
+
         public async Task<ApiResponse<List<BookTableResponse>>> GetBookingsByCustomerAsync(int customerId) {
             var bookings = await bookTableRepo.GetAllBookingsByCustomerIdAsync(customerId);
             if ( bookings == null || bookings.Count == 0 ) {
@@ -158,7 +185,7 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
             }).ToList();
             return ApiResponse<List<BookTableResponse>>.SuccessResponse(responseList, "Lấy danh sách đặt bàn thành công");
         }
-        public async Task<ApiResponse<PageResponse<BookTableResponse>>> GetBookingsByStatusIdAsync(DateTime date, int id, int page = 1) {
+        public async Task<ApiResponse<PageResponse<BookTableResponse>>> GetBookingsByStatusIdAsync(DateTime? date, int id, int page = 1) {
             int pageSize = 12;
             var bookings = await bookTableRepo.GetBookingsByStatusIdAsync(date, id);
             if ( bookings == null || bookings.Count == 0 ) {
@@ -172,6 +199,7 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
                 tableId = b.TableId,
                 statusId = b.bookTableStatusId,
                 numberOfPeople = b.NumberOfGuests,
+                customerId = b.customerId,
                 statusName = b.BookTableStatus != null ? b.BookTableStatus.status : "Unknown",
                 CustomerName = b.Customers != null ? b.Customers.FullName : "Unknown"
             }).ToList();
@@ -189,9 +217,15 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
             return ApiResponse<PageResponse<BookTableResponse>>.SuccessResponse(pageResponse, "Lấy danh sách đặt bàn theo trạng thái thành công");
         }
 
-        public async Task<ApiResponse<List<TableResponse>>> GetTablesByDate(DateTime date, int numberOfGuests) {
+        public async Task<ApiResponse<List<int>>> GetTableId() {
+            var tables = await bookTableRepo.GetAllTable();
+            List<int> res = tables.Select(i => i.TableId).ToList();
+            return ApiResponse<List<int>>.SuccessResponse(res);
+        }
+
+        public async Task<ApiResponse<List<TableResponse>>> GetTablesByDate(DateTimeOffset date, int numberOfGuests) {
             var tables = await bookTableRepo.GetByNumberOfGuests(numberOfGuests);
-            if ( tables == null || !tables.Any() ) {
+            if ( tables == null || tables.Count == 0 ) {
                 return ApiResponse<List<TableResponse>>.FailResponse("Lỗi hệ thống.");
             }
             var bookTables = await bookTableRepo.GetBookTableByDate(date);
@@ -201,6 +235,7 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
                     responses.Add(new TableResponse() {
                         tableId = item.TableId,
                         numberOfPeople = item.Capacity,
+                        description = item.Description
                     });
                 }
             }

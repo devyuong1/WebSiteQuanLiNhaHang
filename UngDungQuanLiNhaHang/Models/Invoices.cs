@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace UngDungQuanLiNhaHang.Models {
     public class Invoices {
@@ -14,23 +15,30 @@ namespace UngDungQuanLiNhaHang.Models {
         public string? Note { get; set; }
         public int? customerId { get; set; }
         [ForeignKey("customerId")]
+        [JsonIgnore]
         public Customers? customers { get; set; }
         public int? tableId { get; set; }
+        [JsonIgnore]
+        [ForeignKey("tableId")]
         public Tables? tables { get; set; }
         public int employeeId { get; set; } = 0;
         public string? HangfireJobId { get; set; }
 
         public int PaymentMethodId { get; set; }
         [ForeignKey("PaymentMethodId")]
+        [JsonIgnore]
         public PaymentMethod? PaymentMethod { get; set; }
         public int InvoiceStatusId { get; set; }
         [ForeignKey("InvoiceStatusId")]
+        [JsonIgnore]
         public InvoiceStatus? InvoiceStatus { get; set; }
+        [JsonIgnore]
         public ICollection<ProductReviews> productReviews { get; set; } = new List<ProductReviews>();
         public int AddressId { get; set; }
         [ForeignKey("AddressId")]
-
+        [JsonIgnore]
         public Address? address { get; set; }
+        [JsonIgnore]
         public ICollection<InvoiceItems> invoiceItems { get; set; }  = new List<InvoiceItems>();
 
 

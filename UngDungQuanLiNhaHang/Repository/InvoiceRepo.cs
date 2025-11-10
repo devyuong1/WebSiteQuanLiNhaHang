@@ -5,7 +5,16 @@ using UngDungQuanLiNhaHang.Models;
 namespace UngDungQuanLiNhaHang.Repository {
     public class InvoiceRepo(DataDbConText _context) {
         public async Task<Invoices?> GetById(int invoiceId) {
-            return await _context.invoices.FindAsync(invoiceId);
+            return await _context.invoices.AsNoTracking().FirstOrDefaultAsync( s=> s.InvoiceId == invoiceId);
+        }
+        public async Task<Invoices?> GetByInvoiceId(int invoiceId) {
+            return await _context.invoices.FirstOrDefaultAsync(s => s.InvoiceId == invoiceId);
+        }
+        public async Task<Invoices?> GetByIdForEmail(int invoiceId) {
+            return await _context.invoices
+                .Include(i => i.customers)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(s => s.InvoiceId == invoiceId);
         }
         public async Task<Invoices?> GetByCustomerIdAndInvoiceId(int customerId, int invoiceId) {
             return await _context.invoices

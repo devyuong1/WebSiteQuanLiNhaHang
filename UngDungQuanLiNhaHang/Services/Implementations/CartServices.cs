@@ -1,4 +1,5 @@
-﻿using UngDungQuanLiNhaHang.Models;
+﻿using System.Diagnostics;
+using UngDungQuanLiNhaHang.Models;
 using UngDungQuanLiNhaHang.Repository;
 using UngDungQuanLiNhaHang.RequestDTO;
 using UngDungQuanLiNhaHang.ResponseDTO;
@@ -219,6 +220,7 @@ namespace UngDungQuanLiNhaHang.Services.Implementations {
             }
             catch ( Exception ex ) { 
                 await transactionRepo.RollbackAsync();
+                Debug.WriteLine("UpdateQuantityCartOption Error:" + ex.ToString());
                 return ApiResponse<bool>.FailResponse("Cập nhật thất bại.");
             }
 

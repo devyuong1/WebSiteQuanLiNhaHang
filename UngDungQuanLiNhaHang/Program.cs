@@ -154,7 +154,6 @@ builder.Services.AddScoped<ProductReviewRepo>();
 builder.Services.AddScoped<IProductReviewService, ProductReviewService>();
 builder.Services.AddScoped<IVnPayService, VpPayService>();
 builder.Services.AddScoped<RefreshTokenRepo>();
-builder.Services.AddScoped<Logger<InvoiceService>>();
 builder.Services.AddScoped<IOrderNotificationService,OrderNotificationService>();
 builder.Services.AddScoped<Logger<IngredientService>>();
 

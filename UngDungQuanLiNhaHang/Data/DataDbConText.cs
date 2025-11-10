@@ -246,8 +246,9 @@ namespace UngDungQuanLiNhaHang.Data {
             modelBuilder.Entity<PaymentMethod>().HasData(
                     new PaymentMethod { PaymentMethodId = 1, PaymentMethodName = "VNPay" },
                     new PaymentMethod { PaymentMethodId = 2, PaymentMethodName = "MoMo" },
-                    new PaymentMethod { PaymentMethodId = 3, PaymentMethodName = "Thanh toán khi nhận hàng" }
-                );
+                    new PaymentMethod { PaymentMethodId = 3, PaymentMethodName = "Thanh toán khi nhận hàng" },
+                    new PaymentMethod { PaymentMethodId = 4, PaymentMethodName = "Thanh toán tại cửa hàng." }
+            );
 
             modelBuilder.Entity<Customers>().HasData(
                 new Customers {
@@ -1215,28 +1216,28 @@ namespace UngDungQuanLiNhaHang.Data {
                 );
 
             modelBuilder.Entity<Tables>().HasData(
-                new Tables { TableId = 1, Capacity = 4, Status = false },
-                new Tables { TableId = 2, Capacity = 4, Status = false },
-                new Tables { TableId = 3, Capacity = 6, Status = false },
-                new Tables { TableId = 4, Capacity = 6, Status = false },
-                new Tables { TableId = 5, Capacity = 8, Status = false },
-                new Tables { TableId = 6, Capacity = 8, Status = false },
-                new Tables { TableId = 7, Capacity = 6, Status = false },
-                new Tables { TableId = 8, Capacity = 6, Status = false },
-                new Tables { TableId = 9, Capacity = 8, Status = false },
-                new Tables { TableId = 10, Capacity = 8, Status = false },
-                new Tables { TableId = 11, Capacity = 8, Status = false },
-                new Tables { TableId = 12, Capacity = 8, Status = false },
-                new Tables { TableId = 13, Capacity = 8, Status = false },
-                new Tables { TableId = 14, Capacity = 8, Status = false },
-                new Tables { TableId = 15, Capacity = 8, Status = false },
-                new Tables { TableId = 16, Capacity = 8, Status = false },
-                new Tables { TableId = 17, Capacity = 8, Status = false },
-                new Tables { TableId = 18, Capacity = 8, Status = false },
-                new Tables { TableId = 19, Capacity = 8, Status = false },
-                new Tables { TableId = 20, Capacity = 10, Status = false },
-                new Tables { TableId = 21, Capacity = 10, Status = false },
-                new Tables { TableId = 22, Capacity = 10, Status = false }
+                new Tables { TableId = 1, Capacity = 4, Status = false, Description = "Bàn tầng trệt" },
+                new Tables { TableId = 2, Capacity = 4, Status = false, Description = "Bàn tầng trệt" },
+                new Tables { TableId = 3, Capacity = 6, Status = false, Description = "Bàn tầng trệt" },
+                new Tables { TableId = 4, Capacity = 6, Status = false, Description = "Bàn tầng trệt" },
+                new Tables { TableId = 5, Capacity = 8, Status = false, Description = "Bàn tầng trệt" },
+                new Tables { TableId = 6, Capacity = 8, Status = false , Description = "Bàn tầng trệt" },
+                new Tables { TableId = 7, Capacity = 6, Status = false , Description = "Bàn tầng trệt" },
+                new Tables { TableId = 8, Capacity = 6, Status = false , Description = "Bàn tầng trệt" },
+                new Tables { TableId = 9, Capacity = 8, Status = false , Description = "Bàn tầng trệt" },
+                new Tables { TableId = 10, Capacity = 8, Status = false , Description = "Bàn tầng trệt" },
+                new Tables { TableId = 11, Capacity = 8, Status = false , Description = "Bàn tầng trệt" },
+                new Tables { TableId = 12, Capacity = 8, Status = false , Description = "Bàn tầng trệt" },
+                new Tables { TableId = 13, Capacity = 8, Status = false, Description = "Bàn tầng trệt" },
+                new Tables { TableId = 14, Capacity = 8, Status = false, Description = "Bàn tầng 1" },
+                new Tables { TableId = 15, Capacity = 8, Status = false, Description = "Bàn tầng 1" },
+                new Tables { TableId = 16, Capacity = 8, Status = false, Description = "Bàn tầng 1" },
+                new Tables { TableId = 17, Capacity = 8, Status = false, Description = "Bàn tầng 1" },
+                new Tables { TableId = 18, Capacity = 8, Status = false, Description = "Bàn tầng 1" },
+                new Tables { TableId = 19, Capacity = 8, Status = false, Description = "Bàn tầng 1" },
+                new Tables { TableId = 20, Capacity = 10, Status = false, Description = "Bàn tầng 1" },
+                new Tables { TableId = 21, Capacity = 10, Status = false, Description = "Bàn tầng 1" },
+                new Tables { TableId = 22, Capacity = 10, Status = false, Description = "Bàn tầng 1" }
             );
 
             modelBuilder.Entity<BookTableStatus>().HasData(

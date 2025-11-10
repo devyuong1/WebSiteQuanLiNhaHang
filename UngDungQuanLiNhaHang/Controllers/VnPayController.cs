@@ -1,8 +1,6 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+﻿
 using Microsoft.AspNetCore.Mvc;
-using UngDungQuanLiNhaHang.RequestDTO;
-using UngDungQuanLiNhaHang.ResponseDTO;
+
 
 using UngDungQuanLiNhaHang.Services.Interfaces;
 using UngDungQuanLiNhaHang.VnPayLibary;
@@ -10,7 +8,7 @@ using UngDungQuanLiNhaHang.VnPayLibary;
 namespace UngDungQuanLiNhaHang.Controllers {
     [Route("api/[controller]")]
     [ApiController]
-    public class VnPayController(IVnPayService vnPayService,
+    public class VnPayController(
         IBookTableServices bookTableServices,
         IInvoiceServices invoiceService,
         Logger<VnPayController> _logger
@@ -50,12 +48,13 @@ namespace UngDungQuanLiNhaHang.Controllers {
                 var isSuccess = await invoiceService.UpdatePayMent(orderId); // Cập nhật trạng thái thanh toán  hóa đơn "
                 var isDeleteCart = await invoiceService.DeleteCartByInvoiceId(orderId);
                 if ( isSuccess.Success == false  || isDeleteCart.Success == false) {
+                    await invoiceService.SendEmailError(orderId, "Hệ thống đã xảy ra lỗi. Vui lòng liên hệ với nhà hàng để được xử lý.");
                     return Redirect($"http://localhost:5173/Payment/Error?orderId={orderId}&&reason=Lỗi hệ thống vui lòng liên hệ nhà hàng để được hỗ trợ.");
                 }
-
+                await invoiceService.SendEmailSuccess(orderId,"Thanh toán thành công. Đơn hàng của bạn đã được xác nhận.");
                 return Redirect($"http://localhost:5173/Payment/Success");
             }
-
+            await invoiceService.SendEmailError(orderId, "Thanh toán thất bại. Vui lòng kiểm tra lại tài khoản.");
             return Redirect($"http://localhost:5173/Payment/Error?orderId={orderId}&reason=Thanh toán thất bại. Vui lòng kiểm tra lại tài khoản.");
 
         }

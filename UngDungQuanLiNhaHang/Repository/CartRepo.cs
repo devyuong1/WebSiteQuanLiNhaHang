@@ -6,6 +6,8 @@ namespace UngDungQuanLiNhaHang.Repository {
     public class CartRepo(DataDbConText _context) {
         public async Task<Carts?> GetCartByCustomerId(int customerId) {
             return await _context.carts
+                
+                .Include(s => s.Customers)
                 .Include(c => c.CartItems)
                     .ThenInclude(ci => ci.Products)
                         .ThenInclude(p => p.images)

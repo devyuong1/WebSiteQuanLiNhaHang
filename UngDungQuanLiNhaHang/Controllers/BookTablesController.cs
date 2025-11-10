@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
@@ -39,21 +40,24 @@ namespace UngDungQuanLiNhaHang.Controllers
         }
         [HttpGet("GetBookingsByStatusIdAsync")]
         [Authorize(Roles = "Admin, Manager, Employee")]
-        public async Task<ActionResult<ApiResponse<PageResponse<BookTableResponse>>>> GetBookingsByStatusIdAsync([FromQuery] string  time, [FromQuery] int id, [FromQuery] int page = 1) {
+        public async Task<ActionResult<ApiResponse<PageResponse<BookTableResponse>>>> GetBookingsByStatusIdAsync([FromQuery] string?  time, [FromQuery] int id, [FromQuery] int page = 1) {
                 var userIdClaim = User.FindFirst("UserID");
-            
+                
                 if ( userIdClaim == null )
                  return Unauthorized("Token không hợp lệ ");
                 DateTime date;
-                var formats = new[] { "yyyy-MM-dd", "dd/MM/yyyy", "MM/dd/yyyy", "yyyy/MM/dd" };
-                if ( !DateTime.TryParseExact(time, formats, CultureInfo.InvariantCulture, DateTimeStyles.None, out date) ) {
-                    return BadRequest(new ApiResponse<string> {
-                        Success = false,
-                        Message = $"Định dạng ngày không hợp lệ ({time}). Hãy dùng định dạng yyyy-MM-dd hoặc dd/MM/yyyy."
-                    });
+                ApiResponse<PageResponse<BookTableResponse>> bookings;
+                if (time != null ) {
+                    var formats = new[] { "yyyy-MM-dd", "dd/MM/yyyy", "MM/dd/yyyy", "yyyy/MM/dd", "yyyy-MM-dd HH:mm", "/MM/yyyy HH:mm" };
+                    if ( !DateTime.TryParseExact(time, formats, CultureInfo.InvariantCulture, DateTimeStyles.None, out date) ) {
+                        return BadRequest(ApiResponse<PageResponse<BookTableResponse>>.FailResponse("loi format"));
+                    }
+                bookings = await bookTableServices.GetBookingsByStatusIdAsync(date, id, page);
                 }
-            var bookings = await bookTableServices.GetBookingsByStatusIdAsync(date, id, page);
-                
+
+                    else {
+                bookings = await bookTableServices.GetBookingsByStatusIdAsync(null, id, page);
+            }
                 return Ok(bookings);
         }
         [HttpGet("UpdateBookingStatusAsync")]
@@ -68,6 +72,19 @@ namespace UngDungQuanLiNhaHang.Controllers
             }
             return Ok(bookings);
         }
+
+        [HttpGet("GetAllTablesByDate")]
+        [Authorize(Roles = "Admin, Manager, Employee")]
+        public async Task<ActionResult<ApiResponse<List<TableResponse>>>> GetAllTablesByDate() {
+            var respon = await bookTableServices.GetAllTablesByDate();
+            if (respon.Success) {
+                return Ok(respon);
+            }
+            return BadRequest(respon);
+        }
+
+
+
         // for customer
         [HttpPost("CreateBooking")]
         [Authorize(Roles = "Customer")]
@@ -111,6 +128,7 @@ namespace UngDungQuanLiNhaHang.Controllers
         [HttpPost("GetTableByDay")]
         [Authorize(Roles = "Customer")]
         public async Task<ActionResult<ApiResponse<List<TableResponse>>>> GetTableByDay([FromBody] BookTableDTO dto) {
+            Debug.WriteLine("Date" + dto.bookingDate.ToString());
             if ( !ModelState.IsValid ) {
                 return BadRequest(ApiResponse<List<TableResponse>>.FailResponse("Dữ liệu lỗi."));
             }
@@ -120,6 +138,14 @@ namespace UngDungQuanLiNhaHang.Controllers
 
             }
             return Ok(result);
+        }
+        [HttpGet("GetTablesId")]
+        public async Task<ActionResult<ApiResponse<List<int>>>> GetTablesId() {
+            var res = await bookTableServices.GetTableId();
+            if (res.Success) {
+                return Ok(res);
+            }
+            return BadRequest(res);
         }
     }
 }

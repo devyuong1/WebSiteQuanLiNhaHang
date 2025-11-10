@@ -16,6 +16,6 @@ namespace UngDungQuanLiNhaHang.Services.Interfaces {
         Task<ApiResponse<List<ProductResponse>>> GetListProductNews();
         Task<ApiResponse<List<ProductResponse>>> GetProductByCategoryid(int categoryId);
         Task<ApiResponse<PutProductResponse>> GetProductId(int productId);
-
+        Task<ApiResponse<PageResponse<ProductDetailResponse>>> GetPageProducts(ProductPageDTO productPageDTO);
     }
 }

@@ -110,14 +110,14 @@ namespace UngDungQuanLiNhaHang.Controllers
         }
         [HttpPost("AddInvoiceItem")]
         [Authorize(Roles = "Employee, Manager, Admin")]
-        public async Task<ActionResult<ApiResponse<bool>>> AddInvoiceItem([FromBody] InvoiceItemDTO invoiceItemDTO) {
+        public async Task<ActionResult<ApiResponse<bool>>> AddInvoiceItem([FromBody] InvoiceOffLineDTO invoiceDTO) {
             var userIdClaim = User.FindFirst("UserID");
             if ( userIdClaim == null )
                 return Unauthorized("Token không hợp lệ ");
-            if ( !ModelState.IsValid || invoiceItemDTO == null ) {
+            if ( !ModelState.IsValid || invoiceDTO == null ) {
                 return BadRequest("Dữ liệu không hợp lệ");
             }
-            var response = await invoiceServices.AddInvoiceItem(int.Parse(userIdClaim.Value), invoiceItemDTO);
+            var response = await invoiceServices.AddInvoiceItem(int.Parse(userIdClaim.Value), invoiceDTO);
             if ( !response.Success ) {
                 return BadRequest(response);
             }

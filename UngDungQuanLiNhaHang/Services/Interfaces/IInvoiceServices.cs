@@ -20,7 +20,7 @@ namespace UngDungQuanLiNhaHang.Services.Interfaces {
         // nhân viên tạo hóa đơn  cho khách hàng đã đặt bàn 
         Task<ApiResponse<bool>> CreateInvoiceForBookTable(int employeeId, InvoiceOffLineDTO invoice);
         // nhân viên thêm món vào hóa đơn tại chỗ hoặc thêm những phần gọi thêm cho khách hàng đã đặt bàn
-        Task<ApiResponse<bool>> AddInvoiceItem(int employeeId, InvoiceItemDTO invoiceItemDTO);
+        Task<ApiResponse<bool>> AddInvoiceItem(int employeeId, InvoiceOffLineDTO invoiceDTO);
         // hủy hóa đơn online  cho khách hàng khi không đủ điều kiện thanh toán online 
         Task CancellInvoiceOnlineForStaff(int invoiceId);
 
@@ -35,6 +35,9 @@ namespace UngDungQuanLiNhaHang.Services.Interfaces {
         // he thong
         Task<ApiResponse<bool>> UpdatePayMent(int invoiceId);
         Task<ApiResponse<bool>> DeleteCartByInvoiceId(int invoiceId);
-        
+        Task SendEmailSuccess(int invoiceId,string reason);
+        Task SendEmailError(int invoiceId,string reason);
+
+
     }
 }
